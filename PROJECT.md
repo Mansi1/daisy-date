@@ -42,7 +42,7 @@ Status: draft v1 · 2026-09-28 · Tasks: [TASK-list](./TASK-list/README.md)
 | Tests        | **Vitest**, coverage ≥ 95 % lines/branches on `src/`                                                           |
 | Lint/format  | **ESLint** (typescript-eslint, strict-type-checked) + **Prettier**                                             |
 | CI           | **GitHub Actions**: lint, typecheck, test (Node 20/22/24), build, package checks, `dist` smoke test on Node 18 |
-| Release      | **semantic-release** from Conventional Commits on `main`, npm publish with provenance                          |
+| Release      | **semantic-release** from Conventional Commits on `main`, started by hand, npm publish with provenance         |
 
 ### 3.1 Entry points
 
