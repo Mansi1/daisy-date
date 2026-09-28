@@ -13,3 +13,5 @@
 - 2026-09-28 (T02): 0.x is kept by a `breaking → minor` releaseRule plus a `v0.0.0` tag on the first commit (without the tag
   the first release is 1.0.0). T22 removes the rule.
 - 2026-09-28: `npm audit` reports a low-severity esbuild advisory (dev server, Windows only) via tsup; `audit fix` can't resolve it. Ignored.
+- 2026-09-28 (T02): the `@semantic-release/github` failure issue is disabled (`failTitle: false`); on the first run it crashed creating
+  its label. Release failures show up only in the Actions tab.

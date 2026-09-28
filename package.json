@@ -121,5 +121,13 @@
   "publishConfig": {
     "provenance": true,
     "access": "public"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mansi1/daisy-date.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Mansi1/daisy-date/issues"
+  },
+  "homepage": "https://github.com/Mansi1/daisy-date#readme"
 }
