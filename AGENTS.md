@@ -8,6 +8,9 @@
   `(shift) => shift.start`, not `(s) => s.start`.
 - **Exhaustive switches.** End every `switch` over a union or enum with
   `default: return assertNever(value);`, so a new member fails the compile.
+- **No enums.** Model fixed value sets as `as const` string arrays with a derived union:
+  `const DAY_OF_WEEK = ['monday', …] as const; type DayOfWeek = (typeof DAY_OF_WEEK)[number];`.
+  No TypeScript `enum` and no enum-like const objects such as `{ MONDAY: 1 }`.
 - **Arrow functions.** Write `const fn = (...) => {...}` instead of `function fn() {}`, including module-level
   and exported functions (class methods excepted). Arrow consts aren't hoisted, so define helpers first.
 - **Refactor what you touch.** When a change touches code, also improve that code: naming, structure,
