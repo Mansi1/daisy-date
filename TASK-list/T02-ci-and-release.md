@@ -21,8 +21,10 @@
 - [x] Create the GitHub repository (`Mansi1/daisy-date`) and add it as `origin`.
 - [x] Add `repository`/`bugs`/`homepage` to `package.json`.
 - [x] Commit, tag the first commit `v0.0.0` and push it. CI was green on the first push, including the Node 18 smoke test.
-- [ ] npm: add an `NPM_TOKEN` secret for the first publish. Trusted publishing (GitHub Actions, workflow `release.yml`) can only be
-      configured once the package exists on npm; after that, delete the secret. The release job currently fails with `ENONPMTOKEN`.
+- [x] First publish via the short-lived `NPM_TOKEN` secret: `daisy-date@0.1.0` with provenance (repo made public; npm rejects
+      provenance from private repos).
+- [ ] npm: configure trusted publishing on npmjs.com (daisy-date → Settings → Trusted publishing: `Mansi1/daisy-date`,
+      workflow `release.yml`), then revoke the token and `gh secret delete NPM_TOKEN`.
 - [ ] If `main` is protected, allow the release job to push the `chore(release)` commit (or drop `@semantic-release/git`).
 - [ ] Open a test PR and confirm that CI is green and the commitlint job runs.
 

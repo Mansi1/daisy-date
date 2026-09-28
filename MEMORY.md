@@ -22,3 +22,6 @@
   breaks if both the CJS and the ESM copy get loaded (dual-package hazard); `error.code` is the reliable check. Mention in T21 docs.
 - 2026-09-28 (T02): the release job sets `HUSKY=0`. Otherwise `npm ci` installs the commit-msg hook and @semantic-release/git's
   commit fails: the hook's `npx commitlint` breaks inside semantic-release's own `npx` environment.
+- 2026-09-28 (T02): npm rejects provenance from **private** repos (E422), so the repo is public. A failed publish after
+  @semantic-release/git has pushed leaves a `vX` tag plus a `refs/notes/semantic-release-vX` ref. Delete both (and the release
+  commit) before retrying, or semantic-release treats the version as released. 0.1.0 was recovered this way.
