@@ -16,7 +16,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 
 ## Milestone 2 — Core types
 
-- [ ] [T04 · `DayOfWeek` and shared comparison](./T04-dayofweek-and-shared-comparison.md)
+- [x] [T04 · `DayOfWeek` and shared comparison](./T04-dayofweek-and-shared-comparison.md)
 - [ ] [T05 · `LocalDate` core](./T05-localdate-core.md)
 - [ ] [T06 · `LocalDate` arithmetic and adjusters](./T06-localdate-arithmetic-and-adjusters.md)
 - [ ] [T07 · `Period`](./T07-period.md)

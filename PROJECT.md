@@ -79,15 +79,16 @@ created through static factories only (`of`, `parse`, `from…`, `now`). Constru
 
 ### 5.1 Common conventions
 
-| Convention        | Rule                                                                                                                                                        |
-| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Months            | `1–12`                                                                                                                                                      |
-| Day of week       | ISO numbering, `1 = Monday … 7 = Sunday`, exposed as the `DayOfWeek` enum-like const                                                                        |
-| Comparison        | `compareTo(other): -1 \| 0 \| 1`, `equals`, `isBefore`, `isAfter`, `isEqual`; static `compare` usable in `Array.sort`                                       |
-| String form       | `toString()` returns ISO 8601. `toJSON()` returns the same, so `JSON.stringify` works.                                                                      |
-| Invalid input     | Throws `DaisyRangeError` (out-of-range values) or `DaisyParseError` (unparseable text). No silent clamping, except month-end overflow in arithmetic (§5.2). |
-| `now` / `today`   | Take an optional IANA `timeZone` string, defaulting to the system zone. This is the only place zones appear in v1.                                          |
-| JS `Date` interop | `fromDate(date, timeZone?)` / `toDate(timeZone?)`. The zone defaults to the system zone.                                                                    |
+| Convention        | Rule                                                                                                                                                                                                                                                         |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Months            | `1–12`                                                                                                                                                                                                                                                       |
+| Day of week       | `DayOfWeek` is a string union (`'monday' … 'sunday'`) derived from the `DAY_OF_WEEK` array (ISO order), with `isDayOfWeek`, `dayOfWeekFromIsoNumber`, `dayOfWeekToIsoNumber`, `shiftDayOfWeek`. Getters such as `LocalDate#dayOfWeek` return the name.       |
+| Value sets        | No `enum`s and no enum-like const objects. Fixed sets are `as const` string arrays with a derived union: `type Unit = (typeof UNIT)[number]`.                                                                                                                |
+| Comparison        | Ordered types (`LocalDate`, `LocalDateTime`, `Duration`) extend `ComparableValue`: `compareTo(other): -1 \| 0 \| 1`, `equals`, `isBefore`, `isAfter`, `isEqual`, plus the root `compare` for `Array.sort`. `Period` and `LocalDateRange` only have `equals`. |
+| String form       | `toString()` returns ISO 8601. `toJSON()` returns the same, so `JSON.stringify` works.                                                                                                                                                                       |
+| Invalid input     | Throws `DaisyRangeError` (out-of-range values) or `DaisyParseError` (unparseable text). No silent clamping, except month-end overflow in arithmetic (§5.2).                                                                                                  |
+| `now` / `today`   | Take an optional IANA `timeZone` string, defaulting to the system zone. This is the only place zones appear in v1.                                                                                                                                           |
+| JS `Date` interop | `fromDate(date, timeZone?)` / `toDate(timeZone?)`. The zone defaults to the system zone.                                                                                                                                                                     |
 
 ### 5.2 `LocalDate`
 
@@ -100,7 +101,7 @@ Wraps `Temporal.PlainDate`.
   `daysInYear`, `isLeapYear()`
 - **Arithmetic:** `plusDays/Weeks/Months/Years`, `minus…`, `plus(period)`, `minus(period)`. Month and
   year arithmetic **clamps** to the month end (`2026-01-31 + 1 month = 2026-02-28`), as in java.time.
-- **Adjust:** `withYear/Month/Day`, `startOfWeek(firstDay = MONDAY)`, `endOfWeek(…)`,
+- **Adjust:** `withYear/Month/Day`, `startOfWeek(firstDay = 'monday')`, `endOfWeek(…)`,
   `startOfMonth`, `endOfMonth`, `startOfYear`, `endOfYear`, `next(dayOfWeek)`, `previous(dayOfWeek)`,
   `nextOrSame`, `previousOrSame`
 - **Between:** `until(other): Period`, `daysUntil(other): number` (signed)
@@ -129,7 +130,7 @@ An **inclusive** range of calendar days. Stored as `start` and `end`, both `Loca
 
 - **Create:** `LocalDateRange.of(start, end)` (throws if `end < start`),
   `LocalDateRange.ofDays(start, count)`, `LocalDateRange.ofMonth(year, month)`,
-  `LocalDateRange.ofYear(year)`, `LocalDateRange.ofWeek(date, firstDay = MONDAY)`,
+  `LocalDateRange.ofYear(year)`, `LocalDateRange.ofWeek(date, firstDay = 'monday')`,
   `LocalDateRange.parse('2026-10-01/2026-10-03')` (ISO 8601 interval syntax)
 - **Read:** `start`, `end`, `days()` returns the **number of days** (`1–3 Oct → 3`)
 - **Query:** `contains(date)`, `encloses(range)`, `overlaps(range)`, `abuts(range)` (`end + 1 day = other.start`),
@@ -164,7 +165,7 @@ getters, `plus`, `minus`, `negated`, `abs`, `isZero`, `isNegative`, `equals`, `t
 No holidays. The only configuration is which weekdays are weekend days.
 
 ```ts
-type WeekendOptions = { weekend?: readonly DayOfWeek[] }; // default [SATURDAY, SUNDAY]
+type WeekendOptions = { weekend?: readonly DayOfWeek[] }; // default ['saturday', 'sunday']
 ```
 
 - `LocalDate#isWeekend(options?)`, `LocalDate#isBusinessDay(options?)`
