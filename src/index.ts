@@ -16,5 +16,6 @@ export {
   TemporalUnavailableError,
 } from './errors';
 export type { DaisyErrorCode, ParseErrorDetails } from './errors';
+export { LocalDate } from './local-date';
 export { configureTemporal } from './internal/temporal';
 export type { TemporalLike } from './internal/temporal';

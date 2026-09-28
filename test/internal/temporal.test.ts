@@ -11,6 +11,7 @@ const createTemporalCopy = (): TemporalLike => ({
   PlainDate: polyfillTemporal.PlainDate,
   PlainDateTime: polyfillTemporal.PlainDateTime,
   Duration: polyfillTemporal.Duration,
+  Instant: polyfillTemporal.Instant,
   Now: polyfillTemporal.Now,
 });
 
@@ -65,6 +66,7 @@ describe('getTemporal', () => {
     ['an object without Now', { ...createTemporalCopy(), Now: undefined }],
     ['an object with Now set to null', { ...createTemporalCopy(), Now: null }],
     ['an object without PlainDateTime', { ...createTemporalCopy(), PlainDateTime: undefined }],
+    ['an object without Instant', { ...createTemporalCopy(), Instant: undefined }],
   ])('rejects %s as globalThis.Temporal', (_description, fakeTemporal) => {
     vi.stubGlobal('Temporal', fakeTemporal);
     expect(getTemporal).toThrow(/globalThis\.Temporal is not a complete Temporal implementation/);

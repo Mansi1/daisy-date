@@ -2,15 +2,48 @@ import { TemporalUnavailableError } from '../errors';
 
 type TemporalClass = abstract new (...args: never[]) => unknown;
 
-/** The part of the Temporal API daisy relies on, typed structurally so any spec-compliant implementation fits. */
-export type TemporalLike = {
-  readonly PlainDate: TemporalClass;
-  readonly PlainDateTime: TemporalClass;
-  readonly Duration: TemporalClass;
-  readonly Now: object;
+type PlainDateFields = { year: number; month: number; day: number };
+
+/** The members of a `Temporal.PlainDate` instance daisy reads. */
+export type PlainDateLike = {
+  readonly year: number;
+  readonly month: number;
+  readonly day: number;
+  readonly dayOfWeek: number;
+  readonly dayOfYear: number;
+  readonly weekOfYear: number | undefined;
+  readonly daysInMonth: number;
+  readonly daysInYear: number;
+  readonly inLeapYear: boolean;
+  add: (duration: { days: number }) => PlainDateLike;
+  toZonedDateTime: (options: { timeZone: string }) => { readonly epochMilliseconds: number };
+  toString: () => string;
 };
 
-const REQUIRED_CLASSES = ['PlainDate', 'PlainDateTime', 'Duration'] as const;
+type PlainDateClass = TemporalClass & {
+  from: (item: string | PlainDateFields, options?: { overflow?: 'reject' }) => PlainDateLike;
+  compare: (one: PlainDateLike, two: PlainDateLike) => number;
+};
+
+type InstantClass = TemporalClass & {
+  fromEpochMilliseconds: (epochMilliseconds: number) => {
+    toZonedDateTimeISO: (timeZone: string) => { toPlainDate: () => PlainDateLike };
+  };
+};
+
+/** The part of the Temporal API daisy relies on, typed structurally so any spec-compliant implementation fits. */
+export type TemporalLike = {
+  readonly PlainDate: PlainDateClass;
+  readonly PlainDateTime: TemporalClass;
+  readonly Duration: TemporalClass;
+  readonly Instant: InstantClass;
+  readonly Now: {
+    plainDateISO: (timeZone?: string) => PlainDateLike;
+    timeZoneId: () => string;
+  };
+};
+
+const REQUIRED_CLASSES = ['PlainDate', 'PlainDateTime', 'Duration', 'Instant'] as const;
 
 const isTemporalLike = (candidate: unknown): candidate is TemporalLike => {
   if (typeof candidate !== 'object' || candidate === null) {
