@@ -25,3 +25,5 @@
 - 2026-09-28 (T02): npm rejects provenance from **private** repos (E422), so the repo is public. A failed publish after
   @semantic-release/git has pushed leaves a `vX` tag plus a `refs/notes/semantic-release-vX` ref. Delete both (and the release
   commit) before retrying, or semantic-release treats the version as released. 0.1.0 was recovered this way.
+- Open follow-up (owner): npm trusted publishing for `Mansi1/daisy-date` + `release.yml`, then revoke the token and
+  `gh secret delete NPM_TOKEN`. As of 2026-09-28 the secret still exists. Delete this entry once done.
