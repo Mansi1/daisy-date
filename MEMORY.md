@@ -15,3 +15,8 @@
 - 2026-09-28: `npm audit` reports a low-severity esbuild advisory (dev server, Windows only) via tsup; `audit fix` can't resolve it. Ignored.
 - 2026-09-28 (T02): the `@semantic-release/github` failure issue is disabled (`failTitle: false`); on the first run it crashed creating
   its label. Release failures show up only in the Actions tab.
+- 2026-09-28 (T03): `TemporalLike` only checks for the `PlainDate`/`PlainDateTime`/`Duration` classes and a `Now` object. Each later
+  task adds the members it calls. `test/internal/temporal.test.ts` passes the polyfill's `Temporal` to `configureTemporal`
+  without a cast, which proves at compile time that the real implementation still fits.
+- 2026-09-28 (T03): error `name`s are string literals, not `new.target.name`, so they survive minifiers. `instanceof`
+  breaks if both the CJS and the ESM copy get loaded (dual-package hazard); `error.code` is the reliable check. Mention in T21 docs.

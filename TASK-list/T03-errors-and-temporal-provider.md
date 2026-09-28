@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 1 — Foundation  
 **Depends on:** [T01](./T01-project-scaffold.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 

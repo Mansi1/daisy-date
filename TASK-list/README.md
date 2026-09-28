@@ -12,7 +12,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 
 - [x] [T01 · Project scaffold](./T01-project-scaffold.md)
 - [ ] [T02 · CI and release](./T02-ci-and-release.md)
-- [ ] [T03 · Errors and Temporal provider](./T03-errors-and-temporal-provider.md)
+- [x] [T03 · Errors and Temporal provider](./T03-errors-and-temporal-provider.md)
 
 ## Milestone 2 — Core types
 
