@@ -21,6 +21,11 @@ export default tseslint.config(
       'no-restricted-syntax': [
         'error',
         {
+          selector: 'TSEnumDeclaration',
+          message:
+            'Use an `as const` string array with a derived union instead of an enum (see AGENTS.md).',
+        },
+        {
           selector: 'FunctionDeclaration',
           message: 'Use an arrow function const instead of a function declaration (see AGENTS.md).',
         },

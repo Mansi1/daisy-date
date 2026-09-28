@@ -1,3 +1,13 @@
+export { ComparableValue, compare } from './comparable';
+export type { Comparable, ComparisonResult } from './comparable';
+export {
+  DAY_OF_WEEK,
+  dayOfWeekFromIsoNumber,
+  dayOfWeekToIsoNumber,
+  isDayOfWeek,
+  shiftDayOfWeek,
+} from './day-of-week';
+export type { DayOfWeek } from './day-of-week';
 export {
   DaisyError,
   DaisyFormatError,
