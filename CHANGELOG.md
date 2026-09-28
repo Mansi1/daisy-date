@@ -1,3 +1,9 @@
+## [0.2.0](https://github.com/Mansi1/daisy-date/compare/v0.1.0...v0.2.0) (2026-09-28)
+
+### Features
+
+* add DayOfWeek and comparison helpers ([ac4b0c3](https://github.com/Mansi1/daisy-date/commit/ac4b0c3e53fe17037c17e2d6a533501caa8cee68))
+
 ## [0.1.0](https://github.com/Mansi1/daisy-date/compare/v0.0.0...v0.1.0) (2026-09-28)
 
 ### Features
