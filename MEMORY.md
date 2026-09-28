@@ -1,0 +1,15 @@
+# MEMORY.md
+
+- 2026-09-28: npm name `daisy` is taken (unrelated RabbitMQ lib, v0.2.0); `daisy-date` and `daisyjs` were free on that date.
+- 2026-09-28: Tool majors are pinned by Node engines, not by preference: Vitest 5 needs Node ≥22.12, ESLint 10 needs ≥20.19
+  (local Node was 20.18.2), and TypeScript 7 (the Go port) has no JS API for tsup's dts build. So: Vitest 4, ESLint 9, TS ~5.9.
+- 2026-09-28: Tests get Temporal types via `import type {} from 'temporal-polyfill/global'`; `src/` must not rely on the global type.
+- 2026-09-28: Prettier ignores `AGENTS.md`/`CLAUDE.md` (owner-maintained); `func-style` lint rule dropped as duplicate of the
+  `no-restricted-syntax` arrow-function rule. `license: MIT` in package.json is a placeholder until the owner confirms.
+- 2026-09-28 (T02): semantic-release 25 and its plugins need Node ≥22.14, so they are not devDependencies; `release.yml` runs
+  them via `npx -p` on Node 24. commitlint is pinned to 20 (21 needs Node ≥22.12).
+- 2026-09-28 (T02): the `angular` preset ignores `feat!:`, so the preset is `conventionalcommits`, pinned to **@9**. @10 fails
+  in release-notes-generator ("requires conventional-changelog-writer@9"). Verified by a dry run in a scratch repo.
+- 2026-09-28 (T02): 0.x is kept by a `breaking → minor` releaseRule plus a `v0.0.0` tag on the first commit (without the tag
+  the first release is 1.0.0). T22 removes the rule.
+- 2026-09-28: `npm audit` reports a low-severity esbuild advisory (dev server, Windows only) via tsup; `audit fix` can't resolve it. Ignored.

@@ -1,0 +1,125 @@
+{
+  "name": "daisy-date",
+  "version": "0.0.0-development",
+  "description": "Easy, immutable local dates and days for TypeScript, built on Temporal.",
+  "keywords": [
+    "date",
+    "days",
+    "temporal",
+    "localdate",
+    "localdatetime",
+    "date-range",
+    "business-days",
+    "format",
+    "parse",
+    "relative-time"
+  ],
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.cts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./locale/en": {
+      "import": {
+        "types": "./dist/locale/en.d.ts",
+        "default": "./dist/locale/en.js"
+      },
+      "require": {
+        "types": "./dist/locale/en.d.cts",
+        "default": "./dist/locale/en.cjs"
+      }
+    },
+    "./locale/de": {
+      "import": {
+        "types": "./dist/locale/de.d.ts",
+        "default": "./dist/locale/de.js"
+      },
+      "require": {
+        "types": "./dist/locale/de.d.cts",
+        "default": "./dist/locale/de.cjs"
+      }
+    },
+    "./locale/fr": {
+      "import": {
+        "types": "./dist/locale/fr.d.ts",
+        "default": "./dist/locale/fr.js"
+      },
+      "require": {
+        "types": "./dist/locale/fr.d.cts",
+        "default": "./dist/locale/fr.cjs"
+      }
+    },
+    "./locale/es": {
+      "import": {
+        "types": "./dist/locale/es.d.ts",
+        "default": "./dist/locale/es.js"
+      },
+      "require": {
+        "types": "./dist/locale/es.d.cts",
+        "default": "./dist/locale/es.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run typecheck && npm run lint && npm run format:check && npm run test:coverage",
+    "check:package": "npm run build && publint --strict && attw --pack . --profile node16",
+    "prepare": "husky",
+    "smoke": "node scripts/smoke-test.mjs"
+  },
+  "peerDependencies": {
+    "temporal-polyfill": ">=0.3.0"
+  },
+  "peerDependenciesMeta": {
+    "temporal-polyfill": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.5",
+    "@commitlint/cli": "^20.5.3",
+    "@commitlint/config-conventional": "^20.5.3",
+    "@eslint/js": "^9.39.5",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^9.39.5",
+    "globals": "^16.5.0",
+    "husky": "^9.1.7",
+    "prettier": "^3.9.9",
+    "publint": "^0.3.24",
+    "temporal-polyfill": "^0.3.2",
+    "tsup": "^8.5.1",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.70.1",
+    "vitest": "^4.1.11"
+  },
+  "publishConfig": {
+    "provenance": true,
+    "access": "public"
+  }
+}
