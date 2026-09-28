@@ -26,7 +26,7 @@
 - [ ] Follow-up (owner, tracked in `MEMORY.md`): configure trusted publishing on npmjs.com (daisy-date → Settings → Trusted publishing: `Mansi1/daisy-date`,
       workflow `release.yml`), then revoke the token and `gh secret delete NPM_TOKEN`.
 - [x] `main` is not protected, so the release job can push its `chore(release)` commit. Revisit if protection is added.
-- [ ] Commitlint on PRs: first verified by the T04 PR (follow-up in `MEMORY.md`).
+- [x] Commitlint on PRs: verified by PR #1 (T04), the "Commit messages" job passed.
 
 ## Definition of done
 
