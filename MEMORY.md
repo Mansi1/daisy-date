@@ -15,14 +15,16 @@
 - 2026-09-28: `npm audit` reports a low-severity esbuild advisory (dev server, Windows only) via tsup; `audit fix` can't resolve it. Ignored.
 - 2026-09-28 (T02): the `@semantic-release/github` failure issue is disabled (`failTitle: false`); on the first run it crashed creating
   its label. Release failures show up only in the Actions tab.
-- 2026-09-28 (T03): `TemporalLike` only checks for the `PlainDate`/`PlainDateTime`/`Duration` classes and a `Now` object. Each later
-  task adds the members it calls. `test/internal/temporal.test.ts` passes the polyfill's `Temporal` to `configureTemporal`
+- 2026-09-29 (T05): `TemporalLike` checks at runtime for the `PlainDate`/`PlainDateTime`/`Duration`/`Instant` classes and a
+  `Now` object; its types list only the members daisy calls (`PlainDateLike` etc.). Each later task adds the members it calls. `test/internal/temporal.test.ts` passes the polyfill's `Temporal` to `configureTemporal`
   without a cast, which proves at compile time that the real implementation still fits.
 - 2026-09-28 (T03): error `name`s are string literals, not `new.target.name`, so they survive minifiers. `instanceof`
   breaks if both the CJS and the ESM copy get loaded (dual-package hazard); `error.code` is the reliable check. Mention in T21 docs.
 - 2026-09-28 (T02): npm rejects provenance from **private** repos (E422), so the repo is public. A failed publish leaves a
   `vX` tag plus a `refs/notes/semantic-release-vX` ref. Delete both before retrying, or semantic-release treats the version
   as released. 0.1.0 was recovered this way.
+- 2026-09-29 (T05): Temporal truncates fractional fields in property bags (`{ day: 2.5 }` → 2), so factories call
+  `assertInteger` first. `vi.useFakeTimers({ now })` also drives the polyfill's `Temporal.Now`.
 - 2026-09-29: 0.1.0 and 0.2.0 were unpublished from npm (scaffold only, nothing usable). npm never allows those numbers
   again, so the `v0.1.0`/`v0.2.0` tags must stay: semantic-release continues from them and the next release is 0.3.0.
 - Open follow-up (owner): enable `Mansi1/daisy-date` on codecov.io. Until then the Codecov upload fails quietly
