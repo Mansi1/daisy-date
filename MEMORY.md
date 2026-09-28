@@ -20,3 +20,5 @@
   without a cast, which proves at compile time that the real implementation still fits.
 - 2026-09-28 (T03): error `name`s are string literals, not `new.target.name`, so they survive minifiers. `instanceof`
   breaks if both the CJS and the ESM copy get loaded (dual-package hazard); `error.code` is the reliable check. Mention in T21 docs.
+- 2026-09-28 (T02): the release job sets `HUSKY=0`. Otherwise `npm ci` installs the commit-msg hook and @semantic-release/git's
+  commit fails: the hook's `npx commitlint` breaks inside semantic-release's own `npx` environment.
