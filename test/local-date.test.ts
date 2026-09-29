@@ -1,3 +1,5 @@
+import { inspect } from 'node:util';
+
 import type {} from 'temporal-polyfill/global';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
@@ -278,6 +280,11 @@ describe('LocalDate comparison', () => {
 });
 
 describe('LocalDate string form', () => {
+  it('shows the ISO date when inspected in Node', () => {
+    expect(inspect(LocalDate.of(2026, 9, 28))).toBe('LocalDate(2026-09-28)');
+    expect(inspect({ due: LocalDate.of(2026, 9, 28) })).toBe('{ due: LocalDate(2026-09-28) }');
+  });
+
   it('serializes to the ISO date in JSON', () => {
     const date = LocalDate.of(2026, 9, 28);
     expect(date.toJSON()).toBe('2026-09-28');

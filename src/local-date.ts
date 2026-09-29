@@ -320,4 +320,9 @@ export class LocalDate extends ComparableValue<LocalDate> {
   toJSON(): string {
     return this.toString();
   }
+
+  /** Shows the date in `console.log` and Node's `util.inspect`, e.g. `LocalDate(2026-09-28)`. */
+  [Symbol.for('nodejs.util.inspect.custom')](): string {
+    return `LocalDate(${this.toString()})`;
+  }
 }
