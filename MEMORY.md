@@ -35,6 +35,8 @@
   plain object works in tests. Only types with private state (`LocalDate`) need an equality tester in `test/setup`.
 - 2026-09-29 (T07): Temporal throws "Cannot mix duration signs" for `add({ years: 1, months: -2 })`; Period arithmetic on
   dates therefore goes through `plusMonths` then `plusDays`.
+- 2026-09-29: the `main` ruleset requires up-to-date branches, so after one PR merges every other open PR needs
+  "Update branch" (or a rebase and force-push) plus a fresh CI run before it can merge.
 - 2026-09-29: 0.1.0 and 0.2.0 were unpublished from npm (scaffold only, nothing usable). npm never allows those numbers
   again, so the `v0.1.0`/`v0.2.0` tags must stay: semantic-release continues from them and the next release is 0.3.0.
 - Open follow-up (owner): enable `Mansi1/daisy-date` on codecov.io. Until then the Codecov upload fails quietly
