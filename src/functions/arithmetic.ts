@@ -4,10 +4,21 @@ import type { DateDuration } from '../internal/temporal';
 import { translateRangeError } from '../internal/translate-range-error';
 import { fromPlainDate, toPlainDate } from '../local-date';
 import type { LocalDate } from '../local-date';
+import { Period } from '../period';
 
 type DateUnit = keyof DateDuration;
 
-const moveDate = (date: LocalDate, unit: DateUnit, amount: number, sign: 1 | -1): LocalDate => {
+type Sign = 1 | -1;
+
+type PeriodArithmetic = {
+  (date: LocalDate, period: Period): LocalDate;
+  (period: Period, other: Period): Period;
+};
+
+const MONTHS_PER_YEAR = 12;
+const DAYS_PER_WEEK = 7;
+
+const moveDate = (date: LocalDate, unit: DateUnit, amount: number, sign: Sign): LocalDate => {
   assertInteger(amount, `Number of ${unit}`);
   const signedAmount = sign * amount;
   return fromPlainDate(
@@ -57,3 +68,40 @@ export const minusYears = (date: LocalDate, years: number): LocalDate =>
 /** Counts the days from `date` to `other`: positive when `other` is later, negative when it is earlier. */
 export const daysUntil = (date: LocalDate, other: LocalDate): number =>
   toPlainDate(date).until(toPlainDate(other)).days;
+
+const movePeriod = (date: LocalDate, period: Period, sign: Sign): LocalDate =>
+  moveDate(
+    moveDate(date, 'months', period.years * MONTHS_PER_YEAR + period.months, sign),
+    'days',
+    period.weeks * DAYS_PER_WEEK + period.days,
+    sign,
+  );
+
+const combinePeriods = (period: Period, other: Period, sign: Sign): Period =>
+  Period.of({
+    years: period.years + sign * other.years,
+    months: period.months + sign * other.months,
+    weeks: period.weeks + sign * other.weeks,
+    days: period.days + sign * other.days,
+  });
+
+/**
+ * Adds `period` to a date, applying all months first and then the days, as in java.time; or adds two periods
+ * component by component.
+ */
+export const plus = ((target: LocalDate | Period, period: Period) =>
+  target instanceof Period
+    ? combinePeriods(target, period, 1)
+    : movePeriod(target, period, 1)) as PeriodArithmetic;
+
+/** Subtracts `period` from a date (months first, then days) or from another period, component by component. */
+export const minus = ((target: LocalDate | Period, period: Period) =>
+  target instanceof Period
+    ? combinePeriods(target, period, -1)
+    : movePeriod(target, period, -1)) as PeriodArithmetic;
+
+/** Returns the years, months and days from `date` to `other`, as java.time's `LocalDate#until` does. */
+export const until = (date: LocalDate, other: LocalDate): Period => {
+  const difference = toPlainDate(date).until(toPlainDate(other), { largestUnit: 'year' });
+  return Period.of({ years: difference.years, months: difference.months, days: difference.days });
+};

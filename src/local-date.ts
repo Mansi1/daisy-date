@@ -20,18 +20,22 @@ import {
 } from './functions/adjusters';
 import {
   daysUntil,
+  minus,
   minusDays,
   minusMonths,
   minusWeeks,
   minusYears,
+  plus,
   plusDays,
   plusMonths,
   plusWeeks,
   plusYears,
+  until,
 } from './functions/arithmetic';
 import { assertInteger } from './internal/assert-integer';
 import { getTemporal } from './internal/temporal';
 import type { PlainDateLike } from './internal/temporal';
+import type { Period } from './period';
 import { translateRangeError } from './internal/translate-range-error';
 
 const ISO_DATE_FORMAT = /^(?:[+-]\d{6}|\d{4})-\d{2}-\d{2}$/;
@@ -235,6 +239,16 @@ export class LocalDate extends ComparableValue<LocalDate> {
     return minusYears(this, years);
   }
 
+  /** Adds a period: all months first, clamped to the month end, then the days. `2026-01-31 + P1M1D` is `2026-03-01`. */
+  plus(period: Period): LocalDate {
+    return plus(this, period);
+  }
+
+  /** Subtracts a period: all months first, clamped to the month end, then the days. */
+  minus(period: Period): LocalDate {
+    return minus(this, period);
+  }
+
   withYear(year: number): LocalDate {
     return withYear(this, year);
   }
@@ -285,6 +299,11 @@ export class LocalDate extends ComparableValue<LocalDate> {
 
   previousOrSame(dayOfWeek: DayOfWeek): LocalDate {
     return previousOrSame(this, dayOfWeek);
+  }
+
+  /** Returns the years, months and days until `other`: `2026-01-31` until `2026-03-01` is `P1M1D`. */
+  until(other: LocalDate): Period {
+    return until(this, other);
   }
 
   /** Counts the days until `other`: positive when it is later, negative when it is earlier. */

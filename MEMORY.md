@@ -28,6 +28,10 @@
 - 2026-09-29 (T06): functions in `src/functions/` reach a LocalDate's PlainDate through the internal `toPlainDate`/`fromPlainDate`
   in `local-date.ts`. `local-date.ts` and the function modules import each other; that is safe only while neither uses the
   other at module top level.
+- 2026-09-29 (T07): root functions shared by several types (`plus`, `minus`) are arrow consts cast to an overloaded
+  call-signature type (`PeriodArithmetic`); TS can't check an arrow against overloads without the cast. T08 extends them.
+- 2026-09-29 (T07): Temporal throws "Cannot mix duration signs" for `add({ years: 1, months: -2 })`; Period arithmetic on
+  dates therefore goes through `plusMonths` then `plusDays`.
 - 2026-09-29: 0.1.0 and 0.2.0 were unpublished from npm (scaffold only, nothing usable). npm never allows those numbers
   again, so the `v0.1.0`/`v0.2.0` tags must stay: semantic-release continues from them and the next release is 0.3.0.
 - Open follow-up (owner): enable `Mansi1/daisy-date` on codecov.io. Until then the Codecov upload fails quietly

@@ -157,7 +157,14 @@ Shared API: `of({...})`, `ofDays/ofWeeks/…` or `ofHours/ofMinutes/…`, `parse
 getters, `plus`, `minus`, `negated`, `abs`, `isZero`, `isNegative`, `equals`, `toString`, `toJSON`,
 `format(options?)` for human text (§6.5).
 
-- `Period.normalized()` folds months into years (`14M → 1Y2M`) and keeps days unchanged.
+- `Period.normalized()` folds months into years (`14M → 1Y2M`) and keeps weeks and days unchanged.
+- `Period` follows java.time where the table is silent: components may have mixed signs (`P1Y-2M`), `equals`
+  compares component by component (`P12M ≠ P1Y`), `isNegative` is true if any component is negative, and
+  `abs` makes every component positive. `parse` accepts a leading sign and signed components (`-P1Y2M`,
+  `P-1Y2M`); `toString` writes the sign into each component (`P-1Y-2M`) and `P0D` for zero.
+- `LocalDate#plus(period)` applies all months first (`12 × years + months`, clamped to the month end), then
+  `7 × weeks + days`, as java.time does: `2026-01-31 + P1M1D = 2026-03-01`. Temporal can't add mixed-sign
+  durations, so daisy applies the two steps itself. `until` returns years, months and days, never weeks.
 - `Duration.normalized()` balances units into hours, minutes, seconds and milliseconds.
 - `Duration.toMillis()`. `Period` has **no** conversion to days, because months vary in length.
 

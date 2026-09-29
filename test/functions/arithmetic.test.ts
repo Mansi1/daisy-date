@@ -3,7 +3,9 @@ import { describe, expect, it } from 'vitest';
 import {
   DaisyRangeError,
   LocalDate,
+  Period,
   daysUntil,
+  minus,
   minusDays,
   minusMonths,
   minusWeeks,
@@ -11,7 +13,9 @@ import {
   plusDays,
   plusMonths,
   plusWeeks,
+  plus,
   plusYears,
+  until,
 } from '../../src';
 
 const date = (text: string) => LocalDate.parse(text);
@@ -134,6 +138,53 @@ describe('daysUntil', () => {
   });
 });
 
+describe('plus and minus with a Period', () => {
+  it.each([
+    ['2026-01-31', 'P1M1D', '2026-03-01'],
+    ['2024-02-29', 'P1Y', '2025-02-28'],
+    ['2024-02-29', 'P1Y1M', '2025-03-29'],
+    ['2026-09-28', 'P2W', '2026-10-12'],
+    ['2026-09-28', 'P1Y-2M', '2027-07-28'],
+    ['2026-03-31', 'P-1M1D', '2026-03-01'],
+    ['2026-09-28', 'P1W3D', '2026-10-08'],
+    ['2026-09-28', 'P0D', '2026-09-28'],
+  ])('%s plus %s is %s', (start, text, expected) => {
+    expect(plus(date(start), Period.parse(text))).toEqual(date(expected));
+  });
+
+  it.each([
+    ['2026-03-01', 'P1M1D', '2026-01-31'],
+    ['2025-02-28', 'P1Y', '2024-02-28'],
+    ['2026-03-31', 'P1M', '2026-02-28'],
+    ['2026-10-12', 'P2W', '2026-09-28'],
+    ['2026-09-28', '-P1D', '2026-09-29'],
+  ])('%s minus %s is %s', (start, text, expected) => {
+    expect(minus(date(start), Period.parse(text))).toEqual(date(expected));
+  });
+
+  it('rejects results beyond the supported range', () => {
+    expect(() => plus(date('+275760-09-13'), Period.parse('P1D'))).toThrow(
+      new DaisyRangeError('+275760-09-13 moved by 1 days is outside the supported range'),
+    );
+  });
+});
+
+describe('until', () => {
+  it.each([
+    ['2026-01-31', '2026-03-01', { years: 0, months: 1, weeks: 0, days: 1 }],
+    ['2026-01-31', '2026-02-28', { years: 0, months: 0, weeks: 0, days: 28 }],
+    ['2024-02-29', '2025-02-28', { years: 0, months: 11, weeks: 0, days: 30 }],
+    ['2025-02-28', '2024-02-29', { years: 0, months: -11, weeks: 0, days: -28 }],
+    ['2026-03-01', '2026-01-31', { years: 0, months: -1, weeks: 0, days: -1 }],
+    ['2026-09-28', '2027-11-30', { years: 1, months: 2, weeks: 0, days: 2 }],
+    ['2026-03-31', '2026-04-30', { years: 0, months: 0, weeks: 0, days: 30 }],
+    ['2026-04-30', '2026-03-31', { years: 0, months: 0, weeks: 0, days: -30 }],
+    ['2026-09-28', '2026-09-28', { years: 0, months: 0, weeks: 0, days: 0 }],
+  ])('from %s to %s is %o', (start, end, expected) => {
+    expect(until(date(start), date(end))).toEqual(expected);
+  });
+});
+
 describe('LocalDate arithmetic methods', () => {
   const start = date('2026-01-31');
 
@@ -148,6 +199,12 @@ describe('LocalDate arithmetic methods', () => {
     ['minusYears(3)', '2023-01-31', (value) => value.minusYears(3)],
   ])('2026-01-31.%s is %s', (_call, expected, move) => {
     expect(move(start)).toEqual(date(expected));
+  });
+
+  it('adds and subtracts periods and measures the period until another date', () => {
+    expect(start.plus(Period.parse('P1M1D'))).toEqual(date('2026-03-01'));
+    expect(start.minus(Period.parse('P1M1D'))).toEqual(date('2025-12-30'));
+    expect(start.until(date('2026-03-01'))).toEqual({ years: 0, months: 1, weeks: 0, days: 1 });
   });
 
   it('counts days with daysUntil', () => {

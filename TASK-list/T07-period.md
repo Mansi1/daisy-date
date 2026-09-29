@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 2 — Core types  
 **Depends on:** [T04](./T04-dayofweek-and-shared-comparison.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 

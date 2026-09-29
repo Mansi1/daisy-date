@@ -22,7 +22,10 @@ export type PlainDateLike = {
   readonly inLeapYear: boolean;
   add: (duration: DateDuration) => PlainDateLike;
   with: (fields: Partial<PlainDateFields>, options?: OverflowOptions) => PlainDateLike;
-  until: (other: PlainDateLike) => { readonly days: number };
+  until: (
+    other: PlainDateLike,
+    options?: { largestUnit?: 'year' },
+  ) => { readonly years: number; readonly months: number; readonly days: number };
   toZonedDateTime: (options: { timeZone: string }) => { readonly epochMilliseconds: number };
   toString: () => string;
 };

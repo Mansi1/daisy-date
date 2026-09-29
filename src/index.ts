@@ -33,15 +33,21 @@ export {
 } from './functions/adjusters';
 export {
   daysUntil,
+  minus,
   minusDays,
   minusMonths,
   minusWeeks,
   minusYears,
+  plus,
   plusDays,
   plusMonths,
   plusWeeks,
   plusYears,
+  until,
 } from './functions/arithmetic';
+export { abs, isNegative, isZero, negated, normalized } from './functions/period';
 export { LocalDate } from './local-date';
+export { Period } from './period';
+export type { PeriodFields } from './period';
 export { configureTemporal } from './internal/temporal';
 export type { TemporalLike } from './internal/temporal';
