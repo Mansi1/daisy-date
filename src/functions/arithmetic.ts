@@ -2,17 +2,18 @@ import { DaisyRangeError } from '../errors';
 import { assertInteger } from '../internal/assert-integer';
 import type { DateDuration } from '../internal/temporal';
 import { translateRangeError } from '../internal/translate-range-error';
-import { fromPlainDate, toPlainDate } from '../local-date';
-import type { LocalDate } from '../local-date';
+import { Duration } from '../duration';
+import { LocalDate, fromPlainDate, toPlainDate } from '../local-date';
 import { Period } from '../period';
 
 type DateUnit = keyof DateDuration;
 
 type Sign = 1 | -1;
 
-type PeriodArithmetic = {
+type AmountArithmetic = {
   (date: LocalDate, period: Period): LocalDate;
   (period: Period, other: Period): Period;
+  (duration: Duration, other: Duration): Duration;
 };
 
 const MONTHS_PER_YEAR = 12;
@@ -85,20 +86,43 @@ const combinePeriods = (period: Period, other: Period, sign: Sign): Period =>
     days: period.days + sign * other.days,
   });
 
+const combineDurations = (duration: Duration, other: Duration, sign: Sign): Duration =>
+  Duration.of({
+    hours: duration.hours + sign * other.hours,
+    minutes: duration.minutes + sign * other.minutes,
+    seconds: duration.seconds + sign * other.seconds,
+    milliseconds: duration.milliseconds + sign * other.milliseconds,
+  });
+
+const applyAmount = (
+  target: LocalDate | Period | Duration,
+  amount: Period | Duration,
+  sign: Sign,
+): LocalDate | Period | Duration => {
+  if (target instanceof LocalDate && amount instanceof Period) {
+    return movePeriod(target, amount, sign);
+  }
+  if (target instanceof Period && amount instanceof Period) {
+    return combinePeriods(target, amount, sign);
+  }
+  if (target instanceof Duration && amount instanceof Duration) {
+    return combineDurations(target, amount, sign);
+  }
+  const operation = sign === 1 ? 'add' : 'subtract';
+  const preposition = sign === 1 ? 'to' : 'from';
+  throw new TypeError(`Cannot ${operation} ${String(amount)} ${preposition} ${String(target)}`);
+};
+
 /**
- * Adds `period` to a date, applying all months first and then the days, as in java.time; or adds two periods
+ * Adds a period to a date (all months first, then the days, as in java.time), or adds two periods or two durations
  * component by component.
  */
-export const plus = ((target: LocalDate | Period, period: Period) =>
-  target instanceof Period
-    ? combinePeriods(target, period, 1)
-    : movePeriod(target, period, 1)) as PeriodArithmetic;
+export const plus = ((target: LocalDate | Period | Duration, amount: Period | Duration) =>
+  applyAmount(target, amount, 1)) as AmountArithmetic;
 
-/** Subtracts `period` from a date (months first, then days) or from another period, component by component. */
-export const minus = ((target: LocalDate | Period, period: Period) =>
-  target instanceof Period
-    ? combinePeriods(target, period, -1)
-    : movePeriod(target, period, -1)) as PeriodArithmetic;
+/** Subtracts a period from a date (months first, then days), or one period or duration from another. */
+export const minus = ((target: LocalDate | Period | Duration, amount: Period | Duration) =>
+  applyAmount(target, amount, -1)) as AmountArithmetic;
 
 /** Returns the years, months and days from `date` to `other`, as java.time's `LocalDate#until` does. */
 export const until = (date: LocalDate, other: LocalDate): Period => {

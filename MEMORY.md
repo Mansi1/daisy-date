@@ -28,8 +28,11 @@
 - 2026-09-29 (T06): functions in `src/functions/` reach a LocalDate's PlainDate through the internal `toPlainDate`/`fromPlainDate`
   in `local-date.ts`. `local-date.ts` and the function modules import each other; that is safe only while neither uses the
   other at module top level.
-- 2026-09-29 (T07): root functions shared by several types (`plus`, `minus`) are arrow consts cast to an overloaded
-  call-signature type (`PeriodArithmetic`); TS can't check an arrow against overloads without the cast. T08 extends them.
+- 2026-09-29 (T07/T08): root functions shared by several types (`plus`, `minus`, `negated`, `abs`, `normalized`) are
+  arrow consts cast to an overloaded call-signature type (`AmountArithmetic`, `AmountTransform`); TS can't check an arrow
+  against overloads without the cast, so each dispatches on `instanceof` and `plus`/`minus` throw `TypeError` otherwise.
+- 2026-09-29 (T08): `Period` and `Duration` expose their components as frozen public fields, so `toEqual` against a
+  plain object works in tests. Only types with private state (`LocalDate`) need an equality tester in `test/setup`.
 - 2026-09-29 (T07): Temporal throws "Cannot mix duration signs" for `add({ years: 1, months: -2 })`; Period arithmetic on
   dates therefore goes through `plusMonths` then `plusDays`.
 - 2026-09-29: 0.1.0 and 0.2.0 were unpublished from npm (scaffold only, nothing usable). npm never allows those numbers
