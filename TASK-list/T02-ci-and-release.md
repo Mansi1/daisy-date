@@ -10,8 +10,9 @@
   A separate Node 18 job builds on 22, then `require`s and `import`s every `dist` entry on Node 18. Vitest 4 needs Node 20+,
   so the suite can't run on 18.
 - `.github/workflows/release.yml`: semantic-release on `main`, started by hand (`workflow_dispatch`) once a usable
-  milestone has landed. Runs `npm run check` first, then `@semantic-release/npm` (provenance), `@semantic-release/github`
-  and `@semantic-release/changelog`. Needs the `NPM_TOKEN` secret (or trusted publishing).
+  milestone has landed. Runs `npm run check` first, then `@semantic-release/npm` (provenance) and `@semantic-release/github`.
+  It pushes only a tag, never a commit, so the `main` ruleset needs no bypass: release notes live in GitHub Releases, and
+  `package.json` keeps the placeholder version `0.0.0-development`. Needs the `NPM_TOKEN` secret (or trusted publishing).
 - commitlint + a husky `commit-msg` hook enforcing Conventional Commits (including the `refactor:` type AGENTS.md requires).
 - Start pre-1.0 (`0.x`); 1.0 is cut in T22.
 
@@ -27,7 +28,7 @@
 - [ ] Follow-up (owner, tracked in `MEMORY.md`): configure trusted publishing on npmjs.com (daisy-date → Settings → Trusted publishing: `Mansi1/daisy-date`,
       workflow `release.yml`), then revoke the token and `gh secret delete NPM_TOKEN`.
 - [x] `main` has a ruleset (2026-09-29) that requires the CI checks, so PRs below the coverage thresholds can't merge.
-      GitHub Actions is a bypass actor, so the release job can still push its `chore(release)` commit.
+      Personal repos can't list GitHub Actions as a bypass actor, which is why the release no longer commits to `main`.
 - [x] Commitlint on PRs: verified by PR #1 (T04), the "Commit messages" job passed.
 
 ## Definition of done
