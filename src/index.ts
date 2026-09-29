@@ -45,7 +45,7 @@ export {
   plusYears,
   until,
 } from './functions/arithmetic';
-export { abs, isNegative, isZero, negated, normalized } from './functions/period';
+export { abs, isNegative, isZero, negated, normalized } from './functions/amounts';
 export { LocalDate } from './local-date';
 export { Period } from './period';
 export type { PeriodFields } from './period';

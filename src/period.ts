@@ -1,6 +1,6 @@
 import { DaisyParseError } from './errors';
 import { minus, plus } from './functions/arithmetic';
-import { abs, isNegative, isZero, negated, normalized } from './functions/period';
+import { abs, isNegative, isZero, negated, normalized } from './functions/amounts';
 import { assertInteger } from './internal/assert-integer';
 
 export type PeriodFields = {
