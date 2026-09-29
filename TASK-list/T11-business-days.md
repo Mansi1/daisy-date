@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 2 — Core types  
 **Depends on:** [T10](./T10-localdaterange.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 

@@ -205,8 +205,11 @@ type WeekendOptions = { weekend?: readonly DayOfWeek[] }; // default ['saturday'
 ```
 
 - `LocalDate#isWeekend(options?)`, `LocalDate#isBusinessDay(options?)`
-- `LocalDate#plusBusinessDays(n, options?)`, `minusBusinessDays`. Starting on a weekend, the count
-  starts from the next business day.
+- `LocalDate#plusBusinessDays(n, options?)`, `minusBusinessDays`. Business days are counted **strictly after** the
+  start (strictly before it for `minus`), like Excel's `WORKDAY`: Friday + 1 and Saturday + 1 are both Monday,
+  Sunday − 1 is Friday, and `n = 0` returns the start unchanged, even on a weekend (owner decision, 2026-09-29).
+  Whole weeks are skipped in one step, so the cost doesn't grow with `n`.
+- `LocalDateTime` has the same business-day methods; they look at the date and keep the time.
 - `LocalDate#businessDaysUntil(other, options?)` counts business days in `[this, other)` and is signed.
 - `LocalDateRange#businessDays(options?)` counts business days in the range, inclusive.
 - `LocalDateRange#businessDaysIterator(options?)`

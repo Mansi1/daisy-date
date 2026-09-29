@@ -23,7 +23,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 - [x] [T08 · `Duration`](./T08-duration.md)
 - [x] [T09 · `LocalDateTime`](./T09-localdatetime.md)
 - [x] [T10 · `LocalDateRange`](./T10-localdaterange.md)
-- [ ] [T11 · Business days](./T11-business-days.md)
+- [x] [T11 · Business days](./T11-business-days.md)
 
 ## Milestone 3 — Localization and text
 
