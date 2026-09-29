@@ -18,7 +18,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 
 - [x] [T04 · `DayOfWeek` and shared comparison](./T04-dayofweek-and-shared-comparison.md)
 - [x] [T05 · `LocalDate` core](./T05-localdate-core.md)
-- [ ] [T06 · `LocalDate` arithmetic and adjusters](./T06-localdate-arithmetic-and-adjusters.md)
+- [x] [T06 · `LocalDate` arithmetic and adjusters](./T06-localdate-arithmetic-and-adjusters.md)
 - [ ] [T07 · `Period`](./T07-period.md)
 - [ ] [T08 · `Duration`](./T08-duration.md)
 - [ ] [T09 · `LocalDateTime`](./T09-localdatetime.md)

@@ -25,6 +25,9 @@
   as released. 0.1.0 was recovered this way.
 - 2026-09-29 (T05): Temporal truncates fractional fields in property bags (`{ day: 2.5 }` → 2), so factories call
   `assertInteger` first. `vi.useFakeTimers({ now })` also drives the polyfill's `Temporal.Now`.
+- 2026-09-29 (T06): functions in `src/functions/` reach a LocalDate's PlainDate through the internal `toPlainDate`/`fromPlainDate`
+  in `local-date.ts`. `local-date.ts` and the function modules import each other; that is safe only while neither uses the
+  other at module top level.
 - 2026-09-29: 0.1.0 and 0.2.0 were unpublished from npm (scaffold only, nothing usable). npm never allows those numbers
   again, so the `v0.1.0`/`v0.2.0` tags must stay: semantic-release continues from them and the next release is 0.3.0.
 - Open follow-up (owner): enable `Mansi1/daisy-date` on codecov.io. Until then the Codecov upload fails quietly
