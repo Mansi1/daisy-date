@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 2 — Core types  
 **Depends on:** [T05](./T05-localdate-core.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 

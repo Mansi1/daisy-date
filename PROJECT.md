@@ -86,7 +86,7 @@ created through static factories only (`of`, `parse`, `from…`, `now`). Constru
 | Value sets        | No `enum`s and no enum-like const objects. Fixed sets are `as const` string arrays with a derived union: `type Unit = (typeof UNIT)[number]`.                                                                                                                |
 | Comparison        | Ordered types (`LocalDate`, `LocalDateTime`, `Duration`) extend `ComparableValue`: `compareTo(other): -1 \| 0 \| 1`, `equals`, `isBefore`, `isAfter`, `isEqual`, plus the root `compare` for `Array.sort`. `Period` and `LocalDateRange` only have `equals`. |
 | String form       | `toString()` returns ISO 8601. `toJSON()` returns the same, so `JSON.stringify` works.                                                                                                                                                                       |
-| Invalid input     | Throws `DaisyRangeError` (out-of-range values) or `DaisyParseError` (unparseable text). No silent clamping, except month-end overflow in arithmetic (§5.2).                                                                                                  |
+| Invalid input     | Throws `DaisyRangeError` (out-of-range values) or `DaisyParseError` (unparseable text). No silent clamping, except month-end overflow in arithmetic and `withYear`/`withMonth` (§5.2).                                                                       |
 | `now` / `today`   | Take an optional IANA `timeZone` string, defaulting to the system zone. This is the only place zones appear in v1.                                                                                                                                           |
 | JS `Date` interop | `fromDate(date, timeZone?)` / `toDate(timeZone?)`. The zone defaults to the system zone.                                                                                                                                                                     |
 
@@ -101,7 +101,8 @@ Wraps `Temporal.PlainDate`.
   `daysInYear`, `isLeapYear()`
 - **Arithmetic:** `plusDays/Weeks/Months/Years`, `minus…`, `plus(period)`, `minus(period)`. Month and
   year arithmetic **clamps** to the month end (`2026-01-31 + 1 month = 2026-02-28`), as in java.time.
-- **Adjust:** `withYear/Month/Day`, `startOfWeek(firstDay = 'monday')`, `endOfWeek(…)`,
+- **Adjust:** `withYear/Month/Day` (as in java.time, `withYear` and `withMonth` clamp the day to the month end;
+  `withDay` throws for a day the month doesn't have), `startOfWeek(firstDay = 'monday')`, `endOfWeek(…)`,
   `startOfMonth`, `endOfMonth`, `startOfYear`, `endOfYear`, `next(dayOfWeek)`, `previous(dayOfWeek)`,
   `nextOrSame`, `previousOrSame`
 - **Between:** `until(other): Period`, `daysUntil(other): number` (signed)

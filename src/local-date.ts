@@ -3,6 +3,32 @@ import type { ComparisonResult } from './comparable';
 import { dayOfWeekFromIsoNumber } from './day-of-week';
 import type { DayOfWeek } from './day-of-week';
 import { DaisyParseError, DaisyRangeError } from './errors';
+import {
+  endOfMonth,
+  endOfWeek,
+  endOfYear,
+  next,
+  nextOrSame,
+  previous,
+  previousOrSame,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+  withDay,
+  withMonth,
+  withYear,
+} from './functions/adjusters';
+import {
+  daysUntil,
+  minusDays,
+  minusMonths,
+  minusWeeks,
+  minusYears,
+  plusDays,
+  plusMonths,
+  plusWeeks,
+  plusYears,
+} from './functions/arithmetic';
 import { assertInteger } from './internal/assert-integer';
 import { getTemporal } from './internal/temporal';
 import type { PlainDateLike } from './internal/temporal';
@@ -13,9 +39,29 @@ const ISO_DATE_FORMAT = /^(?:[+-]\d{6}|\d{4})-\d{2}-\d{2}$/;
 const resolveTimeZone = (timeZone: string | undefined): string =>
   timeZone ?? getTemporal().Now.timeZoneId();
 
+const WRAP_PLAIN_DATE = Symbol('wrapPlainDate');
+const UNWRAP_PLAIN_DATE = Symbol('unwrapPlainDate');
+
+/** Internal: wraps a Temporal date without exposing the private constructor. */
+export const fromPlainDate = (plainDate: PlainDateLike): LocalDate =>
+  LocalDate[WRAP_PLAIN_DATE](plainDate);
+
+/** Internal: reads the Temporal date behind `date`. */
+export const toPlainDate = (date: LocalDate): PlainDateLike => LocalDate[UNWRAP_PLAIN_DATE](date);
+
 /** A calendar date without time or time zone, such as `2026-09-28`. Immutable; create it through the static factories. */
 export class LocalDate extends ComparableValue<LocalDate> {
   readonly #plainDate: PlainDateLike;
+
+  /** @internal Keyed by a module-private symbol; use `fromPlainDate` instead. */
+  static [WRAP_PLAIN_DATE](plainDate: PlainDateLike): LocalDate {
+    return new LocalDate(plainDate);
+  }
+
+  /** @internal Keyed by a module-private symbol; use `toPlainDate` instead. */
+  static [UNWRAP_PLAIN_DATE](date: LocalDate): PlainDateLike {
+    return date.#plainDate;
+  }
 
   private constructor(plainDate: PlainDateLike) {
     super();
@@ -155,6 +201,97 @@ export class LocalDate extends ComparableValue<LocalDate> {
     return this.#plainDate.inLeapYear;
   }
 
+  plusDays(days: number): LocalDate {
+    return plusDays(this, days);
+  }
+
+  plusWeeks(weeks: number): LocalDate {
+    return plusWeeks(this, weeks);
+  }
+
+  /** Adds months, clamping to the month end: `2026-01-31` plus one month is `2026-02-28`. */
+  plusMonths(months: number): LocalDate {
+    return plusMonths(this, months);
+  }
+
+  /** Adds years, clamping to the month end: `2024-02-29` plus one year is `2025-02-28`. */
+  plusYears(years: number): LocalDate {
+    return plusYears(this, years);
+  }
+
+  minusDays(days: number): LocalDate {
+    return minusDays(this, days);
+  }
+
+  minusWeeks(weeks: number): LocalDate {
+    return minusWeeks(this, weeks);
+  }
+
+  minusMonths(months: number): LocalDate {
+    return minusMonths(this, months);
+  }
+
+  minusYears(years: number): LocalDate {
+    return minusYears(this, years);
+  }
+
+  withYear(year: number): LocalDate {
+    return withYear(this, year);
+  }
+
+  withMonth(month: number): LocalDate {
+    return withMonth(this, month);
+  }
+
+  withDay(day: number): LocalDate {
+    return withDay(this, day);
+  }
+
+  startOfWeek(firstDay?: DayOfWeek): LocalDate {
+    return startOfWeek(this, firstDay);
+  }
+
+  endOfWeek(firstDay?: DayOfWeek): LocalDate {
+    return endOfWeek(this, firstDay);
+  }
+
+  startOfMonth(): LocalDate {
+    return startOfMonth(this);
+  }
+
+  endOfMonth(): LocalDate {
+    return endOfMonth(this);
+  }
+
+  startOfYear(): LocalDate {
+    return startOfYear(this);
+  }
+
+  endOfYear(): LocalDate {
+    return endOfYear(this);
+  }
+
+  next(dayOfWeek: DayOfWeek): LocalDate {
+    return next(this, dayOfWeek);
+  }
+
+  nextOrSame(dayOfWeek: DayOfWeek): LocalDate {
+    return nextOrSame(this, dayOfWeek);
+  }
+
+  previous(dayOfWeek: DayOfWeek): LocalDate {
+    return previous(this, dayOfWeek);
+  }
+
+  previousOrSame(dayOfWeek: DayOfWeek): LocalDate {
+    return previousOrSame(this, dayOfWeek);
+  }
+
+  /** Counts the days until `other`: positive when it is later, negative when it is earlier. */
+  daysUntil(other: LocalDate): number {
+    return daysUntil(this, other);
+  }
+
   compareTo(other: LocalDate): ComparisonResult {
     return toComparisonResult(getTemporal().PlainDate.compare(this.#plainDate, other.#plainDate));
   }
@@ -182,5 +319,10 @@ export class LocalDate extends ComparableValue<LocalDate> {
 
   toJSON(): string {
     return this.toString();
+  }
+
+  /** Shows the date in `console.log` and Node's `util.inspect`, e.g. `LocalDate(2026-09-28)`. */
+  [Symbol.for('nodejs.util.inspect.custom')](): string {
+    return `LocalDate(${this.toString()})`;
   }
 }

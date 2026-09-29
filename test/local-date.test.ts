@@ -1,7 +1,9 @@
+import { inspect } from 'node:util';
+
 import type {} from 'temporal-polyfill/global';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { DaisyParseError, DaisyRangeError, LocalDate, compare } from '../src';
+import { DaisyParseError, DaisyRangeError, LocalDate, compare, configureTemporal } from '../src';
 import type { DaisyError, DayOfWeek } from '../src';
 
 const catchError = (action: () => unknown): unknown => {
@@ -12,6 +14,25 @@ const catchError = (action: () => unknown): unknown => {
   }
   throw new Error('Expected the action to throw');
 };
+
+const SYSTEM_TIME_ZONE = 'Pacific/Kiritimati';
+
+const useSystemTimeZone = (timeZone: string) => {
+  configureTemporal({
+    PlainDate: Temporal.PlainDate,
+    PlainDateTime: Temporal.PlainDateTime,
+    Duration: Temporal.Duration,
+    Instant: Temporal.Instant,
+    Now: {
+      plainDateISO: (zone) => Temporal.Now.plainDateISO(zone),
+      timeZoneId: () => timeZone,
+    },
+  });
+};
+
+afterEach(() => {
+  configureTemporal(undefined);
+});
 
 const expectDaisyErrorCausedByRangeError = (
   action: () => unknown,
@@ -173,7 +194,8 @@ describe('LocalDate.today', () => {
 
   it('defaults to the system time zone', () => {
     vi.useFakeTimers({ now: new Date('2026-09-28T23:30:00Z') });
-    expect(LocalDate.today().equals(LocalDate.today(Temporal.Now.timeZoneId()))).toBe(true);
+    useSystemTimeZone(SYSTEM_TIME_ZONE);
+    expect(LocalDate.today()).toEqual(LocalDate.parse('2026-09-29'));
   });
 
   it('rejects unknown time zones', () => {
@@ -193,11 +215,8 @@ describe('LocalDate.fromDate', () => {
   });
 
   it('defaults to the system time zone', () => {
-    expect(
-      LocalDate.fromDate(lateEvening).equals(
-        LocalDate.fromDate(lateEvening, Temporal.Now.timeZoneId()),
-      ),
-    ).toBe(true);
+    useSystemTimeZone(SYSTEM_TIME_ZONE);
+    expect(LocalDate.fromDate(lateEvening)).toEqual(LocalDate.parse('2026-09-29'));
   });
 
   it('rejects an invalid Date', () => {
@@ -230,11 +249,12 @@ describe('LocalDate#toDate', () => {
   });
 
   it('defaults to the system time zone', () => {
-    expect(date.toDate().getTime()).toBe(date.toDate(Temporal.Now.timeZoneId()).getTime());
+    useSystemTimeZone(SYSTEM_TIME_ZONE);
+    expect(date.toDate().toISOString()).toBe('2026-09-27T10:00:00.000Z');
   });
 
   it('round-trips through fromDate in the same zone', () => {
-    expect(LocalDate.fromDate(date.toDate('Asia/Tokyo'), 'Asia/Tokyo').equals(date)).toBe(true);
+    expect(LocalDate.fromDate(date.toDate('Asia/Tokyo'), 'Asia/Tokyo')).toEqual(date);
   });
 
   it('rejects unknown time zones', () => {
@@ -269,15 +289,20 @@ describe('LocalDate comparison', () => {
 
   it('sorts with compare', () => {
     const dates = [later, LocalDate.of(2025, 12, 31), earlier];
-    expect(dates.sort(compare).map((date) => date.toString())).toEqual([
-      '2025-12-31',
-      '2026-09-28',
-      '2026-10-01',
+    expect(dates.sort(compare)).toEqual([
+      LocalDate.parse('2025-12-31'),
+      LocalDate.parse('2026-09-28'),
+      LocalDate.parse('2026-10-01'),
     ]);
   });
 });
 
 describe('LocalDate string form', () => {
+  it('shows the ISO date when inspected in Node', () => {
+    expect(inspect(LocalDate.of(2026, 9, 28))).toBe('LocalDate(2026-09-28)');
+    expect(inspect({ due: LocalDate.of(2026, 9, 28) })).toBe('{ due: LocalDate(2026-09-28) }');
+  });
+
   it('serializes to the ISO date in JSON', () => {
     const date = LocalDate.of(2026, 9, 28);
     expect(date.toJSON()).toBe('2026-09-28');

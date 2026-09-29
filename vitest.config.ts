@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 export default defineConfig({
   test: {
     include: ['test/**/*.test.ts'],
-    setupFiles: ['temporal-polyfill/global'],
+    setupFiles: ['temporal-polyfill/global', './test/setup/local-date-equality.ts'],
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],

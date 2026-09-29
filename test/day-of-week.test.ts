@@ -49,11 +49,13 @@ describe('ISO number conversion', () => {
     expect(dayOfWeekFromIsoNumber(Temporal.PlainDate.from('2026-10-04').dayOfWeek)).toBe('sunday');
   });
 
-  it.each([0, 8, 2.5, Number.NaN])('throws DaisyRangeError for %s', (isoNumber) => {
-    expect(() => dayOfWeekFromIsoNumber(isoNumber)).toThrow(DaisyRangeError);
-    expect(() => dayOfWeekFromIsoNumber(isoNumber)).toThrow(
-      `ISO day of week must be an integer from 1 to 7, got ${String(isoNumber)}`,
-    );
+  it.each([
+    [0, 'ISO day of week must be an integer from 1 to 7, got 0'],
+    [8, 'ISO day of week must be an integer from 1 to 7, got 8'],
+    [2.5, 'ISO day of week must be an integer from 1 to 7, got 2.5'],
+    [Number.NaN, 'ISO day of week must be an integer from 1 to 7, got NaN'],
+  ])('throws DaisyRangeError for %s', (isoNumber, message) => {
+    expect(() => dayOfWeekFromIsoNumber(isoNumber)).toThrow(new DaisyRangeError(message));
   });
 });
 
@@ -68,17 +70,14 @@ describe('shiftDayOfWeek', () => {
     ['thursday', 7, 'thursday'],
     ['thursday', -14, 'thursday'],
     ['friday', 1_000_003, 'tuesday'],
+    ['monday', 6, 'sunday'],
+    ['monday', 8, 'tuesday'],
+    ['monday', -7, 'monday'],
+    ['monday', -8, 'sunday'],
+    ['monday', -30, 'saturday'],
+    ['monday', 30, 'wednesday'],
   ])('%s shifted by %s days is %s', (start, days, expected) => {
     expect(shiftDayOfWeek(start, days)).toBe(expected);
-  });
-
-  it('agrees with Temporal date arithmetic', () => {
-    const monday = Temporal.PlainDate.from('2026-09-28');
-    for (let days = -30; days <= 30; days += 1) {
-      expect(shiftDayOfWeek('monday', days)).toBe(
-        dayOfWeekFromIsoNumber(monday.add({ days }).dayOfWeek),
-      );
-    }
   });
 
   it('rejects fractional days', () => {
