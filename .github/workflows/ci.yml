@@ -16,6 +16,10 @@ jobs:
   check:
     name: Check (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      id-token: write
     strategy:
       fail-fast: false
       matrix:
@@ -28,6 +32,23 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run check
+      - name: Report coverage on the PR
+        if: always() && matrix.node == 22 && github.event_name == 'pull_request'
+        uses: davelosert/vitest-coverage-report-action@v2
+      - name: Upload HTML coverage report
+        if: always() && matrix.node == 22
+        uses: actions/upload-artifact@v7
+        with:
+          name: coverage-report
+          path: coverage/
+          if-no-files-found: ignore
+      - name: Upload coverage to Codecov
+        if: always() && matrix.node == 22
+        uses: codecov/codecov-action@v7
+        with:
+          files: coverage/lcov.info
+          use_oidc: true
+          fail_ci_if_error: false
       - run: npm run check:package
 
   node18-smoke:
