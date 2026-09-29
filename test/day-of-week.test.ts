@@ -74,7 +74,8 @@ describe('shiftDayOfWeek', () => {
 
   it('agrees with Temporal date arithmetic', () => {
     const monday = Temporal.PlainDate.from('2026-09-28');
-    for (let days = -30; days <= 30; days += 1) {
+    const dayShifts = Array.from({ length: 61 }, (_unused, index) => index - 30);
+    for (const days of dayShifts) {
       expect(shiftDayOfWeek('monday', days)).toBe(
         dayOfWeekFromIsoNumber(monday.add({ days }).dayOfWeek),
       );

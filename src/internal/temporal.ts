@@ -57,8 +57,10 @@ const isTemporalLike = (candidate: unknown): candidate is TemporalLike => {
   );
 };
 
-let configuredTemporal: TemporalLike | undefined;
-let detectedTemporal: TemporalLike | undefined;
+const temporalSource: {
+  configured: TemporalLike | undefined;
+  detected: TemporalLike | undefined;
+} = { configured: undefined, detected: undefined };
 
 const detectGlobalTemporal = (): TemporalLike => {
   const globalTemporal: unknown = (globalThis as { Temporal?: unknown }).Temporal;
@@ -80,15 +82,15 @@ export const configureTemporal = (temporal: TemporalLike | undefined): void => {
       'The object passed to configureTemporal() is not a Temporal implementation.',
     );
   }
-  configuredTemporal = temporal;
-  detectedTemporal = undefined;
+  temporalSource.configured = temporal;
+  temporalSource.detected = undefined;
 };
 
 /** Returns the configured Temporal implementation, detecting and caching the global one on first use. */
 export const getTemporal = (): TemporalLike => {
-  if (configuredTemporal !== undefined) {
-    return configuredTemporal;
+  if (temporalSource.configured !== undefined) {
+    return temporalSource.configured;
   }
-  detectedTemporal ??= detectGlobalTemporal();
-  return detectedTemporal;
+  temporalSource.detected ??= detectGlobalTemporal();
+  return temporalSource.detected;
 };
