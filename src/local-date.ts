@@ -3,6 +3,7 @@ import type { ComparisonResult } from './comparable';
 import { dayOfWeekFromIsoNumber } from './day-of-week';
 import type { DayOfWeek } from './day-of-week';
 import { DaisyParseError, DaisyRangeError } from './errors';
+import { atStartOfDay, atTime } from './functions/combine';
 import {
   endOfMonth,
   endOfWeek,
@@ -36,6 +37,7 @@ import { assertInteger } from './internal/assert-integer';
 import { isoWeekOfYear } from './internal/calendar-fields';
 import { getTemporal } from './internal/temporal';
 import type { PlainDateLike } from './internal/temporal';
+import type { LocalDateTime } from './local-date-time';
 import type { Period } from './period';
 import { resolveTimeZone } from './internal/time-zone';
 import { translateRangeError } from './internal/translate-range-error';
@@ -304,6 +306,15 @@ export class LocalDate extends ComparableValue<LocalDate> {
   /** Counts the days until `other`: positive when it is later, negative when it is earlier. */
   daysUntil(other: LocalDate): number {
     return daysUntil(this, other);
+  }
+
+  /** Combines this date with a wall-clock time: `2026-09-28` at 14:30 is `2026-09-28T14:30:00`. */
+  atTime(hour: number, minute?: number, second?: number, millisecond?: number): LocalDateTime {
+    return atTime(this, hour, minute, second, millisecond);
+  }
+
+  atStartOfDay(): LocalDateTime {
+    return atStartOfDay(this);
   }
 
   compareTo(other: LocalDate): ComparisonResult {

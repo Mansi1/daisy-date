@@ -34,6 +34,52 @@ export type PlainDateLike = CalendarFields & {
   toString: () => string;
 };
 
+/** Wall-clock time fields, down to the millisecond daisy supports. */
+export type TimeFields = { hour: number; minute: number; second: number; millisecond: number };
+
+/** Clock amounts a PlainDateTime can be moved by. */
+export type TimeDuration = {
+  hours?: number;
+  minutes?: number;
+  seconds?: number;
+  milliseconds?: number;
+};
+
+type DateTimeDifference = {
+  readonly years: number;
+  readonly months: number;
+  readonly days: number;
+  readonly hours: number;
+  readonly minutes: number;
+  readonly seconds: number;
+  readonly milliseconds: number;
+};
+
+/** The members of a `Temporal.PlainDateTime` instance daisy reads. */
+export type PlainDateTimeLike = CalendarFields &
+  Readonly<TimeFields> & {
+    add: (duration: DateDuration & TimeDuration) => PlainDateTimeLike;
+    with: (
+      fields: Partial<PlainDateFields & TimeFields & { microsecond: number; nanosecond: number }>,
+      options?: OverflowOptions,
+    ) => PlainDateTimeLike;
+    until: (
+      other: PlainDateTimeLike,
+      options: { largestUnit: 'year' | 'hour' },
+    ) => DateTimeDifference;
+    toPlainDate: () => PlainDateLike;
+    toZonedDateTime: (timeZone: string) => { readonly epochMilliseconds: number };
+    toString: (options?: { fractionalSecondDigits?: 0 | 3 }) => string;
+  };
+
+type PlainDateTimeClass = TemporalClass & {
+  from: (
+    item: string | (PlainDateFields & Partial<TimeFields>),
+    options?: OverflowOptions,
+  ) => PlainDateTimeLike;
+  compare: (one: PlainDateTimeLike, two: PlainDateTimeLike) => number;
+};
+
 type PlainDateClass = TemporalClass & {
   from: (item: string | PlainDateFields, options?: OverflowOptions) => PlainDateLike;
   compare: (one: PlainDateLike, two: PlainDateLike) => number;
@@ -41,18 +87,22 @@ type PlainDateClass = TemporalClass & {
 
 type InstantClass = TemporalClass & {
   fromEpochMilliseconds: (epochMilliseconds: number) => {
-    toZonedDateTimeISO: (timeZone: string) => { toPlainDate: () => PlainDateLike };
+    toZonedDateTimeISO: (timeZone: string) => {
+      toPlainDate: () => PlainDateLike;
+      toPlainDateTime: () => PlainDateTimeLike;
+    };
   };
 };
 
 /** The part of the Temporal API daisy relies on, typed structurally so any spec-compliant implementation fits. */
 export type TemporalLike = {
   readonly PlainDate: PlainDateClass;
-  readonly PlainDateTime: TemporalClass;
+  readonly PlainDateTime: PlainDateTimeClass;
   readonly Duration: TemporalClass;
   readonly Instant: InstantClass;
   readonly Now: {
     plainDateISO: (timeZone?: string) => PlainDateLike;
+    plainDateTimeISO: (timeZone?: string) => PlainDateTimeLike;
     timeZoneId: () => string;
   };
 };

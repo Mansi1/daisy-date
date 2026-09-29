@@ -48,7 +48,9 @@ export {
 export { abs, isNegative, isZero, negated, normalized, toMillis } from './functions/amounts';
 export { Duration } from './duration';
 export type { DurationFields } from './duration';
+export { atStartOfDay, atTime } from './functions/combine';
 export { LocalDate } from './local-date';
+export { LocalDateTime } from './local-date-time';
 export { Period } from './period';
 export type { PeriodFields } from './period';
 export { configureTemporal } from './internal/temporal';
