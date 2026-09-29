@@ -27,6 +27,8 @@
   commit) before retrying, or semantic-release treats the version as released. 0.1.0 was recovered this way.
 - 2026-09-29: 0.1.0 and 0.2.0 were unpublished from npm (scaffold only, nothing usable). npm never allows those numbers
   again, so the `v0.1.0`/`v0.2.0` tags must stay: semantic-release continues from them and the next release is 0.3.0.
+- Open follow-up (owner): enable `Mansi1/daisy-date` on codecov.io. Until then the Codecov upload fails quietly
+  (`fail_ci_if_error: false`) and the README badge shows "unknown". Delete this entry once uploads work.
 - Open follow-up (owner): npm trusted publishing for `Mansi1/daisy-date` + `release.yml`, then revoke the token and
   `gh secret delete NPM_TOKEN`. With the package unpublished, trusted publishing can only be set up after 0.3.0 has gone
   out with `NPM_TOKEN`, so keep the secret until then. Delete this entry once done.

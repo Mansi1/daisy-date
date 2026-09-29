@@ -26,7 +26,8 @@
       provenance from private repos).
 - [ ] Follow-up (owner, tracked in `MEMORY.md`): configure trusted publishing on npmjs.com (daisy-date → Settings → Trusted publishing: `Mansi1/daisy-date`,
       workflow `release.yml`), then revoke the token and `gh secret delete NPM_TOKEN`.
-- [x] `main` is not protected, so the release job can push its `chore(release)` commit. Revisit if protection is added.
+- [x] `main` has a ruleset (2026-09-29) that requires the CI checks, so PRs below the coverage thresholds can't merge.
+      GitHub Actions is a bypass actor, so the release job can still push its `chore(release)` commit.
 - [x] Commitlint on PRs: verified by PR #1 (T04), the "Commit messages" job passed.
 
 ## Definition of done

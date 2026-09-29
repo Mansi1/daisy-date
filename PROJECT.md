@@ -39,7 +39,7 @@ Status: draft v1 · 2026-09-28 · Tasks: [TASK-list](./TASK-list/README.md)
 | Runtime      | **Node ≥ 18**, modern browsers via bundlers, Deno and Bun on a best-effort basis                               |
 | Runtime deps | **None.** Temporal comes from the environment (§4).                                                            |
 | Peer deps    | `temporal-polyfill` as an _optional_ peer dependency                                                           |
-| Tests        | **Vitest**, coverage ≥ 95 % lines/branches on `src/`                                                           |
+| Tests        | **Vitest**, `src/` coverage ≥ 98 % lines, 96 % branches, 100 % functions; required to merge                    |
 | Lint/format  | **ESLint** (typescript-eslint, strict-type-checked) + **Prettier**                                             |
 | CI           | **GitHub Actions**: lint, typecheck, test (Node 20/22/24), build, package checks, `dist` smoke test on Node 18 |
 | Release      | **semantic-release** from Conventional Commits on `main`, started by hand, npm publish with provenance         |
