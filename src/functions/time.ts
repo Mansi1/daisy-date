@@ -105,7 +105,8 @@ export const startOfDay = (dateTime: LocalDateTime): LocalDateTime =>
 export const endOfDay = (dateTime: LocalDateTime): LocalDateTime =>
   setTime(dateTime, 'the end of the day', END_OF_DAY);
 
-const fieldsBelow = (unit: TruncationUnit): Partial<TimeFields> => {
+/** Internal: the time fields that truncating to `unit` resets to zero. */
+export const fieldsBelow = (unit: TruncationUnit): Partial<TimeFields> => {
   switch (unit) {
     case 'day':
       return START_OF_DAY;
