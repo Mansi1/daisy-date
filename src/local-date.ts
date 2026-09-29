@@ -13,9 +13,29 @@ const ISO_DATE_FORMAT = /^(?:[+-]\d{6}|\d{4})-\d{2}-\d{2}$/;
 const resolveTimeZone = (timeZone: string | undefined): string =>
   timeZone ?? getTemporal().Now.timeZoneId();
 
+const WRAP_PLAIN_DATE = Symbol('wrapPlainDate');
+const UNWRAP_PLAIN_DATE = Symbol('unwrapPlainDate');
+
+/** Internal: wraps a Temporal date without exposing the private constructor. */
+export const fromPlainDate = (plainDate: PlainDateLike): LocalDate =>
+  LocalDate[WRAP_PLAIN_DATE](plainDate);
+
+/** Internal: reads the Temporal date behind `date`. */
+export const toPlainDate = (date: LocalDate): PlainDateLike => LocalDate[UNWRAP_PLAIN_DATE](date);
+
 /** A calendar date without time or time zone, such as `2026-09-28`. Immutable; create it through the static factories. */
 export class LocalDate extends ComparableValue<LocalDate> {
   readonly #plainDate: PlainDateLike;
+
+  /** @internal Keyed by a module-private symbol; use `fromPlainDate` instead. */
+  static [WRAP_PLAIN_DATE](plainDate: PlainDateLike): LocalDate {
+    return new LocalDate(plainDate);
+  }
+
+  /** @internal Keyed by a module-private symbol; use `toPlainDate` instead. */
+  static [UNWRAP_PLAIN_DATE](date: LocalDate): PlainDateLike {
+    return date.#plainDate;
+  }
 
   private constructor(plainDate: PlainDateLike) {
     super();
