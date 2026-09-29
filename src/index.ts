@@ -60,6 +60,8 @@ export {
 } from './functions/business-days';
 export type { WeekendOptions } from './functions/business-days';
 export { atStartOfDay, atTime } from './functions/combine';
+export { format } from './functions/format';
+export type { FormatOptions } from './functions/format';
 export type { DateValue } from './functions/date-part';
 export {
   TRUNCATION_UNIT,
