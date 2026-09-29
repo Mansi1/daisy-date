@@ -1,4 +1,5 @@
 import { DaisyRangeError } from './errors';
+import { assertInteger } from './internal/assert-integer';
 
 /** Days of the week in ISO order, starting with Monday. */
 export const DAY_OF_WEEK = [
@@ -36,9 +37,7 @@ export const dayOfWeekToIsoNumber = (dayOfWeek: DayOfWeek): number =>
 
 /** Moves `dayOfWeek` by `days`, wrapping around the week in both directions. */
 export const shiftDayOfWeek = (dayOfWeek: DayOfWeek, days: number): DayOfWeek => {
-  if (!Number.isInteger(days)) {
-    throw new DaisyRangeError(`Days must be an integer, got ${String(days)}`);
-  }
+  assertInteger(days, 'Days');
   const shiftedIndex =
     (DAY_OF_WEEK.indexOf(dayOfWeek) + (days % DAYS_PER_WEEK) + DAYS_PER_WEEK) % DAYS_PER_WEEK;
   return dayOfWeekFromIsoNumber(shiftedIndex + 1);
