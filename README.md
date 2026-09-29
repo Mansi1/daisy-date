@@ -216,10 +216,43 @@ friday.isBusinessDay({ weekend: ['friday', 'saturday'] }); // false
 > returns the start unchanged, even on a weekend. `businessDaysUntil` counts from the start up to, but not
 > including, the end. The same methods exist on `LocalDateTime`, where they keep the time.
 
+### Formatting
+
+Format with [LDML pattern letters](https://unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table)
+(as in `java.time`'s `DateTimeFormatter`) or with a locale preset:
+
+```ts
+const date = LocalDate.parse('2026-09-28');
+
+date.format('EEEE, d MMMM yyyy'); // 'Monday, 28 September 2026'
+date.format('long'); // 'September 28, 2026'  (presets: short, medium, long, full)
+date.format("'Q'Q yyyy, 'week' w"); // 'Q3 2026, week 40'
+
+const start = LocalDateTime.parse('2026-09-28T14:05');
+start.format("h:mm a 'on' EEE"); // '2:05 PM on Mon'
+start.format('short'); // '9/28/26, 2:05 PM'
+```
+
+Text in single quotes is copied as is, and `''` writes a quote. Unknown letters and time fields on a `LocalDate`
+throw a `DaisyFormatError`.
+
+| Letters                       | Meaning                                    | Example                        |
+| ----------------------------- | ------------------------------------------ | ------------------------------ |
+| `y` `yy` `yyyy`               | year                                       | `2026` `26` `2026`             |
+| `M` `MM` `MMM` `MMMM` `MMMMM` | month (`L…` for standalone names)          | `9` `09` `Sep` `September` `S` |
+| `d` `dd` / `D` `DDD`          | day of month / day of year                 | `8` `08` / `271`               |
+| `E` `EEEE` `EEEEE` `EEEEEE`   | weekday                                    | `Mon` `Monday` `M` `Mo`        |
+| `e` `c`                       | weekday number from the locale's first day | `1`                            |
+| `w` `ww` / `Y`                | ISO week / week-based year                 | `40` / `2026`                  |
+| `Q` `QQQ` `QQQQ`              | quarter                                    | `3` `Q3` `3rd quarter`         |
+| `a`                           | AM/PM                                      | `PM`                           |
+| `H` `h` `K` `k` (×2 pads)     | hour 0–23, 1–12, 0–11, 1–24                | `14` `2` `2` `14`              |
+| `m` `s` / `S` `SS` `SSS`      | minute, second / fraction                  | `05` `09` / `0` `04` `045`     |
+
 ### Locales
 
-English is built in and is the default. A locale holds the names, patterns and phrases that formatting and
-parsing will use; German, French and Spanish packs follow with that work.
+English is built in and is the default. A locale holds the names, presets and phrases that formatting uses; pass
+one per call or make it the default. German, French and Spanish packs are on the roadmap.
 
 ```ts
 import { en, getDefaultLocale, setDefaultLocale } from 'daisy-date';
@@ -229,6 +262,7 @@ getDefaultLocale().code; // 'en'
 en.months.format.wide[8]; // 'September'
 en.ordinal(22); // '22nd'
 setDefaultLocale(en); // make a locale the default
+date.format('long', { locale: en }); // or pick one per call
 ```
 
 ### Comparing and sorting
@@ -287,7 +321,8 @@ try {
 daisy is being built in the open, task by task ([task list](./TASK-list/README.md), [specification](./PROJECT.md)).
 Coming next:
 
-- Pattern formatting and parsing (`format('EEEE, d MMMM yyyy')`) with English, German, French and Spanish
+- Pattern parsing (`LocalDate.parse('28.09.2026', 'dd.MM.yyyy')`) and range formatting (`1–3 Oct 2026`)
+- German, French and Spanish locale packs
 - Relative text in both directions: `"in 3 days"`, `"next Friday"`, `"vor 2 Wochen"`
 
 ## Contributing

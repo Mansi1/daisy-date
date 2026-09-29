@@ -45,6 +45,8 @@
 - 2026-09-29 (T12): `Locale.relative`/`units` hold CLDR-style `{ one, other }` templates with `{0}`; pick the form with
   `forms[locale.plural(n)] ?? forms.other`. `selectPluralCategory` caches one `Intl.PluralRules` per code and type.
   In the ESM build `daisy-date/locale/en` and the root share one `en` object; in CJS they are separate copies.
+- 2026-09-29 (T13): locale name lookups go through `nameAt` (throws on a missing entry) instead of `?? ''`, whose fallback
+  branch no test can reach; coverage is at 100 % and the owner wants unreachable branches tested, not tolerated.
 - 2026-09-29: git strips commit-message lines that start with `#` (e.g. `#atTime`); reword instead of starting a line with it.
 - 2026-09-29: the `main` ruleset requires up-to-date branches, so after one PR merges every other open PR needs
   "Update branch" (or a rebase and force-push) plus a fresh CI run before it can merge.

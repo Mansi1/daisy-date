@@ -2,14 +2,15 @@
 
 **Milestone:** Milestone 3 — Localization and text  
 **Depends on:** [T09](./T09-localdatetime.md), [T12](./T12-locale-interface-and-en.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 
 - A pattern tokenizer (with literals and `''`), a compiled pattern cache keyed by pattern + locale, and the internal `FieldSource` interface (§9).
 - `format(pattern | preset, options?)` for `LocalDate` and `LocalDateTime`, plus the functional `format`.
 - The full symbol table (§6.2). `DaisyFormatError` for unknown symbols and for time fields on `LocalDate`.
-- Snapshot tests per symbol, and per preset in `en`.
+- ~~Snapshot tests~~ replaced by hand-written tables per symbol and width, and per preset in `en`: snapshots are
+  recorded from the implementation's own output, which AGENTS.md rules out.
 
 ## Definition of done
 
