@@ -16,6 +16,10 @@
 - **Refactor what you touch.** When a change touches code, also improve that code: naming, structure,
   duplication, dead code, outdated patterns. Don't leave it as you found it. Put the refactoring in its
   own `refactor:` commit, ahead of the change that needs it, so the feature commits stay easy to review.
+- **Tests state input ⇒ literal output.** Never compute the expected value: no template strings built from
+  the inputs, no loops or "agrees with …" checks against Temporal or other library functions, no comparing
+  a method with the function it delegates to. A computed expectation can share the bug it should catch.
+  Compare value types with `toEqual`: `expect(date.plusMonths(1)).toEqual(LocalDate.parse('2026-02-28'))`.
 
 ## MEMORY.md — the agent's own memory
 
