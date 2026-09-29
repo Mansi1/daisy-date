@@ -3,6 +3,32 @@ import type { ComparisonResult } from './comparable';
 import { dayOfWeekFromIsoNumber } from './day-of-week';
 import type { DayOfWeek } from './day-of-week';
 import { DaisyParseError, DaisyRangeError } from './errors';
+import {
+  endOfMonth,
+  endOfWeek,
+  endOfYear,
+  next,
+  nextOrSame,
+  previous,
+  previousOrSame,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+  withDay,
+  withMonth,
+  withYear,
+} from './functions/adjusters';
+import {
+  daysUntil,
+  minusDays,
+  minusMonths,
+  minusWeeks,
+  minusYears,
+  plusDays,
+  plusMonths,
+  plusWeeks,
+  plusYears,
+} from './functions/arithmetic';
 import { assertInteger } from './internal/assert-integer';
 import { getTemporal } from './internal/temporal';
 import type { PlainDateLike } from './internal/temporal';
@@ -173,6 +199,97 @@ export class LocalDate extends ComparableValue<LocalDate> {
 
   isLeapYear(): boolean {
     return this.#plainDate.inLeapYear;
+  }
+
+  plusDays(days: number): LocalDate {
+    return plusDays(this, days);
+  }
+
+  plusWeeks(weeks: number): LocalDate {
+    return plusWeeks(this, weeks);
+  }
+
+  /** Adds months, clamping to the month end: `2026-01-31` plus one month is `2026-02-28`. */
+  plusMonths(months: number): LocalDate {
+    return plusMonths(this, months);
+  }
+
+  /** Adds years, clamping to the month end: `2024-02-29` plus one year is `2025-02-28`. */
+  plusYears(years: number): LocalDate {
+    return plusYears(this, years);
+  }
+
+  minusDays(days: number): LocalDate {
+    return minusDays(this, days);
+  }
+
+  minusWeeks(weeks: number): LocalDate {
+    return minusWeeks(this, weeks);
+  }
+
+  minusMonths(months: number): LocalDate {
+    return minusMonths(this, months);
+  }
+
+  minusYears(years: number): LocalDate {
+    return minusYears(this, years);
+  }
+
+  withYear(year: number): LocalDate {
+    return withYear(this, year);
+  }
+
+  withMonth(month: number): LocalDate {
+    return withMonth(this, month);
+  }
+
+  withDay(day: number): LocalDate {
+    return withDay(this, day);
+  }
+
+  startOfWeek(firstDay?: DayOfWeek): LocalDate {
+    return startOfWeek(this, firstDay);
+  }
+
+  endOfWeek(firstDay?: DayOfWeek): LocalDate {
+    return endOfWeek(this, firstDay);
+  }
+
+  startOfMonth(): LocalDate {
+    return startOfMonth(this);
+  }
+
+  endOfMonth(): LocalDate {
+    return endOfMonth(this);
+  }
+
+  startOfYear(): LocalDate {
+    return startOfYear(this);
+  }
+
+  endOfYear(): LocalDate {
+    return endOfYear(this);
+  }
+
+  next(dayOfWeek: DayOfWeek): LocalDate {
+    return next(this, dayOfWeek);
+  }
+
+  nextOrSame(dayOfWeek: DayOfWeek): LocalDate {
+    return nextOrSame(this, dayOfWeek);
+  }
+
+  previous(dayOfWeek: DayOfWeek): LocalDate {
+    return previous(this, dayOfWeek);
+  }
+
+  previousOrSame(dayOfWeek: DayOfWeek): LocalDate {
+    return previousOrSame(this, dayOfWeek);
+  }
+
+  /** Counts the days until `other`: positive when it is later, negative when it is earlier. */
+  daysUntil(other: LocalDate): number {
+    return daysUntil(this, other);
   }
 
   compareTo(other: LocalDate): ComparisonResult {

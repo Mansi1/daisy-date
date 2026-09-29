@@ -4,6 +4,11 @@ type TemporalClass = abstract new (...args: never[]) => unknown;
 
 type PlainDateFields = { year: number; month: number; day: number };
 
+type OverflowOptions = { overflow?: 'constrain' | 'reject' };
+
+/** Calendar amounts a PlainDate can be moved by; month and year steps clamp to the month end. */
+export type DateDuration = { days?: number; weeks?: number; months?: number; years?: number };
+
 /** The members of a `Temporal.PlainDate` instance daisy reads. */
 export type PlainDateLike = {
   readonly year: number;
@@ -15,13 +20,15 @@ export type PlainDateLike = {
   readonly daysInMonth: number;
   readonly daysInYear: number;
   readonly inLeapYear: boolean;
-  add: (duration: { days: number }) => PlainDateLike;
+  add: (duration: DateDuration) => PlainDateLike;
+  with: (fields: Partial<PlainDateFields>, options?: OverflowOptions) => PlainDateLike;
+  until: (other: PlainDateLike) => { readonly days: number };
   toZonedDateTime: (options: { timeZone: string }) => { readonly epochMilliseconds: number };
   toString: () => string;
 };
 
 type PlainDateClass = TemporalClass & {
-  from: (item: string | PlainDateFields, options?: { overflow?: 'reject' }) => PlainDateLike;
+  from: (item: string | PlainDateFields, options?: OverflowOptions) => PlainDateLike;
   compare: (one: PlainDateLike, two: PlainDateLike) => number;
 };
 
