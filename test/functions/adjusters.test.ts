@@ -153,23 +153,25 @@ describe('next, nextOrSame, previous, previousOrSame', () => {
 });
 
 describe('LocalDate adjuster methods', () => {
-  const start = date('2024-02-29');
+  const thursday = date('2024-02-29');
 
-  it('delegate to the standalone functions', () => {
-    expect(start.withYear(2025).equals(withYear(start, 2025))).toBe(true);
-    expect(start.withMonth(4).equals(withMonth(start, 4))).toBe(true);
-    expect(start.withDay(1).equals(withDay(start, 1))).toBe(true);
-    expect(start.startOfWeek().equals(startOfWeek(start))).toBe(true);
-    expect(start.startOfWeek('sunday').equals(startOfWeek(start, 'sunday'))).toBe(true);
-    expect(start.endOfWeek().equals(endOfWeek(start))).toBe(true);
-    expect(start.endOfWeek('sunday').equals(endOfWeek(start, 'sunday'))).toBe(true);
-    expect(start.startOfMonth().equals(startOfMonth(start))).toBe(true);
-    expect(start.endOfMonth().equals(endOfMonth(start))).toBe(true);
-    expect(start.startOfYear().equals(startOfYear(start))).toBe(true);
-    expect(start.endOfYear().equals(endOfYear(start))).toBe(true);
-    expect(start.next('monday').equals(next(start, 'monday'))).toBe(true);
-    expect(start.nextOrSame('thursday').equals(nextOrSame(start, 'thursday'))).toBe(true);
-    expect(start.previous('monday').equals(previous(start, 'monday'))).toBe(true);
-    expect(start.previousOrSame('thursday').equals(previousOrSame(start, 'thursday'))).toBe(true);
+  it.each<[string, string, (value: LocalDate) => LocalDate]>([
+    ['withYear(2025)', '2025-02-28', (value) => value.withYear(2025)],
+    ['withMonth(4)', '2024-04-29', (value) => value.withMonth(4)],
+    ['withDay(1)', '2024-02-01', (value) => value.withDay(1)],
+    ['startOfWeek()', '2024-02-26', (value) => value.startOfWeek()],
+    ["startOfWeek('sunday')", '2024-02-25', (value) => value.startOfWeek('sunday')],
+    ['endOfWeek()', '2024-03-03', (value) => value.endOfWeek()],
+    ["endOfWeek('sunday')", '2024-03-02', (value) => value.endOfWeek('sunday')],
+    ['startOfMonth()', '2024-02-01', (value) => value.startOfMonth()],
+    ['endOfMonth()', '2024-02-29', (value) => value.endOfMonth()],
+    ['startOfYear()', '2024-01-01', (value) => value.startOfYear()],
+    ['endOfYear()', '2024-12-31', (value) => value.endOfYear()],
+    ["next('monday')", '2024-03-04', (value) => value.next('monday')],
+    ["nextOrSame('thursday')", '2024-02-29', (value) => value.nextOrSame('thursday')],
+    ["previous('monday')", '2024-02-26', (value) => value.previous('monday')],
+    ["previousOrSame('thursday')", '2024-02-29', (value) => value.previousOrSame('thursday')],
+  ])('Thursday 2024-02-29.%s is %s', (_call, expected, adjust) => {
+    expect(adjust(thursday)).toEqual(date(expected));
   });
 });

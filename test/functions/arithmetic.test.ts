@@ -141,22 +141,26 @@ describe('daysUntil', () => {
 describe('LocalDate arithmetic methods', () => {
   const start = date('2026-01-31');
 
-  it('delegate to the standalone functions', () => {
-    const other = date('2026-12-24');
-    expect(start.plusDays(3).equals(plusDays(start, 3))).toBe(true);
-    expect(start.plusWeeks(3).equals(plusWeeks(start, 3))).toBe(true);
-    expect(start.plusMonths(1).equals(plusMonths(start, 1))).toBe(true);
-    expect(start.plusYears(3).equals(plusYears(start, 3))).toBe(true);
-    expect(start.minusDays(3).equals(minusDays(start, 3))).toBe(true);
-    expect(start.minusWeeks(3).equals(minusWeeks(start, 3))).toBe(true);
-    expect(start.minusMonths(2).equals(minusMonths(start, 2))).toBe(true);
-    expect(start.minusYears(3).equals(minusYears(start, 3))).toBe(true);
-    expect(start.daysUntil(other)).toBe(daysUntil(start, other));
+  it.each<[string, string, (value: LocalDate) => LocalDate]>([
+    ['plusDays(3)', '2026-02-03', (value) => value.plusDays(3)],
+    ['plusWeeks(3)', '2026-02-21', (value) => value.plusWeeks(3)],
+    ['plusMonths(1)', '2026-02-28', (value) => value.plusMonths(1)],
+    ['plusYears(3)', '2029-01-31', (value) => value.plusYears(3)],
+    ['minusDays(3)', '2026-01-28', (value) => value.minusDays(3)],
+    ['minusWeeks(3)', '2026-01-10', (value) => value.minusWeeks(3)],
+    ['minusMonths(2)', '2025-11-30', (value) => value.minusMonths(2)],
+    ['minusYears(3)', '2023-01-31', (value) => value.minusYears(3)],
+  ])('2026-01-31.%s is %s', (_call, expected, move) => {
+    expect(move(start)).toEqual(date(expected));
+  });
+
+  it('counts days with daysUntil', () => {
+    expect(start.daysUntil(date('2026-12-24'))).toBe(327);
   });
 
   it('leave the original date unchanged', () => {
     start.plusMonths(1);
     start.minusYears(1);
-    expect(start.toString()).toBe('2026-01-31');
+    expect(start).toEqual(date('2026-01-31'));
   });
 });

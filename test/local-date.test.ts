@@ -3,7 +3,7 @@ import { inspect } from 'node:util';
 import type {} from 'temporal-polyfill/global';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-import { DaisyParseError, DaisyRangeError, LocalDate, compare } from '../src';
+import { DaisyParseError, DaisyRangeError, LocalDate, compare, configureTemporal } from '../src';
 import type { DaisyError, DayOfWeek } from '../src';
 
 const catchError = (action: () => unknown): unknown => {
@@ -14,6 +14,25 @@ const catchError = (action: () => unknown): unknown => {
   }
   throw new Error('Expected the action to throw');
 };
+
+const SYSTEM_TIME_ZONE = 'Pacific/Kiritimati';
+
+const useSystemTimeZone = (timeZone: string) => {
+  configureTemporal({
+    PlainDate: Temporal.PlainDate,
+    PlainDateTime: Temporal.PlainDateTime,
+    Duration: Temporal.Duration,
+    Instant: Temporal.Instant,
+    Now: {
+      plainDateISO: (zone) => Temporal.Now.plainDateISO(zone),
+      timeZoneId: () => timeZone,
+    },
+  });
+};
+
+afterEach(() => {
+  configureTemporal(undefined);
+});
 
 const expectDaisyErrorCausedByRangeError = (
   action: () => unknown,
@@ -175,7 +194,8 @@ describe('LocalDate.today', () => {
 
   it('defaults to the system time zone', () => {
     vi.useFakeTimers({ now: new Date('2026-09-28T23:30:00Z') });
-    expect(LocalDate.today().equals(LocalDate.today(Temporal.Now.timeZoneId()))).toBe(true);
+    useSystemTimeZone(SYSTEM_TIME_ZONE);
+    expect(LocalDate.today()).toEqual(LocalDate.parse('2026-09-29'));
   });
 
   it('rejects unknown time zones', () => {
@@ -195,11 +215,8 @@ describe('LocalDate.fromDate', () => {
   });
 
   it('defaults to the system time zone', () => {
-    expect(
-      LocalDate.fromDate(lateEvening).equals(
-        LocalDate.fromDate(lateEvening, Temporal.Now.timeZoneId()),
-      ),
-    ).toBe(true);
+    useSystemTimeZone(SYSTEM_TIME_ZONE);
+    expect(LocalDate.fromDate(lateEvening)).toEqual(LocalDate.parse('2026-09-29'));
   });
 
   it('rejects an invalid Date', () => {
@@ -232,11 +249,12 @@ describe('LocalDate#toDate', () => {
   });
 
   it('defaults to the system time zone', () => {
-    expect(date.toDate().getTime()).toBe(date.toDate(Temporal.Now.timeZoneId()).getTime());
+    useSystemTimeZone(SYSTEM_TIME_ZONE);
+    expect(date.toDate().toISOString()).toBe('2026-09-27T10:00:00.000Z');
   });
 
   it('round-trips through fromDate in the same zone', () => {
-    expect(LocalDate.fromDate(date.toDate('Asia/Tokyo'), 'Asia/Tokyo').equals(date)).toBe(true);
+    expect(LocalDate.fromDate(date.toDate('Asia/Tokyo'), 'Asia/Tokyo')).toEqual(date);
   });
 
   it('rejects unknown time zones', () => {
