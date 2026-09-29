@@ -92,18 +92,16 @@ describe('plusYears and minusYears', () => {
 
 describe('arithmetic validation', () => {
   it.each([
-    [plusDays, 'days'],
-    [plusWeeks, 'weeks'],
-    [plusMonths, 'months'],
-    [plusYears, 'years'],
-    [minusDays, 'days'],
-    [minusWeeks, 'weeks'],
-    [minusMonths, 'months'],
-    [minusYears, 'years'],
-  ] as const)('%o rejects fractional %s', (move, unit) => {
-    expect(() => move(date('2026-09-28'), 1.5)).toThrow(
-      new DaisyRangeError(`Number of ${unit} must be an integer, got 1.5`),
-    );
+    [plusDays, 'Number of days must be an integer, got 1.5'],
+    [plusWeeks, 'Number of weeks must be an integer, got 1.5'],
+    [plusMonths, 'Number of months must be an integer, got 1.5'],
+    [plusYears, 'Number of years must be an integer, got 1.5'],
+    [minusDays, 'Number of days must be an integer, got 1.5'],
+    [minusWeeks, 'Number of weeks must be an integer, got 1.5'],
+    [minusMonths, 'Number of months must be an integer, got 1.5'],
+    [minusYears, 'Number of years must be an integer, got 1.5'],
+  ] as const)('%o rejects fractional amounts', (move, message) => {
+    expect(() => move(date('2026-09-28'), 1.5)).toThrow(new DaisyRangeError(message));
   });
 
   it('rejects results after the last supported date with the Temporal error as cause', () => {
@@ -126,15 +124,13 @@ describe('daysUntil', () => {
     ['2024-01-01', '2025-01-01', 366],
     ['2026-01-01', '2027-01-01', 365],
     ['2026-03-28', '2026-03-30', 2],
+    ['2026-09-28', '2025-08-24', -400],
+    ['2026-09-28', '2026-11-26', 59],
+    ['2026-09-28', '2029-06-24', 1000],
+    ['2024-02-28', '2024-03-01', 2],
+    ['2023-02-28', '2023-03-01', 1],
   ])('from %s to %s is %s days', (start, end, expected) => {
     expect(daysUntil(date(start), date(end))).toBe(expected);
-  });
-
-  it('agrees with plusDays', () => {
-    const start = date('2026-09-28');
-    for (const days of [-400, -31, -1, 0, 1, 59, 1000]) {
-      expect(daysUntil(start, plusDays(start, days))).toBe(days);
-    }
   });
 });
 

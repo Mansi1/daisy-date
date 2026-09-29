@@ -289,10 +289,10 @@ describe('LocalDate comparison', () => {
 
   it('sorts with compare', () => {
     const dates = [later, LocalDate.of(2025, 12, 31), earlier];
-    expect(dates.sort(compare).map((date) => date.toString())).toEqual([
-      '2025-12-31',
-      '2026-09-28',
-      '2026-10-01',
+    expect(dates.sort(compare)).toEqual([
+      LocalDate.parse('2025-12-31'),
+      LocalDate.parse('2026-09-28'),
+      LocalDate.parse('2026-10-01'),
     ]);
   });
 });

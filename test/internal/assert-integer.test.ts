@@ -10,9 +10,13 @@ describe('assertInteger', () => {
     }).not.toThrow();
   });
 
-  it.each([1.5, Number.NaN, Number.POSITIVE_INFINITY])('rejects %s', (value) => {
+  it.each([
+    [1.5, 'Year must be an integer, got 1.5'],
+    [Number.NaN, 'Year must be an integer, got NaN'],
+    [Number.POSITIVE_INFINITY, 'Year must be an integer, got Infinity'],
+  ])('rejects %s', (value, message) => {
     expect(() => {
       assertInteger(value, 'Year');
-    }).toThrow(new DaisyRangeError(`Year must be an integer, got ${String(value)}`));
+    }).toThrow(new DaisyRangeError(message));
   });
 });

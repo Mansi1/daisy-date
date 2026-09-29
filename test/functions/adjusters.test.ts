@@ -1,16 +1,13 @@
 import { describe, expect, it } from 'vitest';
 
 import {
-  DAY_OF_WEEK,
   DaisyRangeError,
   LocalDate,
-  daysUntil,
   endOfMonth,
   endOfWeek,
   endOfYear,
   next,
   nextOrSame,
-  plusDays,
   previous,
   previousOrSame,
   startOfMonth,
@@ -65,12 +62,11 @@ describe('withDay', () => {
   });
 
   it.each([
-    ['2026-02-01', 29],
-    ['2026-09-01', 31],
-    ['2026-09-01', 0],
-  ])('rejects %s with day %s instead of clamping', (start, day) => {
-    expect(() => withDay(date(start), day)).toThrow(DaisyRangeError);
-    expect(() => withDay(date(start), day)).toThrow(`Cannot set day ${String(day)} on ${start}`);
+    ['2026-02-01', 29, 'Cannot set day 29 on 2026-02-01'],
+    ['2026-09-01', 31, 'Cannot set day 31 on 2026-09-01'],
+    ['2026-09-01', 0, 'Cannot set day 0 on 2026-09-01'],
+  ])('rejects %s with day %s instead of clamping', (start, day, message) => {
+    expect(() => withDay(date(start), day)).toThrow(new DaisyRangeError(message));
   });
 
   it('rejects fractional days', () => {
@@ -115,40 +111,48 @@ describe('start and end of month and year', () => {
 
 describe('next, nextOrSame, previous, previousOrSame', () => {
   const monday = date('2026-09-28');
+  const sunday = date('2026-10-04');
 
   it.each<[DayOfWeek, string, string, string, string]>([
     ['monday', '2026-10-05', '2026-09-28', '2026-09-21', '2026-09-28'],
     ['tuesday', '2026-09-29', '2026-09-29', '2026-09-22', '2026-09-22'],
+    ['wednesday', '2026-09-30', '2026-09-30', '2026-09-23', '2026-09-23'],
+    ['thursday', '2026-10-01', '2026-10-01', '2026-09-24', '2026-09-24'],
     ['friday', '2026-10-02', '2026-10-02', '2026-09-25', '2026-09-25'],
+    ['saturday', '2026-10-03', '2026-10-03', '2026-09-26', '2026-09-26'],
     ['sunday', '2026-10-04', '2026-10-04', '2026-09-27', '2026-09-27'],
   ])(
     'from Monday 2026-09-28 to %s: next %s, nextOrSame %s, previous %s, previousOrSame %s',
     (dayOfWeek, expectedNext, expectedNextOrSame, expectedPrevious, expectedPreviousOrSame) => {
-      expect(next(monday, dayOfWeek).toString()).toBe(expectedNext);
-      expect(nextOrSame(monday, dayOfWeek).toString()).toBe(expectedNextOrSame);
-      expect(previous(monday, dayOfWeek).toString()).toBe(expectedPrevious);
-      expect(previousOrSame(monday, dayOfWeek).toString()).toBe(expectedPreviousOrSame);
+      expect(next(monday, dayOfWeek)).toEqual(date(expectedNext));
+      expect(nextOrSame(monday, dayOfWeek)).toEqual(date(expectedNextOrSame));
+      expect(previous(monday, dayOfWeek)).toEqual(date(expectedPrevious));
+      expect(previousOrSame(monday, dayOfWeek)).toEqual(date(expectedPreviousOrSame));
     },
   );
 
-  it('always lands on the requested weekday within one week', () => {
-    const startDates = Array.from({ length: 14 }, (_unused, offset) => plusDays(monday, offset));
-    for (const start of startDates) {
-      for (const dayOfWeek of DAY_OF_WEEK) {
-        const nextDay = next(start, dayOfWeek);
-        const previousDay = previous(start, dayOfWeek);
-        expect(nextDay.dayOfWeek).toBe(dayOfWeek);
-        expect(previousDay.dayOfWeek).toBe(dayOfWeek);
-        expect(daysUntil(start, nextDay)).toBeGreaterThanOrEqual(1);
-        expect(daysUntil(start, nextDay)).toBeLessThanOrEqual(7);
-        expect(daysUntil(previousDay, start)).toBeGreaterThanOrEqual(1);
-        expect(daysUntil(previousDay, start)).toBeLessThanOrEqual(7);
-      }
-    }
-  });
+  it.each<[DayOfWeek, string, string, string, string]>([
+    ['monday', '2026-10-05', '2026-10-05', '2026-09-28', '2026-09-28'],
+    ['tuesday', '2026-10-06', '2026-10-06', '2026-09-29', '2026-09-29'],
+    ['wednesday', '2026-10-07', '2026-10-07', '2026-09-30', '2026-09-30'],
+    ['thursday', '2026-10-08', '2026-10-08', '2026-10-01', '2026-10-01'],
+    ['friday', '2026-10-09', '2026-10-09', '2026-10-02', '2026-10-02'],
+    ['saturday', '2026-10-10', '2026-10-10', '2026-10-03', '2026-10-03'],
+    ['sunday', '2026-10-11', '2026-10-04', '2026-09-27', '2026-10-04'],
+  ])(
+    'from Sunday 2026-10-04 to %s: next %s, nextOrSame %s, previous %s, previousOrSame %s',
+    (dayOfWeek, expectedNext, expectedNextOrSame, expectedPrevious, expectedPreviousOrSame) => {
+      expect(next(sunday, dayOfWeek)).toEqual(date(expectedNext));
+      expect(nextOrSame(sunday, dayOfWeek)).toEqual(date(expectedNextOrSame));
+      expect(previous(sunday, dayOfWeek)).toEqual(date(expectedPrevious));
+      expect(previousOrSame(sunday, dayOfWeek)).toEqual(date(expectedPreviousOrSame));
+    },
+  );
 
   it('rejects a target that is not a DayOfWeek', () => {
-    expect(() => next(monday, 'fri' as DayOfWeek)).toThrow(DaisyRangeError);
+    expect(() => next(monday, 'fri' as DayOfWeek)).toThrow(
+      new DaisyRangeError('Expected a DayOfWeek, got fri'),
+    );
   });
 });
 
