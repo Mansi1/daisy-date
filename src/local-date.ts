@@ -203,37 +203,37 @@ export class LocalDate extends ComparableValue<LocalDate> {
   }
 
   plusDays(days: number): LocalDate {
-    return plusDays(this, days);
+    return plusDays<LocalDate>(this, days);
   }
 
   plusWeeks(weeks: number): LocalDate {
-    return plusWeeks(this, weeks);
+    return plusWeeks<LocalDate>(this, weeks);
   }
 
   /** Adds months, clamping to the month end: `2026-01-31` plus one month is `2026-02-28`. */
   plusMonths(months: number): LocalDate {
-    return plusMonths(this, months);
+    return plusMonths<LocalDate>(this, months);
   }
 
   /** Adds years, clamping to the month end: `2024-02-29` plus one year is `2025-02-28`. */
   plusYears(years: number): LocalDate {
-    return plusYears(this, years);
+    return plusYears<LocalDate>(this, years);
   }
 
   minusDays(days: number): LocalDate {
-    return minusDays(this, days);
+    return minusDays<LocalDate>(this, days);
   }
 
   minusWeeks(weeks: number): LocalDate {
-    return minusWeeks(this, weeks);
+    return minusWeeks<LocalDate>(this, weeks);
   }
 
   minusMonths(months: number): LocalDate {
-    return minusMonths(this, months);
+    return minusMonths<LocalDate>(this, months);
   }
 
   minusYears(years: number): LocalDate {
-    return minusYears(this, years);
+    return minusYears<LocalDate>(this, years);
   }
 
   /** Adds a period: all months first, clamped to the month end, then the days. `2026-01-31 + P1M1D` is `2026-03-01`. */
@@ -247,55 +247,55 @@ export class LocalDate extends ComparableValue<LocalDate> {
   }
 
   withYear(year: number): LocalDate {
-    return withYear(this, year);
+    return withYear<LocalDate>(this, year);
   }
 
   withMonth(month: number): LocalDate {
-    return withMonth(this, month);
+    return withMonth<LocalDate>(this, month);
   }
 
   withDay(day: number): LocalDate {
-    return withDay(this, day);
+    return withDay<LocalDate>(this, day);
   }
 
   startOfWeek(firstDay?: DayOfWeek): LocalDate {
-    return startOfWeek(this, firstDay);
+    return startOfWeek<LocalDate>(this, firstDay);
   }
 
   endOfWeek(firstDay?: DayOfWeek): LocalDate {
-    return endOfWeek(this, firstDay);
+    return endOfWeek<LocalDate>(this, firstDay);
   }
 
   startOfMonth(): LocalDate {
-    return startOfMonth(this);
+    return startOfMonth<LocalDate>(this);
   }
 
   endOfMonth(): LocalDate {
-    return endOfMonth(this);
+    return endOfMonth<LocalDate>(this);
   }
 
   startOfYear(): LocalDate {
-    return startOfYear(this);
+    return startOfYear<LocalDate>(this);
   }
 
   endOfYear(): LocalDate {
-    return endOfYear(this);
+    return endOfYear<LocalDate>(this);
   }
 
   next(dayOfWeek: DayOfWeek): LocalDate {
-    return next(this, dayOfWeek);
+    return next<LocalDate>(this, dayOfWeek);
   }
 
   nextOrSame(dayOfWeek: DayOfWeek): LocalDate {
-    return nextOrSame(this, dayOfWeek);
+    return nextOrSame<LocalDate>(this, dayOfWeek);
   }
 
   previous(dayOfWeek: DayOfWeek): LocalDate {
-    return previous(this, dayOfWeek);
+    return previous<LocalDate>(this, dayOfWeek);
   }
 
   previousOrSame(dayOfWeek: DayOfWeek): LocalDate {
-    return previousOrSame(this, dayOfWeek);
+    return previousOrSame<LocalDate>(this, dayOfWeek);
   }
 
   /** Returns the years, months and days until `other`: `2026-01-31` until `2026-03-01` is `P1M1D`. */

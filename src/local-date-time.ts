@@ -2,7 +2,56 @@ import { ComparableValue, toComparisonResult } from './comparable';
 import type { ComparisonResult } from './comparable';
 import { dayOfWeekFromIsoNumber } from './day-of-week';
 import type { DayOfWeek } from './day-of-week';
+import type { Duration } from './duration';
 import { DaisyParseError, DaisyRangeError } from './errors';
+import {
+  endOfMonth,
+  endOfWeek,
+  endOfYear,
+  next,
+  nextOrSame,
+  previous,
+  previousOrSame,
+  startOfMonth,
+  startOfWeek,
+  startOfYear,
+  withDay,
+  withMonth,
+  withYear,
+} from './functions/adjusters';
+import {
+  durationUntil,
+  minus,
+  minusDays,
+  minusMonths,
+  minusWeeks,
+  minusYears,
+  plus,
+  plusDays,
+  plusMonths,
+  plusWeeks,
+  plusYears,
+  until,
+} from './functions/arithmetic';
+import type { DateTimeDifference } from './functions/arithmetic';
+import {
+  endOfDay,
+  minusHours,
+  minusMilliseconds,
+  minusMinutes,
+  minusSeconds,
+  plusHours,
+  plusMilliseconds,
+  plusMinutes,
+  plusSeconds,
+  startOfDay,
+  truncatedTo,
+  withHour,
+  withMillisecond,
+  withMinute,
+  withSecond,
+} from './functions/time';
+import type { TruncationUnit } from './functions/time';
 import { assertInteger } from './internal/assert-integer';
 import { isoWeekOfYear } from './internal/calendar-fields';
 import { getTemporal } from './internal/temporal';
@@ -11,6 +60,7 @@ import { resolveTimeZone } from './internal/time-zone';
 import { translateRangeError } from './internal/translate-range-error';
 import { fromPlainDate } from './local-date';
 import type { LocalDate } from './local-date';
+import type { Period } from './period';
 
 const ISO_DATE_TIME_FORMAT =
   /^(?:[+-]\d{6}|\d{4})-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.(\d{1,9}))?)?$/;
@@ -199,6 +249,173 @@ export class LocalDateTime extends ComparableValue<LocalDateTime> {
   /** Returns the date part, dropping the time. */
   toLocalDate(): LocalDate {
     return fromPlainDate(this.#plainDateTime.toPlainDate());
+  }
+
+  plusDays(days: number): LocalDateTime {
+    return plusDays<LocalDateTime>(this, days);
+  }
+
+  plusWeeks(weeks: number): LocalDateTime {
+    return plusWeeks<LocalDateTime>(this, weeks);
+  }
+
+  /** Adds months, clamping the day to the month end; the time stays the same. */
+  plusMonths(months: number): LocalDateTime {
+    return plusMonths<LocalDateTime>(this, months);
+  }
+
+  plusYears(years: number): LocalDateTime {
+    return plusYears<LocalDateTime>(this, years);
+  }
+
+  minusDays(days: number): LocalDateTime {
+    return minusDays<LocalDateTime>(this, days);
+  }
+
+  minusWeeks(weeks: number): LocalDateTime {
+    return minusWeeks<LocalDateTime>(this, weeks);
+  }
+
+  minusMonths(months: number): LocalDateTime {
+    return minusMonths<LocalDateTime>(this, months);
+  }
+
+  minusYears(years: number): LocalDateTime {
+    return minusYears<LocalDateTime>(this, years);
+  }
+
+  plusHours(hours: number): LocalDateTime {
+    return plusHours(this, hours);
+  }
+
+  plusMinutes(minutes: number): LocalDateTime {
+    return plusMinutes(this, minutes);
+  }
+
+  plusSeconds(seconds: number): LocalDateTime {
+    return plusSeconds(this, seconds);
+  }
+
+  plusMilliseconds(milliseconds: number): LocalDateTime {
+    return plusMilliseconds(this, milliseconds);
+  }
+
+  minusHours(hours: number): LocalDateTime {
+    return minusHours(this, hours);
+  }
+
+  minusMinutes(minutes: number): LocalDateTime {
+    return minusMinutes(this, minutes);
+  }
+
+  minusSeconds(seconds: number): LocalDateTime {
+    return minusSeconds(this, seconds);
+  }
+
+  minusMilliseconds(milliseconds: number): LocalDateTime {
+    return minusMilliseconds(this, milliseconds);
+  }
+
+  /** Adds a period (months first, then days, keeping the time) or a duration (exact clock time). */
+  plus(amount: Period | Duration): LocalDateTime {
+    return plus(this, amount);
+  }
+
+  minus(amount: Period | Duration): LocalDateTime {
+    return minus(this, amount);
+  }
+
+  withYear(year: number): LocalDateTime {
+    return withYear<LocalDateTime>(this, year);
+  }
+
+  withMonth(month: number): LocalDateTime {
+    return withMonth<LocalDateTime>(this, month);
+  }
+
+  withDay(day: number): LocalDateTime {
+    return withDay<LocalDateTime>(this, day);
+  }
+
+  withHour(hour: number): LocalDateTime {
+    return withHour(this, hour);
+  }
+
+  withMinute(minute: number): LocalDateTime {
+    return withMinute(this, minute);
+  }
+
+  withSecond(second: number): LocalDateTime {
+    return withSecond(this, second);
+  }
+
+  withMillisecond(millisecond: number): LocalDateTime {
+    return withMillisecond(this, millisecond);
+  }
+
+  startOfDay(): LocalDateTime {
+    return startOfDay(this);
+  }
+
+  endOfDay(): LocalDateTime {
+    return endOfDay(this);
+  }
+
+  /** Sets every field smaller than `unit` to zero: `14:35:20.500` truncated to `'hour'` is `14:00`. */
+  truncatedTo(unit: TruncationUnit): LocalDateTime {
+    return truncatedTo(this, unit);
+  }
+
+  /** Returns the first day of the week at 00:00, where weeks begin on `firstDay`. */
+  startOfWeek(firstDay?: DayOfWeek): LocalDateTime {
+    return startOfWeek<LocalDateTime>(this, firstDay);
+  }
+
+  /** Returns the last day of the week at 23:59:59.999, where weeks begin on `firstDay`. */
+  endOfWeek(firstDay?: DayOfWeek): LocalDateTime {
+    return endOfWeek<LocalDateTime>(this, firstDay);
+  }
+
+  startOfMonth(): LocalDateTime {
+    return startOfMonth<LocalDateTime>(this);
+  }
+
+  endOfMonth(): LocalDateTime {
+    return endOfMonth<LocalDateTime>(this);
+  }
+
+  startOfYear(): LocalDateTime {
+    return startOfYear<LocalDateTime>(this);
+  }
+
+  endOfYear(): LocalDateTime {
+    return endOfYear<LocalDateTime>(this);
+  }
+
+  next(dayOfWeek: DayOfWeek): LocalDateTime {
+    return next<LocalDateTime>(this, dayOfWeek);
+  }
+
+  nextOrSame(dayOfWeek: DayOfWeek): LocalDateTime {
+    return nextOrSame<LocalDateTime>(this, dayOfWeek);
+  }
+
+  previous(dayOfWeek: DayOfWeek): LocalDateTime {
+    return previous<LocalDateTime>(this, dayOfWeek);
+  }
+
+  previousOrSame(dayOfWeek: DayOfWeek): LocalDateTime {
+    return previousOrSame<LocalDateTime>(this, dayOfWeek);
+  }
+
+  /** Returns the period and remaining clock time until `other`; `this + period + duration` equals `other`. */
+  until(other: LocalDateTime): DateTimeDifference {
+    return until(this, other);
+  }
+
+  /** Returns the exact time until `other` in hours, minutes, seconds and milliseconds. */
+  durationUntil(other: LocalDateTime): Duration {
+    return durationUntil(this, other);
   }
 
   compareTo(other: LocalDateTime): ComparisonResult {
