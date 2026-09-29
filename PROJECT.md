@@ -281,8 +281,10 @@ are cached per (pattern, locale).
 `LocalDate.parse(text, pattern, options?)` and `LocalDateTime.parse(text, pattern, options?)` accept
 the same symbols as §6.2, except week-based fields in v1.
 
-- Month and weekday names match case-insensitively, in wide, abbreviated or narrow form, depending on
-  the symbol width.
+- Month and weekday names match case-insensitively, in wide or abbreviated form, depending on the symbol width.
+- Narrow names (`MMMMM`, `LLLLL`, `EEEEE`) are format-only. CLDR's single letters repeat (`J` is January, June
+  and July; `T` and `S` are two weekdays each), so a parse pattern containing them throws `DaisyFormatError`
+  when it is compiled (owner decision, 2026-09-29).
 - A parsed weekday must agree with the date, otherwise `DaisyParseError`.
 - `options.strict` (default `true`): numeric widths must match exactly and trailing text is an error.
 - `yy` maps to `2000–2099` (assumption, see §10 Q4).
