@@ -2,6 +2,8 @@ import type { DayOfWeek } from './day-of-week';
 import { DaisyParseError, DaisyRangeError } from './errors';
 import { endOfMonth, endOfWeek, endOfYear, startOfWeek } from './functions/adjusters';
 import { plusDays } from './functions/arithmetic';
+import { businessDays, fallsOnWeekend, resolveWeekend } from './functions/business-days';
+import type { WeekendOptions } from './functions/business-days';
 import {
   abuts,
   contains,
@@ -151,6 +153,24 @@ export class LocalDateRange {
   *[Symbol.iterator](): Generator<LocalDate> {
     for (const offset of new Array<undefined>(this.days()).keys()) {
       yield plusDays(this.start, offset);
+    }
+  }
+
+  /** Counts the business days in the range, both ends included. */
+  businessDays(options?: WeekendOptions): number {
+    return businessDays(this, options);
+  }
+
+  /** Yields each business day in order, lazily; an invalid `options.weekend` throws right away, not on first use. */
+  businessDaysIterator(options?: WeekendOptions): Generator<LocalDate> {
+    return this.#eachBusinessDay(resolveWeekend(options));
+  }
+
+  *#eachBusinessDay(weekendDays: ReadonlySet<DayOfWeek>): Generator<LocalDate> {
+    for (const day of this) {
+      if (!fallsOnWeekend(day, weekendDays)) {
+        yield day;
+      }
     }
   }
 

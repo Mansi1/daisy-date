@@ -192,6 +192,30 @@ LocalDateRange.parse('2026-10-30/2026-11-02').splitBy('month');
 // [2026-10-30/2026-10-31, 2026-11-01/2026-11-02]
 ```
 
+### Business days
+
+Business days skip weekends. There are no holiday calendars; you only choose which days form the weekend
+(Saturday and Sunday by default).
+
+```ts
+const friday = LocalDate.parse('2026-10-02');
+
+friday.isBusinessDay(); // true
+friday.plusBusinessDays(1); // 2026-10-05 (Monday)
+friday.businessDaysUntil(LocalDate.parse('2026-10-09')); // 5 (the Friday counts, the end doesn't)
+LocalDateRange.ofMonth(2026, 10).businessDays(); // 22
+
+// A Friday–Saturday weekend
+friday.isBusinessDay({ weekend: ['friday', 'saturday'] }); // false
+[...LocalDateRange.parse('2026-10-01/2026-10-07').businessDaysIterator()];
+// [10-01, 10-02, 10-05, 10-06, 10-07]
+```
+
+> **How business days are counted:** `plusBusinessDays(n)` counts business days strictly _after_ the start, like
+> Excel's `WORKDAY`. Friday + 1 and Saturday + 1 are both Monday, Sunday − 1 is Friday, and `plusBusinessDays(0)`
+> returns the start unchanged, even on a weekend. `businessDaysUntil` counts from the start up to, but not
+> including, the end. The same methods exist on `LocalDateTime`, where they keep the time.
+
 ### Comparing and sorting
 
 ```ts
@@ -248,7 +272,6 @@ try {
 daisy is being built in the open, task by task ([task list](./TASK-list/README.md), [specification](./PROJECT.md)).
 Coming next:
 
-- Business-day calculations (weekends only, configurable)
 - Pattern formatting and parsing (`format('EEEE, d MMMM yyyy')`) with English, German, French and Spanish
 - Relative text in both directions: `"in 3 days"`, `"next Friday"`, `"vor 2 Wochen"`
 

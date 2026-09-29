@@ -3,6 +3,14 @@ import type { ComparisonResult } from './comparable';
 import { dayOfWeekFromIsoNumber } from './day-of-week';
 import type { DayOfWeek } from './day-of-week';
 import { DaisyParseError, DaisyRangeError } from './errors';
+import {
+  businessDaysUntil,
+  isBusinessDay,
+  isWeekend,
+  minusBusinessDays,
+  plusBusinessDays,
+} from './functions/business-days';
+import type { WeekendOptions } from './functions/business-days';
 import { atStartOfDay, atTime } from './functions/combine';
 import {
   endOfMonth,
@@ -306,6 +314,30 @@ export class LocalDate extends ComparableValue<LocalDate> {
   /** Counts the days until `other`: positive when it is later, negative when it is earlier. */
   daysUntil(other: LocalDate): number {
     return daysUntil(this, other);
+  }
+
+  /** Returns true on a weekend day: Saturday or Sunday unless `options.weekend` says otherwise. */
+  isWeekend(options?: WeekendOptions): boolean {
+    return isWeekend(this, options);
+  }
+
+  isBusinessDay(options?: WeekendOptions): boolean {
+    return isBusinessDay(this, options);
+  }
+
+  /** Adds business days, counted strictly after this day: Friday + 1 and Saturday + 1 are both Monday. */
+  plusBusinessDays(days: number, options?: WeekendOptions): LocalDate {
+    return plusBusinessDays<LocalDate>(this, days, options);
+  }
+
+  /** Subtracts business days, counted strictly before this day: Sunday − 1 is Friday. */
+  minusBusinessDays(days: number, options?: WeekendOptions): LocalDate {
+    return minusBusinessDays<LocalDate>(this, days, options);
+  }
+
+  /** Counts business days from this day up to, but not including, `other`; negative if `other` is earlier. */
+  businessDaysUntil(other: LocalDate, options?: WeekendOptions): number {
+    return businessDaysUntil(this, other, options);
   }
 
   /** Combines this date with a wall-clock time: `2026-09-28` at 14:30 is `2026-09-28T14:30:00`. */

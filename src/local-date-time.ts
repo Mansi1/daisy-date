@@ -35,6 +35,14 @@ import {
 } from './functions/arithmetic';
 import type { DateTimeDifference } from './functions/arithmetic';
 import {
+  businessDaysUntil,
+  isBusinessDay,
+  isWeekend,
+  minusBusinessDays,
+  plusBusinessDays,
+} from './functions/business-days';
+import type { WeekendOptions } from './functions/business-days';
+import {
   endOfDay,
   minusHours,
   minusMilliseconds,
@@ -406,6 +414,30 @@ export class LocalDateTime extends ComparableValue<LocalDateTime> {
 
   previousOrSame(dayOfWeek: DayOfWeek): LocalDateTime {
     return previousOrSame<LocalDateTime>(this, dayOfWeek);
+  }
+
+  /** Returns true on a weekend day: Saturday or Sunday unless `options.weekend` says otherwise. */
+  isWeekend(options?: WeekendOptions): boolean {
+    return isWeekend(this, options);
+  }
+
+  isBusinessDay(options?: WeekendOptions): boolean {
+    return isBusinessDay(this, options);
+  }
+
+  /** Adds business days, counted strictly after this day: Friday + 1 and Saturday + 1 are both Monday. */
+  plusBusinessDays(days: number, options?: WeekendOptions): LocalDateTime {
+    return plusBusinessDays<LocalDateTime>(this, days, options);
+  }
+
+  /** Subtracts business days, counted strictly before this day: Sunday − 1 is Friday. */
+  minusBusinessDays(days: number, options?: WeekendOptions): LocalDateTime {
+    return minusBusinessDays<LocalDateTime>(this, days, options);
+  }
+
+  /** Counts business days from this day up to, but not including, `other`; negative if `other` is earlier. */
+  businessDaysUntil(other: LocalDateTime, options?: WeekendOptions): number {
+    return businessDaysUntil(this, other, options);
   }
 
   /** Returns the period and remaining clock time until `other`; `this + period + duration` equals `other`. */

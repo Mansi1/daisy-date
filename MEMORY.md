@@ -41,6 +41,7 @@
 - 2026-09-29 (T10): loops that need a counter use `for (const index of new Array<undefined>(count).keys())`; the sparse
   array allocates no elements, so it stays lazy without `let`. Generators must be class methods (`*[Symbol.iterator]`),
   since the lint rule forbids `function*` expressions.
+- 2026-09-29 (T11): `0 - count` instead of `-count` where a count may be zero; `-0` fails `toBe(0)` and `toEqual`.
 - 2026-09-29: git strips commit-message lines that start with `#` (e.g. `#atTime`); reword instead of starting a line with it.
 - 2026-09-29: the `main` ruleset requires up-to-date branches, so after one PR merges every other open PR needs
   "Update branch" (or a rebase and force-push) plus a fresh CI run before it can merge.
