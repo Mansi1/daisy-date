@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 2 — Core types  
 **Depends on:** [T06](./T06-localdate-arithmetic-and-adjusters.md), [T07](./T07-period.md), [T08](./T08-duration.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 

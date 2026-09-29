@@ -4,6 +4,7 @@ import type {} from 'temporal-polyfill/global';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { DaisyParseError, DaisyRangeError, LocalDate, compare, configureTemporal } from '../src';
+import { SYSTEM_TIME_ZONE, useSystemTimeZone } from './support/system-time-zone';
 import type { DaisyError, DayOfWeek } from '../src';
 
 const catchError = (action: () => unknown): unknown => {
@@ -13,21 +14,6 @@ const catchError = (action: () => unknown): unknown => {
     return error;
   }
   throw new Error('Expected the action to throw');
-};
-
-const SYSTEM_TIME_ZONE = 'Pacific/Kiritimati';
-
-const useSystemTimeZone = (timeZone: string) => {
-  configureTemporal({
-    PlainDate: Temporal.PlainDate,
-    PlainDateTime: Temporal.PlainDateTime,
-    Duration: Temporal.Duration,
-    Instant: Temporal.Instant,
-    Now: {
-      plainDateISO: (zone) => Temporal.Now.plainDateISO(zone),
-      timeZoneId: () => timeZone,
-    },
-  });
 };
 
 afterEach(() => {

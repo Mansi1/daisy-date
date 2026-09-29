@@ -28,6 +28,7 @@
 - [ ] Follow-up (owner, tracked in `MEMORY.md`): configure trusted publishing on npmjs.com (daisy-date → Settings → Trusted publishing: `Mansi1/daisy-date`,
       workflow `release.yml`), then revoke the token and `gh secret delete NPM_TOKEN`.
 - [x] `main` has a ruleset (2026-09-29) that requires the CI checks, so PRs below the coverage thresholds can't merge.
+      Branches must also be up to date with `main`; "Update branch" (with a rebase option) appears on PRs that are behind.
       Personal repos can't list GitHub Actions as a bypass actor, which is why the release no longer commits to `main`.
 - [x] Commitlint on PRs: verified by PR #1 (T04), the "Commit messages" job passed.
 
