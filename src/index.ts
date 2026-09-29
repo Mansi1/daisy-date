@@ -50,6 +50,15 @@ export type { DateTimeDifference } from './functions/arithmetic';
 export { abs, isNegative, isZero, negated, normalized, toMillis } from './functions/amounts';
 export { Duration } from './duration';
 export type { DurationFields } from './duration';
+export {
+  businessDays,
+  businessDaysUntil,
+  isBusinessDay,
+  isWeekend,
+  minusBusinessDays,
+  plusBusinessDays,
+} from './functions/business-days';
+export type { WeekendOptions } from './functions/business-days';
 export { atStartOfDay, atTime } from './functions/combine';
 export type { DateValue } from './functions/date-part';
 export {
