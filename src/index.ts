@@ -81,6 +81,32 @@ export {
 } from './functions/time';
 export type { TruncationUnit } from './functions/time';
 export { LocalDate } from './local-date';
+export { getDefaultLocale, setDefaultLocale } from './locale/default-locale';
+export { en } from './locale/en';
+export {
+  PLURAL_CATEGORY,
+  PRESET_STYLE,
+  RELATIVE_STYLE,
+  RELATIVE_UNIT,
+  TEXT_UNIT,
+  UNIT_STYLE,
+} from './locale/types';
+export type {
+  ListSeparators,
+  Locale,
+  MonthNames,
+  PluralCategory,
+  PluralForms,
+  PresetStyle,
+  Presets,
+  RelativeGrammar,
+  RelativePhrases,
+  RelativeStyle,
+  RelativeUnit,
+  TextUnit,
+  UnitStyle,
+  WeekdayNames,
+} from './locale/types';
 export { LocalDateTime } from './local-date-time';
 export { LocalDateRange } from './local-date-range';
 export {
