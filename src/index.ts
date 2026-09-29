@@ -73,6 +73,21 @@ export {
 export type { TruncationUnit } from './functions/time';
 export { LocalDate } from './local-date';
 export { LocalDateTime } from './local-date-time';
+export { LocalDateRange } from './local-date-range';
+export {
+  SPLIT_UNIT,
+  abuts,
+  contains,
+  days,
+  encloses,
+  intersection,
+  isConnected,
+  overlaps,
+  span,
+  splitBy,
+  union,
+} from './functions/range';
+export type { SplitOptions, SplitUnit } from './functions/range';
 export { Period } from './period';
 export type { PeriodFields } from './period';
 export { configureTemporal } from './internal/temporal';
