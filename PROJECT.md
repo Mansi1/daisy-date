@@ -166,6 +166,13 @@ getters, `plus`, `minus`, `negated`, `abs`, `isZero`, `isNegative`, `equals`, `t
   `7 × weeks + days`, as java.time does: `2026-01-31 + P1M1D = 2026-03-01`. Temporal can't add mixed-sign
   durations, so daisy applies the two steps itself. `until` returns years, months and days, never weeks.
 - `Duration.normalized()` balances units into hours, minutes, seconds and milliseconds.
+- `Duration` is an exact length, ordered like java.time's: `equals` compares total length (`PT1H = PT60M`), and
+  `isZero`, `isNegative` and `abs` look at the total too (`PT1H-60M` is zero). Components keep their units until
+  `normalized()`. `parse` accepts `PT…` only (days belong to `Period`), with a fraction on seconds down to
+  milliseconds; finer precision is a `DaisyParseError`. `toString` merges seconds and milliseconds (`PT1.5S`).
+  The total must fit in a safe integer of milliseconds.
+- The root `plus`/`minus` throw a `TypeError` for combinations the types don't allow, such as a date plus a
+  `Duration` (that arrives with `LocalDateTime`).
 - `Duration.toMillis()`. `Period` has **no** conversion to days, because months vary in length.
 
 ### 5.6 Business days (weekends only)
