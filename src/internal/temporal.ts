@@ -9,8 +9,8 @@ type OverflowOptions = { overflow?: 'constrain' | 'reject' };
 /** Calendar amounts a PlainDate can be moved by; month and year steps clamp to the month end. */
 export type DateDuration = { days?: number; weeks?: number; months?: number; years?: number };
 
-/** The members of a `Temporal.PlainDate` instance daisy reads. */
-export type PlainDateLike = {
+/** The calendar fields that Temporal's `PlainDate` and `PlainDateTime` share. */
+export type CalendarFields = {
   readonly year: number;
   readonly month: number;
   readonly day: number;
@@ -20,6 +20,10 @@ export type PlainDateLike = {
   readonly daysInMonth: number;
   readonly daysInYear: number;
   readonly inLeapYear: boolean;
+};
+
+/** The members of a `Temporal.PlainDate` instance daisy reads. */
+export type PlainDateLike = CalendarFields & {
   add: (duration: DateDuration) => PlainDateLike;
   with: (fields: Partial<PlainDateFields>, options?: OverflowOptions) => PlainDateLike;
   until: (

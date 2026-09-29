@@ -33,15 +33,14 @@ import {
   until,
 } from './functions/arithmetic';
 import { assertInteger } from './internal/assert-integer';
+import { isoWeekOfYear } from './internal/calendar-fields';
 import { getTemporal } from './internal/temporal';
 import type { PlainDateLike } from './internal/temporal';
 import type { Period } from './period';
+import { resolveTimeZone } from './internal/time-zone';
 import { translateRangeError } from './internal/translate-range-error';
 
 const ISO_DATE_FORMAT = /^(?:[+-]\d{6}|\d{4})-\d{2}-\d{2}$/;
-
-const resolveTimeZone = (timeZone: string | undefined): string =>
-  timeZone ?? getTemporal().Now.timeZoneId();
 
 const WRAP_PLAIN_DATE = Symbol('wrapPlainDate');
 const UNWRAP_PLAIN_DATE = Symbol('unwrapPlainDate');
@@ -186,11 +185,7 @@ export class LocalDate extends ComparableValue<LocalDate> {
 
   /** The ISO 8601 week number, from 1 to 53; early January can belong to the previous year's last week. */
   get weekOfYear(): number {
-    const weekOfYear = this.#plainDate.weekOfYear;
-    if (weekOfYear === undefined) {
-      throw new DaisyRangeError(`No ISO week of year for ${this.toString()}`);
-    }
-    return weekOfYear;
+    return isoWeekOfYear(this.#plainDate, this.toString());
   }
 
   get daysInMonth(): number {
