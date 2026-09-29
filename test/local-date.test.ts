@@ -6,15 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { DaisyParseError, DaisyRangeError, LocalDate, compare, configureTemporal } from '../src';
 import { SYSTEM_TIME_ZONE, useSystemTimeZone } from './support/system-time-zone';
 import type { DaisyError, DayOfWeek } from '../src';
-
-const catchError = (action: () => unknown): unknown => {
-  try {
-    action();
-  } catch (error) {
-    return error;
-  }
-  throw new Error('Expected the action to throw');
-};
+import { catchError } from './support/catch-error';
 
 afterEach(() => {
   configureTemporal(undefined);
