@@ -21,7 +21,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 - [x] [T06 · `LocalDate` arithmetic and adjusters](./T06-localdate-arithmetic-and-adjusters.md)
 - [x] [T07 · `Period`](./T07-period.md)
 - [x] [T08 · `Duration`](./T08-duration.md)
-- [ ] [T09 · `LocalDateTime`](./T09-localdatetime.md)
+- [x] [T09 · `LocalDateTime`](./T09-localdatetime.md)
 - [ ] [T10 · `LocalDateRange`](./T10-localdaterange.md)
 - [ ] [T11 · Business days](./T11-business-days.md)
 

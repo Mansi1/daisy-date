@@ -111,8 +111,10 @@ Wraps `Temporal.PlainDate`.
 
 ### 5.3 `LocalDateTime`
 
-Wraps `Temporal.PlainDateTime`. Precision is **milliseconds** (assumption; Temporal supports ns, but
-JS `Date` interop and typical use cases need ms).
+Wraps `Temporal.PlainDateTime`. Precision is **milliseconds** (Temporal supports ns, but JS `Date` interop
+and typical use cases need ms). Finer input is **rejected**, not truncated: `parse` throws `DaisyParseError`
+for `…15.2501`, as `Duration.parse` does. Only `now()` drops Temporal's micro- and nanoseconds, since the clock
+isn't input.
 
 - **Create:** `of(year, month, day, hour?, minute?, second?, millisecond?)`, `parse(iso)`,
   `now(timeZone?)`, `fromDate(date, timeZone?)`, `LocalDate#atTime`
@@ -123,6 +125,20 @@ JS `Date` interop and typical use cases need ms).
   `endOfDay` (`23:59:59.999`), `truncatedTo(unit)`
 - **Between:** `until(other): { period: Period; duration: Duration }` (assumption, see §10 Q3),
   `durationUntil(other): Duration`
+
+Decisions made in T09:
+
+- `parse` accepts `yyyy-MM-ddTHH:mm`, optionally with `:ss` and a fraction; no offset, zone or space separator.
+  `toString` always writes seconds, and milliseconds (3 digits) when non-zero: `2026-09-28T14:30:00.250`.
+- The date operations shared with `LocalDate` (`plusDays`, `withMonth`, `next`, …) keep the time, as in
+  java.time. `startOf*`/`endOf*` also set it, to `00:00:00.000` and `23:59:59.999`, like `startOfDay`/`endOfDay`.
+- The root functions are generic: `plusDays<T extends LocalDate | LocalDateTime>(value: T, …): T` returns the
+  type it was given.
+- `plus(duration)` adds exact clock time; with no zone there is no DST, so `02:30` always exists.
+- `toDate(timeZone)` resolves DST like Temporal's `'compatible'` mode: a skipped time moves forward, a repeated
+  time takes the earlier instant.
+- `until` returns years, months and days plus the remaining clock time, with `start + period + duration = end`.
+  `truncatedTo` takes `'day' | 'hour' | 'minute' | 'second'`.
 
 ### 5.4 `LocalDateRange`
 

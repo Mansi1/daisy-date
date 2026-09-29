@@ -129,6 +129,37 @@ Period.parse('P14M').normalized().toString(); // 'P1Y2M'
 LocalDate.parse('2024-02-29').until(LocalDate.parse('2025-02-28')).toString(); // 'P11M30D'
 ```
 
+### Durations
+
+A `Duration` is an exact amount of clock time in hours, minutes, seconds and milliseconds.
+
+```ts
+import { Duration } from 'daisy-date';
+
+const meeting = Duration.parse('PT1H30M'); // or Duration.of({ hours: 1, minutes: 30 })
+meeting.toMillis(); // 5400000
+Duration.parse('PT90M').equals(meeting); // true (compared by length)
+Duration.parse('PT100000S').normalized().toString(); // 'PT27H46M40S'
+```
+
+### Dates with a time
+
+A `LocalDateTime` is a date plus a wall-clock time, precise to the millisecond, still without a time zone.
+
+```ts
+import { LocalDateTime } from 'daisy-date';
+
+const start = LocalDateTime.parse('2026-09-28T14:30'); // or date.atTime(14, 30)
+start.plus(meeting); // 2026-09-28T16:00:00
+start.plusHours(10); // 2026-09-29T00:30:00
+start.plusMonths(1); // 2026-10-28T14:30:00 (date steps keep the time)
+start.startOfMonth(); // 2026-09-01T00:00:00
+start.truncatedTo('hour'); // 2026-09-28T14:00:00
+start.toLocalDate(); // 2026-09-28
+start.until(LocalDateTime.parse('2026-10-01T10:00')); // { period: P2D, duration: PT19H30M }
+start.toDate('Europe/Berlin'); // Date for 2026-09-28T12:30:00.000Z
+```
+
 ### Comparing and sorting
 
 ```ts
@@ -141,8 +172,8 @@ date.equals(LocalDate.of(2026, 9, 28)); // true
 
 ### Standalone functions
 
-Arithmetic, adjusters and period operations are also plain functions that take the value first, so bundlers can
-drop what you don't use:
+Arithmetic, adjusters, period and duration operations are also plain functions that take the value first, so
+bundlers can drop what you don't use. Date functions work on both types and return the type they get:
 
 ```ts
 import { LocalDate, endOfMonth, plusDays } from 'daisy-date';
@@ -185,7 +216,6 @@ try {
 daisy is being built in the open, task by task ([task list](./TASK-list/README.md), [specification](./PROJECT.md)).
 Coming next:
 
-- `Duration` and `LocalDateTime` (dates with a time of day)
 - `LocalDateRange` with iteration, and business-day calculations
 - Pattern formatting and parsing (`format('EEEE, d MMMM yyyy')`) with English, German, French and Spanish
 - Relative text in both directions: `"in 3 days"`, `"next Friday"`, `"vor 2 Wochen"`
