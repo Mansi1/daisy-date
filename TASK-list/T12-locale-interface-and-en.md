@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 3 — Localization and text  
 **Depends on:** [T04](./T04-dayofweek-and-shared-comparison.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 

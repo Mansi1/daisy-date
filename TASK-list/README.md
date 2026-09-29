@@ -27,7 +27,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 
 ## Milestone 3 — Localization and text
 
-- [ ] [T12 · Locale interface and `en`](./T12-locale-interface-and-en.md)
+- [x] [T12 · Locale interface and `en`](./T12-locale-interface-and-en.md)
 - [ ] [T13 · Pattern compiler and `format`](./T13-pattern-compiler-and-format.md)
 - [ ] [T14 · Range formatting](./T14-range-formatting.md)
 - [ ] [T15 · Pattern parsing](./T15-pattern-parsing.md)

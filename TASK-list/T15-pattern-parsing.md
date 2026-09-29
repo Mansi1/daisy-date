@@ -9,6 +9,8 @@
 - `parse(text, pattern, options?)` and `tryParse` for `LocalDate`/`LocalDateTime`, per §6.3 (strict mode,
   case-insensitive names, weekday consistency check, `yy` rule).
 - `DaisyParseError.index` points at the failing position.
+- Narrow month and weekday names (`MMMMM`, `LLLLL`, `EEEEE`) are rejected in parse patterns with `DaisyFormatError`
+  (§6.3; owner decision, 2026-09-29).
 - Round-trip property test: `parse(format(x, p), p) equals x` for a set of patterns.
 
 ## Definition of done
