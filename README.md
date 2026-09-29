@@ -22,7 +22,7 @@ invoice.until(LocalDate.parse('2026-03-01')).toString(); // 'P1M1D'
 
 - **No timezone bugs in date maths.** A `LocalDate` is a calendar day and nothing else: no time, no zone, no
   hidden UTC offset. Adding a day always gives the next calendar day, even across daylight-saving changes.
-  Time zones appear in exactly three places, where you convert: `today()`, `fromDate()` and `toDate()`.
+  Time zones appear only where you convert: `today()` / `now()`, `fromDate()` and `toDate()`.
 - **Familiar, predictable API.** Names and rules follow `java.time`: `plusMonths`, `until`, `isBefore`,
   `Period`. Month arithmetic clamps to the month end, the way people expect (`Jan 31 + 1 month = Feb 28`).
 - **Immutable values.** Every operation returns a new value; nothing is ever modified in place.
@@ -160,6 +160,38 @@ start.until(LocalDateTime.parse('2026-10-01T10:00')); // { period: P2D, duration
 start.toDate('Europe/Berlin'); // Date for 2026-09-28T12:30:00.000Z
 ```
 
+### Ranges
+
+A `LocalDateRange` is an inclusive run of days from `start` to `end`. Iterate it like an array:
+
+```ts
+import { LocalDateRange } from 'daisy-date';
+
+const trip = LocalDateRange.parse('2026-10-01/2026-10-03'); // or LocalDateRange.of(start, end)
+
+for (const day of trip) {
+  console.log(day.toString()); // 2026-10-01, 2026-10-02, 2026-10-03
+}
+[...trip].map((day) => day.dayOfWeek); // ['thursday', 'friday', 'saturday']
+trip.days(); // 3
+```
+
+Dates are created one at a time as you iterate, so even a range spanning centuries costs nothing up front.
+
+```ts
+LocalDateRange.ofMonth(2026, 2); // 2026-02-01/2026-02-28
+LocalDateRange.ofWeek(LocalDate.parse('2026-10-01')); // 2026-09-28/2026-10-04
+
+trip.contains(LocalDate.parse('2026-10-02')); // true
+trip.overlaps(LocalDateRange.parse('2026-10-03/2026-10-05')); // true
+trip.abuts(LocalDateRange.parse('2026-10-04/2026-10-05')); // true (no gap, no shared day)
+trip.intersection(LocalDateRange.parse('2026-10-02/2026-10-09')); // 2026-10-02/2026-10-03
+trip.union(LocalDateRange.parse('2026-10-04/2026-10-05')); // 2026-10-01/2026-10-05
+
+LocalDateRange.parse('2026-10-30/2026-11-02').splitBy('month');
+// [2026-10-30/2026-10-31, 2026-11-01/2026-11-02]
+```
+
 ### Comparing and sorting
 
 ```ts
@@ -216,7 +248,7 @@ try {
 daisy is being built in the open, task by task ([task list](./TASK-list/README.md), [specification](./PROJECT.md)).
 Coming next:
 
-- `LocalDateRange` with iteration, and business-day calculations
+- Business-day calculations (weekends only, configurable)
 - Pattern formatting and parsing (`format('EEEE, d MMMM yyyy')`) with English, German, French and Spanish
 - Relative text in both directions: `"in 3 days"`, `"next Friday"`, `"vor 2 Wochen"`
 

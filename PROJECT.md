@@ -160,6 +160,11 @@ An **inclusive** range of calendar days. Stored as `start` and `end`, both `Loca
 - **Convert:** `toString()` returns `"2026-10-01/2026-10-03"`, `format(pattern, options?)` returns
   `"1–3 Oct 2026"` style text using the locale's range separator
 
+Decisions made in T10: a range is never empty (`ofDays` needs at least 1 day), `start`/`end` are frozen public
+fields, and `abuts` is symmetric (either range may come first). `parse` accepts only `date/date` intervals, not
+ISO's `date/duration` or abbreviated forms. Iteration is lazy: each date is created when it's requested.
+`splitBy('week')` takes `{ firstDay }` (default Monday); pieces at either end may be partial.
+
 ### 5.5 `Period` and `Duration`
 
 |            | `Period`                     | `Duration`                            |
