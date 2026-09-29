@@ -20,6 +20,9 @@
   the inputs, no loops or "agrees with …" checks against Temporal or other library functions, no comparing
   a method with the function it delegates to. A computed expectation can share the bug it should catch.
   Compare value types with `toEqual`: `expect(date.plusMonths(1)).toEqual(LocalDate.parse('2026-02-28'))`.
+- **Keep the README current.** A PR that adds or changes public API updates `README.md` in the same PR: a usage
+  example for each new feature, changed examples for changed behaviour, and finished items removed from the
+  roadmap. Run every new or changed example against the built `dist` before committing.
 
 ## MEMORY.md — the agent's own memory
 
