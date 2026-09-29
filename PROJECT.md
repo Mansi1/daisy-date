@@ -228,20 +228,26 @@ date.format('EEEE, d. MMMM yyyy', { locale: de }); // 'Montag, 28. September 202
 setDefaultLocale(de); // global default, optional
 ```
 
-`Locale` interface (sketch; the final shape is decided in task T12):
+`Locale` type (settled in T12, `src/locale/types.ts`):
 
 - `code` (`'de'`), `firstDayOfWeek`, `weekend` (default weekend days; can differ per locale)
 - `months`: wide / abbreviated / narrow, in both format and standalone forms
-- `weekdays`: wide / abbreviated / short / narrow
+- `weekdays`: wide / abbreviated / short / narrow, Monday first; `quarters`: abbreviated / wide
 - `dayPeriods`: am/pm
-- `ordinal(n)`: for the `do`-style ordinal output (e.g. `1st`, `1.`, `1er`, `1.º`)
-- `plural(n)`: a CLDR plural category (assumption: delegates to `Intl.PluralRules(code)`)
-- `relative`: phrase templates for §6.4 formatting, including special words
-  (`today`, `yesterday`, `tomorrow`, `the day after tomorrow`…)
-- `relativeGrammar`: tokens and word lists for §6.4 parsing
-- `units`: unit names with plural forms for §6.5
-- `listSeparator` / `listFinal` / `rangeSeparator`
-- `patterns`: named presets `short | medium | long | full` for date, time and dateTime
+- `plural(n)`: the CLDR plural category, from `Intl.PluralRules(code)`; `ordinal(n)`: `1st`, `1.`, `1er`, `1.º`
+- `patterns`: presets `short | medium | long | full` for `date`, `time` and `dateTime`
+- `units`: per unit (`years` … `milliseconds`) and style (`long | short | narrow`), templates per plural
+  category with `{0}` for the number: `{ one: '{0} week', other: '{0} weeks' }`
+- `lists`: `conjunction` and `unit` separators (`pair`, `middle`, `end`); `rangeSeparator`
+- `relative`: per unit (`year` … `second`), style (`long | short`) and direction (`future | past`), plural
+  templates such as `in {0} days`, which also cover languages that decline the unit (`in 3 Tagen`, `vor 3 Tagen`);
+  the special words (`today`, `the day after tomorrow`…); and weekday templates (`next {0}`)
+- `relativeGrammar`: phrase templates with `{amount}`, `{unit}` and `{target}` (`in {amount} {unit}`,
+  `il y a {amount} {unit}`, `{target} prochain`), special days with their offset, number words, unit words and
+  period words, all lower-case
+
+`Locale` values are plain objects; only `plural` and `ordinal` are functions. A pack may spread another
+(`{ ...en, code: 'en-GB' }`).
 
 ### 6.2 Pattern formatting
 

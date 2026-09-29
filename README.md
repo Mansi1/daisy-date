@@ -216,6 +216,21 @@ friday.isBusinessDay({ weekend: ['friday', 'saturday'] }); // false
 > returns the start unchanged, even on a weekend. `businessDaysUntil` counts from the start up to, but not
 > including, the end. The same methods exist on `LocalDateTime`, where they keep the time.
 
+### Locales
+
+English is built in and is the default. A locale holds the names, patterns and phrases that formatting and
+parsing will use; German, French and Spanish packs follow with that work.
+
+```ts
+import { en, getDefaultLocale, setDefaultLocale } from 'daisy-date';
+// or: import { en } from 'daisy-date/locale/en';
+
+getDefaultLocale().code; // 'en'
+en.months.format.wide[8]; // 'September'
+en.ordinal(22); // '22nd'
+setDefaultLocale(en); // make a locale the default
+```
+
 ### Comparing and sorting
 
 ```ts
