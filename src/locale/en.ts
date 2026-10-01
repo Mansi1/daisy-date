@@ -116,6 +116,7 @@ export const en: Locale = {
   lists: {
     conjunction: { pair: ' and ', middle: ', ', end: ', and ' },
     unit: { pair: ', ', middle: ', ', end: ', ' },
+    narrow: { pair: ' ', middle: ' ', end: ' ' },
   },
   rangeSeparator: '–',
   relative: {

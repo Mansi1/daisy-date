@@ -115,7 +115,12 @@ export type Locale = {
     readonly dateTime: Presets;
   };
   readonly units: Readonly<Record<TextUnit, Readonly<Record<UnitStyle, PluralForms>>>>;
-  readonly lists: { readonly conjunction: ListSeparators; readonly unit: ListSeparators };
+  /** How amounts are joined: `2 weeks and 3 days` (conjunction), `2 weeks, 3 days` (unit), `2w 3d` (narrow). */
+  readonly lists: {
+    readonly conjunction: ListSeparators;
+    readonly unit: ListSeparators;
+    readonly narrow: ListSeparators;
+  };
   /** Placed between the two ends of a formatted range: `1–3 Oct`. */
   readonly rangeSeparator: string;
   readonly relative: {

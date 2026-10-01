@@ -8,9 +8,13 @@ import { assertNever } from '../internal/assert-never';
 import { getDefaultLocale } from '../locale/default-locale';
 import { PRESET_STYLE } from '../locale/types';
 import type { Locale, PresetStyle, Presets } from '../locale/types';
+import { Duration } from '../duration';
 import { LocalDateRange } from '../local-date-range';
 import type { LocalDate } from '../local-date';
 import { LocalDateTime } from '../local-date-time';
+import { Period } from '../period';
+import { formatAmount } from './amount-format';
+import type { AmountFormatOptions } from './amount-format';
 import type { DateValue } from './date-part';
 
 export type FormatOptions = {
@@ -244,18 +248,45 @@ const formatValue = (value: DateValue, pattern: string, locale: Locale): string 
   return renderTokens(compiledPattern.tokens, source, locale);
 };
 
-/**
- * Formats a date, date-time or date range with an LDML pattern (`'EEEE, d MMMM yyyy'`) or a locale preset
- * (`'short'` … `'full'`, default `'medium'`). A range prints the fields its ends share once: `1–3 Oct 2026`.
- * Time fields on a LocalDate or range throw `DaisyFormatError`.
- */
-export const format = (
-  value: DateValue | LocalDateRange,
-  pattern: string = DEFAULT_PRESET,
-  options: FormatOptions = {},
-): string => {
-  const locale = options.locale ?? getDefaultLocale();
-  return value instanceof LocalDateRange
-    ? formatRange(value, pattern, locale)
-    : formatValue(value, pattern, locale);
+type Format = {
+  /**
+   * Formats a date, date-time or date range with an LDML pattern (`'EEEE, d MMMM yyyy'`) or a locale preset
+   * (`'short'` … `'full'`, default `'medium'`). A range prints the fields its ends share once: `1–3 Oct 2026`.
+   * Time fields on a LocalDate or range throw `DaisyFormatError`.
+   */
+  (value: DateValue | LocalDateRange, pattern?: string, options?: FormatOptions): string;
+  /** Writes a period or duration as text: `2 weeks and 3 days`, `1 hr and 30 min`, `2w 3d`. */
+  (amount: Period | Duration, options?: AmountFormatOptions): string;
 };
+
+const formatCalendarValue = (
+  value: DateValue | LocalDateRange,
+  pattern: unknown,
+  options: FormatOptions,
+): string => {
+  if (pattern !== undefined && typeof pattern !== 'string') {
+    throw new TypeError(`format(${value.toString()}, …) takes a pattern string, not options`);
+  }
+  const locale = options.locale ?? getDefaultLocale();
+  const resolvedPattern = pattern ?? DEFAULT_PRESET;
+  return value instanceof LocalDateRange
+    ? formatRange(value, resolvedPattern, locale)
+    : formatValue(value, resolvedPattern, locale);
+};
+
+const formatAmountValue = (amount: Period | Duration, options: unknown): string => {
+  if (typeof options === 'string') {
+    throw new TypeError(`format(${amount.toString()}, …) takes options, not a pattern`);
+  }
+  return formatAmount(amount, options as AmountFormatOptions | undefined);
+};
+
+/** Formats dates, date-times and ranges with a pattern or preset, and periods and durations as text. */
+export const format = ((
+  value: DateValue | LocalDateRange | Period | Duration,
+  patternOrOptions?: unknown,
+  options: FormatOptions = {},
+) =>
+  value instanceof Period || value instanceof Duration
+    ? formatAmountValue(value, patternOrOptions)
+    : formatCalendarValue(value, patternOrOptions, options)) as Format;

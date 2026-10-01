@@ -3,6 +3,8 @@ import type { ComparisonResult } from './comparable';
 import { DaisyParseError, DaisyRangeError } from './errors';
 import { abs, isNegative, isZero, negated, normalized, toMillis } from './functions/amounts';
 import { minus, plus } from './functions/arithmetic';
+import { formatAmount } from './functions/amount-format';
+import type { AmountFormatOptions } from './functions/amount-format';
 import { assertInteger } from './internal/assert-integer';
 import { MILLISECONDS_PER_SECOND } from './internal/time-units';
 
@@ -169,6 +171,11 @@ export class Duration extends ComparableValue<Duration> {
       formatComponent(this.minutes, 'M') +
       formatSeconds(this.seconds * MILLISECONDS_PER_SECOND + this.milliseconds);
     return components === '' ? 'PT0S' : `PT${components}`;
+  }
+
+  /** Writes the duration as text: `PT1H30M` is `1 hour and 30 minutes`, or `1 hr and 30 min` with `{ style: 'short' }`. */
+  format(options?: AmountFormatOptions): string {
+    return formatAmount(this, options);
   }
 
   toJSON(): string {

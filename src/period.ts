@@ -1,6 +1,8 @@
 import { DaisyParseError } from './errors';
 import { minus, plus } from './functions/arithmetic';
 import { abs, isNegative, isZero, negated, normalized } from './functions/amounts';
+import { formatAmount } from './functions/amount-format';
+import type { AmountFormatOptions } from './functions/amount-format';
 import { assertInteger } from './internal/assert-integer';
 
 export type PeriodFields = {
@@ -134,6 +136,11 @@ export class Period {
       formatComponent(this.weeks, 'W') +
       formatComponent(this.days, 'D');
     return components === '' ? 'P0D' : `P${components}`;
+  }
+
+  /** Writes the period as text: `P2W3D` is `2 weeks and 3 days`, or `2w 3d` with `{ style: 'narrow' }`. */
+  format(options?: AmountFormatOptions): string {
+    return formatAmount(this, options);
   }
 
   toJSON(): string {
