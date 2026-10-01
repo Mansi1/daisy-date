@@ -16,7 +16,7 @@ Status: draft v1 · 2026-09-28 · Tasks: [TASK-list](./TASK-list/README.md)
 3. **Two API styles, one implementation.** Immutable classes with methods, plus standalone
    tree-shakable functions. Each method delegates to its function.
 4. **Human text in four languages.** Pattern formatting and parsing, relative text (`"in 3 days"`,
-   `"next Friday"`) in both directions, and duration text, for `en`, `de`, `fr` and `es`.
+   `"next Friday"`) and duration text, for `en`, `de`, `fr` and `es`.
 5. **Temporal underneath, hidden.** Correct calendar arithmetic comes from Temporal. Temporal types
    never appear in the public API.
 
@@ -26,7 +26,8 @@ Status: draft v1 · 2026-09-28 · Tasks: [TASK-list](./TASK-list/README.md)
   them (see §9).
 - Holidays and holiday calendars. Business-day logic knows only weekends.
 - Non-ISO calendars (Hebrew, Islamic, Japanese…). ISO 8601 only.
-- Natural-language parsing beyond the fixed relative grammar in §6.4.
+- Parsing relative or natural-language text (`"next friday"`). Dropped on 2026-10-02 (owner decision): a
+  phrase grammar doesn't carry over to languages without spaces, with case-inflected words or with dual forms.
 - Bundling a Temporal polyfill.
 
 ## 3. Package
@@ -249,9 +250,6 @@ setDefaultLocale(de); // global default, optional
 - `relative`: per unit (`year` … `second`), style (`long | short`) and direction (`future | past`), plural
   templates such as `in {0} days`, which also cover languages that decline the unit (`in 3 Tagen`, `vor 3 Tagen`);
   the special words (`today`, `the day after tomorrow`…); and weekday templates (`next {0}`)
-- `relativeGrammar`: phrase templates with `{amount}`, `{unit}` and `{target}` (`in {amount} {unit}`,
-  `il y a {amount} {unit}`, `{target} prochain`), special days with their offset, number words, unit words and
-  period words, all lower-case
 
 `Locale` values are plain objects; only `plural` and `ordinal` are functions. A pack may spread another
 (`{ ...en, code: 'en-GB' }`).
@@ -347,24 +345,6 @@ second with `numeric: 'auto'` is `locale.relative.now` (`now`); a day or more us
 parts. `relativeTo` may be either type: a date takes a date-time's date, a date-time compares with a date's
 midnight. A plural category without a template falls back to `other`.
 
-**Parsing:** `LocalDate.parseRelative(text, options?)`, where `options` are `{ relativeTo?, locale? }`.
-The grammar is fixed per locale, is case-insensitive and ignores surrounding whitespace. English forms:
-
-| Form                                 | Examples                                                                       |
-| ------------------------------------ | ------------------------------------------------------------------------------ |
-| special words                        | `today`, `yesterday`, `tomorrow`, `day after tomorrow`, `day before yesterday` |
-| `in N <unit>`                        | `in 3 days`, `in 2 weeks`, `in a month`, `in one year`                         |
-| `N <unit> ago`                       | `3 days ago`, `a week ago`                                                     |
-| `next\|last\|this <weekday>`         | `next friday`, `last mon`                                                      |
-| `next\|last\|this week\|month\|year` | returns the **start** of that period (assumption)                              |
-| `<weekday>` alone                    | the next occurrence, or today if it matches (assumption)                       |
-
-Numbers: digits, plus number words `one` to `twelve` and the indefinite article (`a`, `an`) in every
-locale. Unrecognised input throws `DaisyParseError`. `tryParseRelative` returns `null` instead.
-Each locale pack provides its own grammar data: `in 3 Tagen`, `vor 2 Wochen`, `nächsten Freitag`,
-`übermorgen`, `dans 3 jours`, `il y a 2 semaines`, `vendredi prochain`, `après-demain`,
-`dentro de 3 días`, `hace 2 semanas`, `el próximo viernes`, `pasado mañana`.
-
 ### 6.5 Duration and period text
 
 `period.format(options?)` and `duration.format(options?)`:
@@ -430,8 +410,7 @@ matching task starts.
    keep the build config small so switching later is easy.
 3. `LocalDateTime#until` returns `{ period, duration }` (default), or only a `Duration`?
 4. Two-digit years (`yy`): map to `2000–2099` (default), or use a sliding window around the current year?
-5. Bare weekday in `parseRelative` (`"friday"`): the next occurrence including today (default), or
-   strictly after today?
+5. ~~Bare weekday in `parseRelative`~~: obsolete, relative parsing was dropped (2026-10-02).
 6. Should `LocalDateRange` also support open-ended ranges (no end)? Default: no, not in v1.
 
 ## 11. Tasks

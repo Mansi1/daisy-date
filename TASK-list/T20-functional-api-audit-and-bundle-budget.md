@@ -8,7 +8,7 @@
 
 - Check that every logic-bearing method has a standalone function that it delegates to (§7), with type-correct overloads.
 - size-limit in CI: fix budgets for `{ plusDays }`, `{ LocalDate }`, `{ format }`, and each locale.
-  Confirm that unused locales and relative parsing are tree-shaken out.
+  Confirm that unused locales are tree-shaken out.
 
 ## Definition of done
 

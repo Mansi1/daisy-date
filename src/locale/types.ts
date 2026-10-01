@@ -92,26 +92,6 @@ export type RelativePhrases = {
   readonly past: PluralForms;
 };
 
-/** Phrase templates for the relative parser: `{amount}`, `{unit}` and `{target}` stand for the parsed parts. */
-export type RelativeGrammar = {
-  /** Forms such as `in {amount} {unit}`. */
-  readonly future: readonly string[];
-  /** Forms such as `{amount} {unit} ago`. */
-  readonly past: readonly string[];
-  /** Whole phrases and their day offset, lower-case: `tomorrow` is 1. */
-  readonly specialDays: Readonly<Record<string, number>>;
-  /** Number words and articles, lower-case: `a` and `one` are 1. */
-  readonly numbers: Readonly<Record<string, number>>;
-  /** Unit words in every accepted form, lower-case: `day`, `days` and `d` are all `day`. */
-  readonly units: Readonly<Record<string, RelativeUnit>>;
-  /** Forms such as `next {target}`, where the target is a weekday or a period word. */
-  readonly next: readonly string[];
-  readonly last: readonly string[];
-  readonly this: readonly string[];
-  /** Period words for `next week` and similar, lower-case. */
-  readonly periods: Readonly<Record<string, 'week' | 'month' | 'year'>>;
-};
-
 /**
  * Everything daisy needs to write and read dates in one language. A locale is plain data plus two small pure
  * helpers (`plural`, `ordinal`); import the packs you need from `daisy-date/locale/…`.
@@ -154,5 +134,4 @@ export type Locale = {
     /** Templates with `{0}` for the weekday name: `next {0}`. */
     readonly weekdays: { readonly last: string; readonly this: string; readonly next: string };
   };
-  readonly relativeGrammar: RelativeGrammar;
 };

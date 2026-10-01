@@ -372,7 +372,6 @@ daisy is being built in the open, task by task ([task list](./TASK-list/README.m
 Coming next:
 
 - German, French and Spanish locale packs
-- Parsing relative text: `LocalDate.parseRelative('next friday')`, `'in 3 days'`
 - Period and duration text: `'2 weeks and 3 days'`
 
 ## Contributing

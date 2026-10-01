@@ -104,7 +104,6 @@ export type {
   PluralForms,
   PresetStyle,
   Presets,
-  RelativeGrammar,
   RelativePhrases,
   RelativeStyle,
   RelativeUnit,

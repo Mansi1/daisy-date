@@ -32,7 +32,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 - [x] [T14 · Range formatting](./T14-range-formatting.md)
 - [x] [T15 · Pattern parsing](./T15-pattern-parsing.md)
 - [x] [T16 · Relative formatting](./T16-relative-formatting.md)
-- [ ] [T17 · Relative parsing](./T17-relative-parsing.md)
+- ~~[T17 · Relative parsing](./T17-relative-parsing.md)~~ — dropped (2026-10-02)
 - [ ] [T18 · Period and duration text](./T18-period-and-duration-text.md)
 - [ ] [T19 · `de`, `fr`, `es` locale packs](./T19-de-fr-es-locale-packs.md)
 
@@ -48,7 +48,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 T01 ─┬─ T02 ───────────────────────────────────────────────┐
      └─ T03 ─ T04 ─┬─ T05 ─ T06 ─┬─ T09 ─┬─ T13 ─┬─ T15    │
                    ├─ T07 ───────┤       │       ├─ T14    │
-                   ├─ T08 ───────┘       ├─ T16 ─ T17      │
+                   ├─ T08 ───────┘       ├─ T16            │
                    └─ T12 ───────────────┘                 │
                                  T06 ─ T10 ─ T11           │
                    T07,T08,T12 ─ T18                       │
