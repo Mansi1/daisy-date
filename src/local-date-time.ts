@@ -482,8 +482,8 @@ export class LocalDateTime extends ComparableValue<LocalDateTime> {
     });
   }
 
-  /** Formats with an LDML pattern or a preset (`'short'` … `'full'`): `'yyyy-MM-dd HH:mm'` gives `2026-09-28 14:30`. */
-  format(pattern: string, options?: FormatOptions): string {
+  /** Formats with an LDML pattern or a preset (`'short'` … `'full'`, default `'medium'`): `'yyyy-MM-dd HH:mm'` gives `2026-09-28 14:30`. */
+  format(pattern?: string, options?: FormatOptions): string {
     return format(this, pattern, options);
   }
 
