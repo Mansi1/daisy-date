@@ -6,9 +6,9 @@
 
 ## Scope
 
-- Complete packs, each with its own entry point, covering names, presets, ordinals, relative phrases and grammar
+- Complete packs, each with its own entry point, covering names, presets, ordinals, relative phrases
   (`übermorgen`, `il y a`, `hace`), unit plurals, and range separators.
-- Each locale runs the same table-driven suites as `en` (format, parse round-trip, relative format and parse,
+- Each locale runs the same table-driven suites as `en` (format, parse round-trip, relative format,
   duration text).
 - A native-speaker review of the strings is recommended before 1.0.
 
