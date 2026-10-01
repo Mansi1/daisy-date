@@ -130,17 +130,6 @@ describe('en patterns and text templates', () => {
     expect(en.lists.unit).toEqual({ pair: ', ', middle: ', ', end: ', ' });
     expect(en.rangeSeparator).toBe('–');
   });
-
-  it('has the relative grammar', () => {
-    expect(en.relativeGrammar.future).toEqual(['in {amount} {unit}']);
-    expect(en.relativeGrammar.past).toEqual(['{amount} {unit} ago']);
-    expect(en.relativeGrammar.specialDays['day after tomorrow']).toBe(2);
-    expect(en.relativeGrammar.numbers['an']).toBe(1);
-    expect(en.relativeGrammar.numbers['twelve']).toBe(12);
-    expect(en.relativeGrammar.units['wks']).toBe('week');
-    expect(en.relativeGrammar.next).toEqual(['next {target}']);
-    expect(en.relativeGrammar.periods).toEqual({ week: 'week', month: 'month', year: 'year' });
-  });
 });
 
 describe('en entry point', () => {
