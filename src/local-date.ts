@@ -54,6 +54,8 @@ import type { Period } from './period';
 import { resolveTimeZone } from './internal/time-zone';
 import { translateRangeError } from './internal/translate-range-error';
 import type { ParseOptions } from './parse/pattern-parser';
+import { parseRelativeDate } from './parse/relative-parser';
+import type { RelativeParseOptions } from './parse/relative-parser';
 import { nullOnParseError, parseDate } from './parse/resolve';
 
 const ISO_DATE_FORMAT = /^(?:[+-]\d{6}|\d{4})-\d{2}-\d{2}$/;
@@ -153,6 +155,19 @@ export class LocalDate extends ComparableValue<LocalDate> {
   /** Like `parse`, but returns `null` for text that doesn't match; invalid patterns still throw. */
   static tryParse(text: string, pattern?: string, options?: ParseOptions): LocalDate | null {
     return nullOnParseError(() => LocalDate.parse(text, pattern, options));
+  }
+
+  /**
+   * Parses relative text with the locale's grammar: `tomorrow`, `in 3 days`, `a week ago`, `next friday`,
+   * `last month` (its first day) or a bare weekday (its next occurrence, today included).
+   */
+  static parseRelative(text: string, options?: RelativeParseOptions): LocalDate {
+    return parseRelativeDate(text, options);
+  }
+
+  /** Like `parseRelative`, but returns `null` for text the grammar doesn't cover. */
+  static tryParseRelative(text: string, options?: RelativeParseOptions): LocalDate | null {
+    return nullOnParseError(() => parseRelativeDate(text, options));
   }
 
   /** Returns the current date in `timeZone` (an IANA name), defaulting to the system time zone. */
