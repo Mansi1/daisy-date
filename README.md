@@ -258,6 +258,26 @@ throw a `DaisyFormatError`.
 | `H` `h` `K` `k` (×2 pads)     | hour 0–23, 1–12, 0–11, 1–24                | `14` `2` `2` `14`              |
 | `m` `s` / `S` `SS` `SSS`      | minute, second / fraction                  | `05` `09` / `0` `04` `045`     |
 
+### Relative text
+
+```ts
+const today = LocalDate.parse('2026-09-28'); // a Monday
+
+LocalDate.parse('2026-09-29').formatRelative({ relativeTo: today }); // 'tomorrow'
+LocalDate.parse('2026-10-01').formatRelative({ relativeTo: today }); // 'this Thursday'
+LocalDate.parse('2026-10-12').formatRelative({ relativeTo: today }); // 'in 2 weeks'
+LocalDate.parse('2025-09-28').formatRelative({ relativeTo: today }); // '1 year ago'
+LocalDate.parse('2026-10-01').formatRelative({ relativeTo: today, numeric: 'always' }); // 'in 3 days'
+LocalDate.parse('2026-10-12').formatRelative({ relativeTo: today, style: 'short' }); // 'in 2 wks'
+
+const noon = LocalDateTime.parse('2026-09-28T12:00');
+LocalDateTime.parse('2026-09-28T12:45').formatRelative({ relativeTo: noon }); // 'in 45 minutes'
+```
+
+Without `relativeTo`, text is relative to today (or now) in the system time zone. Up to two days away you get
+words (`today`, `the day after tomorrow`), up to six days a weekday (`next Friday`, `last Monday`), then days,
+weeks, months and years. Date-times less than a day apart use hours, minutes and seconds.
+
 ### Parsing
 
 `parse` reads ISO 8601 by default, or any text with a pattern or preset:
@@ -352,7 +372,8 @@ daisy is being built in the open, task by task ([task list](./TASK-list/README.m
 Coming next:
 
 - German, French and Spanish locale packs
-- Relative text in both directions: `"in 3 days"`, `"next Friday"`, `"vor 2 Wochen"`
+- Parsing relative text: `LocalDate.parseRelative('next friday')`, `'in 3 days'`
+- Period and duration text: `'2 weeks and 3 days'`
 
 ## Contributing
 

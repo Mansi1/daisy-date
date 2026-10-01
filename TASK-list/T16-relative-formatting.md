@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 3 — Localization and text  
 **Depends on:** [T12](./T12-locale-interface-and-en.md), [T09](./T09-localdatetime.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 
