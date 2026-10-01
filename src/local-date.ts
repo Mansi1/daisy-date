@@ -11,6 +11,8 @@ import {
   plusBusinessDays,
 } from './functions/business-days';
 import type { WeekendOptions } from './functions/business-days';
+import { format } from './functions/format';
+import type { FormatOptions } from './functions/format';
 import { atStartOfDay, atTime } from './functions/combine';
 import {
   endOfMonth,
@@ -372,6 +374,11 @@ export class LocalDate extends ComparableValue<LocalDate> {
   /** Returns the ISO 8601 form, such as `2026-09-28`. */
   override toString(): string {
     return this.#plainDate.toString();
+  }
+
+  /** Formats with an LDML pattern or a preset (`'short'` … `'full'`): `'EEEE, d MMMM yyyy'` gives `Monday, 28 September 2026`. */
+  format(pattern: string, options?: FormatOptions): string {
+    return format(this, pattern, options);
   }
 
   toJSON(): string {

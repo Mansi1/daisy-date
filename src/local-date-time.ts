@@ -42,6 +42,8 @@ import {
   plusBusinessDays,
 } from './functions/business-days';
 import type { WeekendOptions } from './functions/business-days';
+import { format } from './functions/format';
+import type { FormatOptions } from './functions/format';
 import {
   endOfDay,
   minusHours,
@@ -478,6 +480,11 @@ export class LocalDateTime extends ComparableValue<LocalDateTime> {
     return this.#plainDateTime.toString({
       fractionalSecondDigits: this.millisecond === 0 ? 0 : MILLISECOND_DIGITS,
     });
+  }
+
+  /** Formats with an LDML pattern or a preset (`'short'` … `'full'`): `'yyyy-MM-dd HH:mm'` gives `2026-09-28 14:30`. */
+  format(pattern: string, options?: FormatOptions): string {
+    return format(this, pattern, options);
   }
 
   toJSON(): string {

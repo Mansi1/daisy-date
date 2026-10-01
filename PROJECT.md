@@ -272,9 +272,15 @@ in v1:
 | `S…SSS`                            | fraction of second                                | `123`                              |
 | `'text'`, `''`                     | literal, escaped quote                            |                                    |
 
-Named presets: `format('long')` resolves through `locale.patterns`. Time fields on a `LocalDate`
-throw `DaisyFormatError`. Unknown letters throw at compile time of the pattern. Compiled patterns
-are cached per (pattern, locale).
+Named presets: `format('long')` resolves through `locale.patterns` (`date` presets for a `LocalDate`,
+`dateTime` presets for a `LocalDateTime`). Time fields on a `LocalDate` throw `DaisyFormatError`. Unknown
+letters, unterminated quotes and unsupported widths (`ddd`, `SSSS`) throw when the pattern is compiled.
+
+Decisions made in T13: compiled patterns are cached by pattern text only, because the locale is applied when
+rendering, so one compiled pattern serves every locale; the cache holds at most 256 patterns and is cleared
+when full. `y` pads to its width except `yy` (last two digits); `S…SSS` truncate the milliseconds. The
+`do` ordinal from date-fns is **not** a pattern letter (LDML has no `o`); `locale.ordinal` stays available for
+text features.
 
 ### 6.3 Pattern parsing
 

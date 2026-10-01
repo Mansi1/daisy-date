@@ -17,6 +17,7 @@ export type CalendarFields = {
   readonly dayOfWeek: number;
   readonly dayOfYear: number;
   readonly weekOfYear: number | undefined;
+  readonly yearOfWeek: number | undefined;
   readonly daysInMonth: number;
   readonly daysInYear: number;
   readonly inLeapYear: boolean;

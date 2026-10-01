@@ -8,3 +8,11 @@ export const isoWeekOfYear = (fields: CalendarFields, description: string): numb
   }
   return fields.weekOfYear;
 };
+
+/** Reads the ISO week-based year (`Y`), which Temporal leaves undefined only for non-ISO calendars. */
+export const isoWeekBasedYear = (fields: CalendarFields, description: string): number => {
+  if (fields.yearOfWeek === undefined) {
+    throw new DaisyRangeError(`No ISO week-based year for ${description}`);
+  }
+  return fields.yearOfWeek;
+};
