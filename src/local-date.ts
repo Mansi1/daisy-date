@@ -12,6 +12,8 @@ import {
 } from './functions/business-days';
 import type { WeekendOptions } from './functions/business-days';
 import { format } from './functions/format';
+import { formatRelative } from './functions/relative-format';
+import type { RelativeOptions } from './functions/relative-format';
 import type { FormatOptions } from './functions/format';
 import { atStartOfDay, atTime } from './functions/combine';
 import {
@@ -392,6 +394,11 @@ export class LocalDate extends ComparableValue<LocalDate> {
   /** Formats with an LDML pattern or a preset (`'short'` … `'full'`, default `'medium'`): `'EEEE, d MMMM yyyy'` gives `Monday, 28 September 2026`. */
   format(pattern?: string, options?: FormatOptions): string {
     return format(this, pattern, options);
+  }
+
+  /** Describes this date relative to `options.relativeTo` (default: today): `tomorrow`, `next Friday`, `in 3 weeks`. */
+  formatRelative(options?: RelativeOptions): string {
+    return formatRelative(this, options);
   }
 
   toJSON(): string {

@@ -135,6 +135,7 @@ export const en: Locale = {
       tomorrow: 'tomorrow',
       dayAfterTomorrow: 'the day after tomorrow',
     },
+    now: 'now',
     weekdays: { last: 'last {0}', this: 'this {0}', next: 'next {0}' },
   },
   relativeGrammar: {

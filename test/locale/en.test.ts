@@ -121,6 +121,7 @@ describe('en patterns and text templates', () => {
       },
     });
     expect(en.relative.days.dayAfterTomorrow).toBe('the day after tomorrow');
+    expect(en.relative.now).toBe('now');
     expect(en.relative.weekdays).toEqual({ last: 'last {0}', this: 'this {0}', next: 'next {0}' });
   });
 

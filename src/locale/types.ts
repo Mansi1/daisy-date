@@ -149,6 +149,8 @@ export type Locale = {
       readonly tomorrow: string;
       readonly dayAfterTomorrow: string;
     };
+    /** The word for no difference at all, used with `numeric: 'auto'`: `now`. */
+    readonly now: string;
     /** Templates with `{0}` for the weekday name: `next {0}`. */
     readonly weekdays: { readonly last: string; readonly this: string; readonly next: string };
   };
