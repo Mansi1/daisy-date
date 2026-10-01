@@ -2,6 +2,8 @@ import type { DayOfWeek } from './day-of-week';
 import { DaisyParseError, DaisyRangeError } from './errors';
 import { endOfMonth, endOfWeek, endOfYear, startOfWeek } from './functions/adjusters';
 import { plusDays } from './functions/arithmetic';
+import { format } from './functions/format';
+import type { FormatOptions } from './functions/format';
 import { businessDays, fallsOnWeekend, resolveWeekend } from './functions/business-days';
 import type { WeekendOptions } from './functions/business-days';
 import {
@@ -180,6 +182,14 @@ export class LocalDateRange {
 
   equals(other: LocalDateRange): boolean {
     return this.start.equals(other.start) && this.end.equals(other.end);
+  }
+
+  /**
+   * Formats the range, printing the fields both ends share once: `1–3 Oct 2026`, `28 Sep – 3 Oct 2026`. Takes an
+   * LDML pattern or a date preset (default `'medium'`); numeric-only patterns print both ends in full.
+   */
+  format(pattern?: string, options?: FormatOptions): string {
+    return format(this, pattern, options);
   }
 
   /** Returns the ISO 8601 interval, such as `2026-10-01/2026-10-03`. */

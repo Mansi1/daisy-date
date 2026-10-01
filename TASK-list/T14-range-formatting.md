@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 3 — Localization and text  
 **Depends on:** [T10](./T10-localdaterange.md), [T13](./T13-pattern-compiler-and-format.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 

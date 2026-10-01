@@ -376,8 +376,8 @@ export class LocalDate extends ComparableValue<LocalDate> {
     return this.#plainDate.toString();
   }
 
-  /** Formats with an LDML pattern or a preset (`'short'` … `'full'`): `'EEEE, d MMMM yyyy'` gives `Monday, 28 September 2026`. */
-  format(pattern: string, options?: FormatOptions): string {
+  /** Formats with an LDML pattern or a preset (`'short'` … `'full'`, default `'medium'`): `'EEEE, d MMMM yyyy'` gives `Monday, 28 September 2026`. */
+  format(pattern?: string, options?: FormatOptions): string {
     return format(this, pattern, options);
   }
 
