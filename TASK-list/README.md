@@ -30,7 +30,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 - [x] [T12 · Locale interface and `en`](./T12-locale-interface-and-en.md)
 - [x] [T13 · Pattern compiler and `format`](./T13-pattern-compiler-and-format.md)
 - [x] [T14 · Range formatting](./T14-range-formatting.md)
-- [ ] [T15 · Pattern parsing](./T15-pattern-parsing.md)
+- [x] [T15 · Pattern parsing](./T15-pattern-parsing.md)
 - [ ] [T16 · Relative formatting](./T16-relative-formatting.md)
 - [ ] [T17 · Relative parsing](./T17-relative-parsing.md)
 - [ ] [T18 · Period and duration text](./T18-period-and-duration-text.md)

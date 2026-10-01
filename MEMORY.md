@@ -47,6 +47,8 @@
   In the ESM build `daisy-date/locale/en` and the root share one `en` object; in CJS they are separate copies.
 - 2026-09-29 (T13): locale name lookups go through `nameAt` (throws on a missing entry) instead of `?? ''`, whose fallback
   branch no test can reach; coverage is at 100 % and the owner wants unreachable branches tested, not tolerated.
+- 2026-10-02 (T15): parsed fields carry `{ value, position }` together, so consistency errors always have an index;
+  pattern checks run before reading text, and the resolver's own guards are tested directly via `dateFromFields`.
 - 2026-09-29: git strips commit-message lines that start with `#` (e.g. `#atTime`); reword instead of starting a line with it.
 - 2026-09-29: the `main` ruleset requires up-to-date branches, so after one PR merges every other open PR needs
   "Update branch" (or a rebase and force-push) plus a fresh CI run before it can merge.

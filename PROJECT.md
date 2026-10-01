@@ -301,7 +301,17 @@ the same symbols as §6.2, except week-based fields in v1.
 - A parsed weekday must agree with the date, otherwise `DaisyParseError`.
 - `options.strict` (default `true`): numeric widths must match exactly and trailing text is an error.
 - `yy` maps to `2000–2099` (assumption, see §10 Q4).
-- Also `tryParse(...)`, which returns `null` instead of throwing.
+- Also `tryParse(...)`, which returns `null` instead of throwing a `DaisyParseError`; pattern errors still throw.
+
+Decisions made in T15: without a pattern, `parse` stays ISO-only; presets (`'medium'` …) work as patterns. Pattern
+problems are reported before any text is read, as `DaisyFormatError`: narrow names, the week fields `Y`, `w`,
+`e`, `c`, time fields for a `LocalDate`, `h`/`K` without `a`, and patterns without a year or without month and
+day (or `D`). Strict mode requires the exact digit count for widths of 2 and more, the exact name form (`MMM` vs
+`MMMM`; `EEEEEE` for short weekdays) and no trailing text; lenient mode accepts 1 to N digits, wide or
+abbreviated names (and short weekdays) and trailing text. Names match case-insensitively; literals match
+exactly. `D` and `Q` may be combined with month and day and must then agree, like the weekday. A field given
+twice (`MM … MM`) must repeat the same value. `S…SSS` read a fraction (`.5` is 500 ms); `k` 24 is midnight.
+Impossible dates (`31.02.2026`) are a `DaisyParseError` whose cause is the `DaisyRangeError`.
 
 ### 6.4 Relative text
 

@@ -258,6 +258,27 @@ throw a `DaisyFormatError`.
 | `H` `h` `K` `k` (×2 pads)     | hour 0–23, 1–12, 0–11, 1–24                | `14` `2` `2` `14`              |
 | `m` `s` / `S` `SS` `SSS`      | minute, second / fraction                  | `05` `09` / `0` `04` `045`     |
 
+### Parsing
+
+`parse` reads ISO 8601 by default, or any text with a pattern or preset:
+
+```ts
+LocalDate.parse('28.09.2026', 'dd.MM.yyyy'); // 2026-09-28
+LocalDate.parse('Monday, September 28, 2026', 'full'); // 2026-09-28
+LocalDateTime.parse('28.09.2026 2:05 PM', 'dd.MM.yyyy h:mm a'); // 2026-09-28T14:05:00
+LocalDate.tryParse('31.02.2026', 'dd.MM.yyyy'); // null instead of an error
+```
+
+Parsing is strict by default: `dd` needs two digits, `MMM` needs `Sep` (not `September`), the weekday must match
+the date, and nothing may follow. `{ strict: false }` accepts single digits, either name form and trailing text.
+Errors carry the `index` where the text stopped matching. Narrow names (`MMMMM`), week fields (`w`, `Y`) and
+patterns that can't produce a date (`dd.MM`) throw a `DaisyFormatError`; `yy` means 2000–2099.
+
+```ts
+LocalDate.parse('28.9.2026', 'dd.MM.yyyy'); // DaisyParseError: Expected 2 digits for "MM" … at index 3
+LocalDate.parse('28.9.2026', 'dd.MM.yyyy', { strict: false }); // 2026-09-28
+```
+
 ### Locales
 
 English is built in and is the default. A locale holds the names, presets and phrases that formatting uses; pass
@@ -330,7 +351,6 @@ try {
 daisy is being built in the open, task by task ([task list](./TASK-list/README.md), [specification](./PROJECT.md)).
 Coming next:
 
-- Pattern parsing (`LocalDate.parse('28.09.2026', 'dd.MM.yyyy')`)
 - German, French and Spanish locale packs
 - Relative text in both directions: `"in 3 days"`, `"next Friday"`, `"vor 2 Wochen"`
 
