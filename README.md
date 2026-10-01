@@ -278,6 +278,21 @@ Without `relativeTo`, text is relative to today (or now) in the system time zone
 words (`today`, `the day after tomorrow`), up to six days a weekday (`next Friday`, `last Monday`), then days,
 weeks, months and years. Date-times less than a day apart use hours, minutes and seconds.
 
+Relative text can be read back too:
+
+```ts
+LocalDate.parseRelative('tomorrow', { relativeTo: today }); // 2026-09-29
+LocalDate.parseRelative('in 3 days', { relativeTo: today }); // 2026-10-01
+LocalDate.parseRelative('a week ago', { relativeTo: today }); // 2026-09-21
+LocalDate.parseRelative('next friday', { relativeTo: today }); // 2026-10-09 (Friday of next week)
+LocalDate.parseRelative('next month', { relativeTo: today }); // 2026-10-01 (its first day)
+LocalDate.parseRelative('friday', { relativeTo: today }); // 2026-10-02 (the next one, today included)
+LocalDate.tryParseRelative('in three', { relativeTo: today }); // null
+```
+
+Case and extra spaces don't matter; numbers may be digits, `a`/`an` or `one` to `twelve`. `next`, `this` and
+`last` mean the same calendar week as in `formatRelative`, so formatted text parses back to the same date.
+
 ### Parsing
 
 `parse` reads ISO 8601 by default, or any text with a pattern or preset:
@@ -372,7 +387,6 @@ daisy is being built in the open, task by task ([task list](./TASK-list/README.m
 Coming next:
 
 - German, French and Spanish locale packs
-- Parsing relative text: `LocalDate.parseRelative('next friday')`, `'in 3 days'`
 - Period and duration text: `'2 weeks and 3 days'`
 
 ## Contributing

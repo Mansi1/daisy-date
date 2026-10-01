@@ -360,7 +360,14 @@ The grammar is fixed per locale, is case-insensitive and ignores surrounding whi
 | `<weekday>` alone                    | the next occurrence, or today if it matches (assumption)                       |
 
 Numbers: digits, plus number words `one` to `twelve` and the indefinite article (`a`, `an`) in every
-locale. Unrecognised input throws `DaisyParseError`. `tryParseRelative` returns `null` instead.
+locale.
+
+Decisions made in T17: `next|last|this <weekday>` picks that weekday in the next, previous or current calendar
+week (by the locale's `firstDayOfWeek`), matching `formatRelative`, so `next friday` from a Monday is Friday of
+the following week. The parser splits the text and each `relativeGrammar` template on whitespace and matches
+them token by token (`{amount}`, `{unit}`, `{target}`), so the same code reads `vor {amount} {unit}`,
+`il y a {amount} {unit}` and `{target} prochain`. Only date units are accepted (`in 3 hours` is rejected); an
+amount that leaves the supported range throws `DaisyRangeError`. Unrecognised input throws `DaisyParseError`. `tryParseRelative` returns `null` instead.
 Each locale pack provides its own grammar data: `in 3 Tagen`, `vor 2 Wochen`, `nächsten Freitag`,
 `übermorgen`, `dans 3 jours`, `il y a 2 semaines`, `vendredi prochain`, `après-demain`,
 `dentro de 3 días`, `hace 2 semanas`, `el próximo viernes`, `pasado mañana`.

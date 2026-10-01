@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 3 — Localization and text  
 **Depends on:** [T16](./T16-relative-formatting.md)  
-**Status:** todo
+**Status:** done
 
 ## Scope
 
