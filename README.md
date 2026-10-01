@@ -278,6 +278,22 @@ Without `relativeTo`, text is relative to today (or now) in the system time zone
 words (`today`, `the day after tomorrow`), up to six days a weekday (`next Friday`, `last Monday`), then days,
 weeks, months and years. Date-times less than a day apart use hours, minutes and seconds.
 
+### Period and duration text
+
+```ts
+Period.parse('P2W3D').format(); // '2 weeks and 3 days'
+Period.parse('P1Y2M3D').format(); // '1 year, 2 months, and 3 days'
+Period.parse('P1Y2M3D').format({ largestUnits: 2 }); // '1 year and 2 months'
+Period.parse('P2W3D').format({ style: 'short' }); // '2 wks and 3 d'
+Period.parse('P2W3D').format({ style: 'narrow' }); // '2w 3d'
+Period.parse('P2W3D').format({ list: 'unit' }); // '2 weeks, 3 days'
+Duration.parse('PT90M').normalized().format(); // '1 hour and 30 minutes'
+Period.parse('P0D').format(); // '0 days'
+```
+
+Components are written as stored, so `PT90M` is `90 minutes` until you call `normalized()`. `zeros: 'show'` also
+writes zero components; `format(amount, options)` is the standalone form.
+
 ### Parsing
 
 `parse` reads ISO 8601 by default, or any text with a pattern or preset:
@@ -372,7 +388,6 @@ daisy is being built in the open, task by task ([task list](./TASK-list/README.m
 Coming next:
 
 - German, French and Spanish locale packs
-- Period and duration text: `'2 weeks and 3 days'`
 
 ## Contributing
 
