@@ -51,6 +51,8 @@ import type { LocalDateTime } from './local-date-time';
 import type { Period } from './period';
 import { resolveTimeZone } from './internal/time-zone';
 import { translateRangeError } from './internal/translate-range-error';
+import type { ParseOptions } from './parse/pattern-parser';
+import { nullOnParseError, parseDate } from './parse/resolve';
 
 const ISO_DATE_FORMAT = /^(?:[+-]\d{6}|\d{4})-\d{2}-\d{2}$/;
 
@@ -127,8 +129,14 @@ export class LocalDate extends ComparableValue<LocalDate> {
     );
   }
 
-  /** Parses an ISO 8601 calendar date (`2026-09-28`, or `+010000-01-01` for extended years). */
-  static parse(text: string): LocalDate {
+  /**
+   * Parses an ISO 8601 date (`2026-09-28`, `+010000-01-01`), or `text` with an LDML pattern or date preset:
+   * `LocalDate.parse('28.09.2026', 'dd.MM.yyyy')`. Throws `DaisyParseError` for text that doesn't match.
+   */
+  static parse(text: string, pattern?: string, options?: ParseOptions): LocalDate {
+    if (pattern !== undefined) {
+      return parseDate(text, pattern, options);
+    }
     if (!ISO_DATE_FORMAT.test(text)) {
       throw new DaisyParseError('Expected an ISO 8601 date (yyyy-MM-dd)', { input: text });
     }
@@ -138,6 +146,11 @@ export class LocalDate extends ComparableValue<LocalDate> {
         (cause) => new DaisyParseError('Invalid ISO 8601 date', { input: text }, { cause }),
       ),
     );
+  }
+
+  /** Like `parse`, but returns `null` for text that doesn't match; invalid patterns still throw. */
+  static tryParse(text: string, pattern?: string, options?: ParseOptions): LocalDate | null {
+    return nullOnParseError(() => LocalDate.parse(text, pattern, options));
   }
 
   /** Returns the current date in `timeZone` (an IANA name), defaulting to the system time zone. */

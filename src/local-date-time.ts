@@ -68,6 +68,8 @@ import { getTemporal } from './internal/temporal';
 import type { PlainDateTimeLike } from './internal/temporal';
 import { resolveTimeZone } from './internal/time-zone';
 import { translateRangeError } from './internal/translate-range-error';
+import type { ParseOptions } from './parse/pattern-parser';
+import { nullOnParseError, parseDateTime } from './parse/resolve';
 import { fromPlainDate } from './local-date';
 import type { LocalDate } from './local-date';
 import type { Period } from './period';
@@ -146,8 +148,14 @@ export class LocalDateTime extends ComparableValue<LocalDateTime> {
     );
   }
 
-  /** Parses an ISO 8601 date-time such as `2026-09-28T14:30`, `2026-09-28T14:30:15` or `2026-09-28T14:30:15.250`. */
-  static parse(text: string): LocalDateTime {
+  /**
+   * Parses an ISO 8601 date-time (`2026-09-28T14:30`, `…T14:30:15.250`), or `text` with an LDML pattern or
+   * date-time preset: `LocalDateTime.parse('28.09.2026 14:30', 'dd.MM.yyyy HH:mm')`.
+   */
+  static parse(text: string, pattern?: string, options?: ParseOptions): LocalDateTime {
+    if (pattern !== undefined) {
+      return parseDateTime(text, pattern, options);
+    }
     const match = ISO_DATE_TIME_FORMAT.exec(text);
     if (match === null) {
       throw new DaisyParseError('Expected an ISO 8601 date-time (yyyy-MM-ddTHH:mm:ss.SSS)', {
@@ -164,6 +172,11 @@ export class LocalDateTime extends ComparableValue<LocalDateTime> {
         (cause) => new DaisyParseError('Invalid ISO 8601 date-time', { input: text }, { cause }),
       ),
     );
+  }
+
+  /** Like `parse`, but returns `null` for text that doesn't match; invalid patterns still throw. */
+  static tryParse(text: string, pattern?: string, options?: ParseOptions): LocalDateTime | null {
+    return nullOnParseError(() => LocalDateTime.parse(text, pattern, options));
   }
 
   /** Returns the current date and time in `timeZone` (an IANA name), defaulting to the system time zone. */
