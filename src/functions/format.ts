@@ -3,11 +3,11 @@ import { DaisyFormatError } from '../errors';
 import { fieldSourceOf } from '../format/field-source';
 import type { FieldSource } from '../format/field-source';
 import { compilePattern } from '../format/pattern';
-import type { FieldSymbol } from '../format/pattern';
+import type { FieldSymbol, PatternToken } from '../format/pattern';
 import { assertNever } from '../internal/assert-never';
 import { getDefaultLocale } from '../locale/default-locale';
 import { PRESET_STYLE } from '../locale/types';
-import type { Locale, PresetStyle } from '../locale/types';
+import type { Locale, PresetStyle, Presets } from '../locale/types';
 import { LocalDateTime } from '../local-date-time';
 import type { DateValue } from './date-part';
 
@@ -131,6 +131,24 @@ export const renderField = (
   }
 };
 
+/** Internal: renders compiled tokens for one value. */
+export const renderTokens = (
+  tokens: readonly PatternToken[],
+  source: FieldSource,
+  locale: Locale,
+): string =>
+  tokens
+    .map((token) =>
+      token.kind === 'literal'
+        ? token.text
+        : renderField(token.symbol, token.width, source, locale),
+    )
+    .join('');
+
+/** Internal: returns the preset's pattern if `pattern` names a preset, otherwise `pattern` itself. */
+export const resolvePattern = (pattern: string, presets: Presets): string =>
+  isPresetStyle(pattern) ? presets[pattern] : pattern;
+
 /**
  * Formats a date or date-time with an LDML pattern (`'EEEE, d MMMM yyyy'`) or a locale preset (`'short'`,
  * `'medium'`, `'long'`, `'full'`). Time fields on a LocalDate throw `DaisyFormatError`.
@@ -138,7 +156,7 @@ export const renderField = (
 export const format = (value: DateValue, pattern: string, options: FormatOptions = {}): string => {
   const locale = options.locale ?? getDefaultLocale();
   const presets = value instanceof LocalDateTime ? locale.patterns.dateTime : locale.patterns.date;
-  const resolvedPattern = isPresetStyle(pattern) ? presets[pattern] : pattern;
+  const resolvedPattern = resolvePattern(pattern, presets);
   const compiledPattern = compilePattern(resolvedPattern);
   const source = fieldSourceOf(value);
   if (compiledPattern.usesTime && !source.hasTime) {
@@ -146,11 +164,5 @@ export const format = (value: DateValue, pattern: string, options: FormatOptions
       `Pattern "${resolvedPattern}" uses time fields, but a LocalDate has no time`,
     );
   }
-  return compiledPattern.tokens
-    .map((token) =>
-      token.kind === 'literal'
-        ? token.text
-        : renderField(token.symbol, token.width, source, locale),
-    )
-    .join('');
+  return renderTokens(compiledPattern.tokens, source, locale);
 };
