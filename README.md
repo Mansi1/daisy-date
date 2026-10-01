@@ -192,6 +192,14 @@ LocalDateRange.parse('2026-10-30/2026-11-02').splitBy('month');
 // [2026-10-30/2026-10-31, 2026-11-01/2026-11-02]
 ```
 
+Formatting a range prints the fields both ends share only once:
+
+```ts
+trip.format('d MMM yyyy'); // '1–3 Oct 2026'
+LocalDateRange.parse('2026-09-28/2026-10-03').format('d MMM yyyy'); // '28 Sep – 3 Oct 2026'
+LocalDateRange.parse('2026-12-28/2027-01-03').format(); // 'Dec 28, 2026 – Jan 3, 2027'
+```
+
 ### Business days
 
 Business days skip weekends. There are no holiday calendars; you only choose which days form the weekend
@@ -226,6 +234,7 @@ const date = LocalDate.parse('2026-09-28');
 
 date.format('EEEE, d MMMM yyyy'); // 'Monday, 28 September 2026'
 date.format('long'); // 'September 28, 2026'  (presets: short, medium, long, full)
+date.format(); // 'Sep 28, 2026'  (the medium preset)
 date.format("'Q'Q yyyy, 'week' w"); // 'Q3 2026, week 40'
 
 const start = LocalDateTime.parse('2026-09-28T14:05');
@@ -321,7 +330,7 @@ try {
 daisy is being built in the open, task by task ([task list](./TASK-list/README.md), [specification](./PROJECT.md)).
 Coming next:
 
-- Pattern parsing (`LocalDate.parse('28.09.2026', 'dd.MM.yyyy')`) and range formatting (`1–3 Oct 2026`)
+- Pattern parsing (`LocalDate.parse('28.09.2026', 'dd.MM.yyyy')`)
 - German, French and Spanish locale packs
 - Relative text in both directions: `"in 3 days"`, `"next Friday"`, `"vor 2 Wochen"`
 

@@ -160,6 +160,13 @@ An **inclusive** range of calendar days. Stored as `start` and `end`, both `Loca
 - **Convert:** `toString()` returns `"2026-10-01/2026-10-03"`, `format(pattern, options?)` returns
   `"1–3 Oct 2026"` style text using the locale's range separator
 
+Range formatting (T14): the largest calendar field the ends differ in (year, month or day) decides which fields
+vary; the shared fields before the first varying one are printed once from the start, those after the last
+varying one once from the end: `1–3 Oct 2026`, `Oct 1–3, 2026`, `28 Sep – 3 Oct 2026`. The separator is
+`locale.rangeSeparator`, spaced when more than one field varies. Patterns without a month name (`M/d/yy`) print
+both ends in full, since `10/1–3/26` reads badly. Without a pattern, `format()` uses the `medium` date preset;
+this default also applies to `LocalDate#format` and `LocalDateTime#format`.
+
 Decisions made in T10: a range is never empty (`ofDays` needs at least 1 day), `start`/`end` are frozen public
 fields, and `abuts` is symmetric (either range may come first). `parse` accepts only `date/date` intervals, not
 ISO's `date/duration` or abbreviated forms. Iteration is lazy: each date is created when it's requested.
