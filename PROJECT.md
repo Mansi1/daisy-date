@@ -339,6 +339,14 @@ Unit selection, based on the signed day difference `n`:
 
 `LocalDateTime#formatRelative` adds seconds, minutes and hours for differences under one day.
 
+Decisions made in T16: every date within six days lies in the current or an adjacent week, so with `numeric:
+'auto'` days 3 to 6 always become `this/next/last <weekday>`; the week is compared using the locale's
+`firstDayOfWeek`. Weeks, minutes, hours and seconds round down. When 365 days are less than a calendar year
+(2024-01-01 → 2024-12-31), the text uses months (`in 11 months`) instead of `in 0 years`. Date-times: under a
+second with `numeric: 'auto'` is `locale.relative.now` (`now`); a day or more uses the date rules on the date
+parts. `relativeTo` may be either type: a date takes a date-time's date, a date-time compares with a date's
+midnight. A plural category without a template falls back to `other`.
+
 **Parsing:** `LocalDate.parseRelative(text, options?)`, where `options` are `{ relativeTo?, locale? }`.
 The grammar is fixed per locale, is case-insensitive and ignores surrounding whitespace. English forms:
 
