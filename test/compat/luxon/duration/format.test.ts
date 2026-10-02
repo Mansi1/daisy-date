@@ -165,3 +165,17 @@ describe('Luxon duration/format: toHuman', () => {
     );
   });
 });
+
+describe('Luxon duration/format: toHuman with number format options', () => {
+  it('format.test.js:432: the time half in the short style', () => {
+    expect(fixtureDuration.format({ style: 'short', list: 'unit' })).toBe(
+      '4 hr, 5 min, 6 sec, 7 ms',
+    );
+  });
+});
+
+describe('Luxon duration/format: toHuman with number format options (differs from Luxon on purpose)', () => {
+  it('format.test.js:432: the date half in the short style writes days as "d" (README: "2 wks and 3 d")', () => {
+    expect(fixturePeriod.format({ style: 'short', list: 'unit' })).toBe('1 yr, 2 mths, 1 wk, 3 d');
+  });
+});

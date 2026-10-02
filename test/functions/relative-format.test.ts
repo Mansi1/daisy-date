@@ -113,7 +113,7 @@ describe('formatRelative for date-times', () => {
     ['2026-09-30T00:00', 'long', 'auto', 'the day after tomorrow'],
     ['2026-09-25T12:00', 'long', 'auto', 'last Friday'],
     ['2026-09-28T12:00:01', 'short', 'auto', 'in 1 sec'],
-    ['2026-09-28T14:00', 'short', 'auto', 'in 2 hrs'],
+    ['2026-09-28T14:00', 'short', 'auto', 'in 2 hr'],
   ])('from 2026-09-28T12:00, %s (%s, %s) is %j', (text, style, numeric, expected) => {
     expect(formatRelative(dateTime(text), { relativeTo: NOON, style, numeric })).toBe(expected);
   });
