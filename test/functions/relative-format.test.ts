@@ -31,7 +31,7 @@ describe('formatRelative for dates, numeric auto', () => {
     ['2026-09-30', 'the day after tomorrow'],
     ['2026-09-26', 'the day before yesterday'],
     ['2026-10-01', 'this Thursday'],
-    ['2026-10-04', 'this Sunday'],
+    ['2026-10-04', 'next Sunday'],
     ['2026-09-25', 'last Friday'],
     ['2026-09-22', 'last Tuesday'],
     ['2026-10-05', 'in 1 week'],
@@ -67,9 +67,9 @@ describe('formatRelative for dates, numeric auto', () => {
   });
 
   it('takes the week start from the locale', () => {
-    const sundayFirst: Locale = { ...en, firstDayOfWeek: 'sunday' };
-    expect(formatRelative(date('2026-10-04'), { relativeTo: MONDAY, locale: sundayFirst })).toBe(
-      'next Sunday',
+    const mondayFirst: Locale = { ...en, firstDayOfWeek: 'monday' };
+    expect(formatRelative(date('2026-10-04'), { relativeTo: MONDAY, locale: mondayFirst })).toBe(
+      'this Sunday',
     );
   });
 });

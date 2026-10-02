@@ -107,7 +107,7 @@ date.daysUntil(LocalDate.parse('2026-12-24')); // 87
 ### Adjusting
 
 ```ts
-date.startOfWeek(); // 2026-09-28 (weeks start on Monday)
+date.startOfWeek(); // 2026-09-28 (Monday by default; pass 'sunday' for US weeks)
 date.endOfWeek('sunday'); // 2026-10-03 (for weeks starting on Sunday)
 date.endOfMonth(); // 2026-09-30
 date.startOfYear(); // 2026-01-01

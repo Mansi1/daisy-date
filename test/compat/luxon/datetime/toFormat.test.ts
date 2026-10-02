@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
 import { LocalDate, LocalDateTime, en } from '../../../../src';
+import type { Locale } from '../../../../src';
 import { de } from '../../../../src/locale/de';
 import { fr } from '../../../../src/locale/fr';
 
@@ -24,6 +25,8 @@ const fixtureWith = (
   );
 
 const date = (text: string) => LocalDate.parse(text);
+
+const isoWeekLocale: Locale = { ...en, firstDayOfWeek: 'monday' };
 
 describe('Luxon datetime/toFormat, written with LDML letters', () => {
   it.each<[string, LocalDateTime, string, string]>([
@@ -67,8 +70,6 @@ describe('Luxon datetime/toFormat, written with LDML letters', () => {
     ['toFormat.test.js:172', fixtureWith({ day: 1 }), 'd', '1'],
     ['toFormat.test.js:176', LUXON_FIXTURE, 'dd', '25'],
     ['toFormat.test.js:177', fixtureWith({ day: 1 }), 'dd', '01'],
-    ['toFormat.test.js:181 (E)', LUXON_FIXTURE, 'e', '2'],
-    ['toFormat.test.js:182 (c)', LUXON_FIXTURE, 'c', '2'],
     ['toFormat.test.js:186', LUXON_FIXTURE, 'EEE', 'Tue'],
     ['toFormat.test.js:191 (ccc)', LUXON_FIXTURE, 'EEE', 'Tue'],
     ['toFormat.test.js:196', LUXON_FIXTURE, 'EEEE', 'Tuesday'],
@@ -430,4 +431,11 @@ describe('Luxon datetime/toFormat (differs from Luxon on purpose)', () => {
       expect(value.format(pattern, { locale: LOCALES[localeCode] })).toBe(expected);
     },
   );
+});
+
+describe('Luxon ISO weekday numbers', () => {
+  it("toFormat.test.js:181 (E) and toFormat.test.js:182 (c): Luxon's ISO weekday number, written with a Monday-first locale", () => {
+    expect(LUXON_FIXTURE.format('e', { locale: isoWeekLocale })).toBe('2');
+    expect(LUXON_FIXTURE.format('c', { locale: isoWeekLocale })).toBe('2');
+  });
 });

@@ -64,8 +64,8 @@ describe('en names', () => {
     expect(en.dayPeriods).toEqual({ am: 'AM', pm: 'PM' });
   });
 
-  it('starts weeks on Monday with a Saturday–Sunday weekend', () => {
-    expect(en.firstDayOfWeek).toBe('monday');
+  it('starts weeks on Sunday, as CLDR does for en, with a Saturday–Sunday weekend', () => {
+    expect(en.firstDayOfWeek).toBe('sunday');
     expect(en.weekend).toEqual(['saturday', 'sunday']);
   });
 });

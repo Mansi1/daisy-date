@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
 import { LocalDate, LocalDateTime } from '../../../../src';
+import type { Locale } from '../../../../src';
+import { en } from '../../../../src/locale/en';
 import { es } from '../../../../src/locale/es';
 import { fr } from '../../../../src/locale/fr';
 
@@ -9,6 +11,8 @@ const LUXON_FIXTURE = LocalDateTime.parse('1982-05-25T09:23:54.123');
 const LOCALES = { es, fr } as const;
 
 type LocaleCode = keyof typeof LOCALES;
+
+const isoWeekLocale: Locale = { ...en, firstDayOfWeek: 'monday' };
 
 describe('Luxon datetime/format: ISO, SQL and HTTP text', () => {
   it.each<[string, LocalDate, string]>([
@@ -24,7 +28,6 @@ describe('Luxon datetime/format: ISO, SQL and HTTP text', () => {
 
   it.each<[string, LocalDateTime, string, string]>([
     ['format.test.js:190 (toISODate basic)', LUXON_FIXTURE, 'yyyyMMdd', '19820525'],
-    ['format.test.js:235 (toISOWeekDate)', LUXON_FIXTURE, "YYYY-'W'ww-e", '1982-W21-2'],
     [
       'format.test.js:278 (toISOTime without offset)',
       LUXON_FIXTURE,
@@ -136,4 +139,10 @@ describe('Luxon datetime/format (differs from Luxon on purpose)', () => {
       expect(value.format('HH:mm:ss.SSS')).toBe(expected);
     },
   );
+});
+
+describe('Luxon ISO weekday numbers', () => {
+  it('format.test.js:235 (toISOWeekDate): an ISO week date numbers weekdays from Monday', () => {
+    expect(LUXON_FIXTURE.format("YYYY-'W'ww-e", { locale: isoWeekLocale })).toBe('1982-W21-2');
+  });
 });

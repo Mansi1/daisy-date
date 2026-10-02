@@ -252,6 +252,10 @@ setDefaultLocale(de); // global default, optional
   templates such as `in {0} days`, which also cover languages that decline the unit (`in 3 Tagen`, `vor 3 Tagen`);
   the special words (`today`, `the day after tomorrow`…); and weekday templates (`next {0}`)
 
+`en` follows CLDR's US English, like its presets: weeks start on **Sunday** for `e`/`c` numbering and for the
+this/next/last week in relative text (owner decision, 2026-10-02). `startOfWeek()`, `endOfWeek()` and
+`LocalDateRange.ofWeek()` keep their explicit Monday default; pass `'sunday'` for US weeks.
+
 `Locale` values are plain objects; only `plural` and `ordinal` are functions. A pack may spread another
 (`{ ...en, code: 'en-GB' }`).
 

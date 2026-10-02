@@ -34,7 +34,7 @@ const relativePhrases = (singular: string, plural: string): RelativePhrases => (
 /** English, the default locale. */
 export const en: Locale = {
   code: 'en',
-  firstDayOfWeek: 'monday',
+  firstDayOfWeek: 'sunday',
   weekend: ['saturday', 'sunday'],
   months: { format: MONTHS, standalone: MONTHS },
   weekdays: {
