@@ -16,6 +16,7 @@ import { formatRelative } from './functions/relative-format';
 import type { RelativeOptions } from './functions/relative-format';
 import type { FormatOptions } from './functions/format';
 import { atStartOfDay, atTime } from './functions/combine';
+import { toDate } from './functions/conversion';
 import {
   endOfMonth,
   endOfWeek,
@@ -372,18 +373,7 @@ export class LocalDate extends ComparableValue<LocalDate> {
 
   /** Returns the start of this day in `timeZone` (an IANA name) as a JS `Date`, defaulting to the system time zone. */
   toDate(timeZone?: string): Date {
-    return new Date(
-      translateRangeError(
-        () =>
-          this.#plainDate.toZonedDateTime({ timeZone: resolveTimeZone(timeZone) })
-            .epochMilliseconds,
-        (cause) =>
-          new DaisyRangeError(
-            `Cannot convert ${this.toString()} to a Date in time zone ${String(timeZone)}`,
-            { cause },
-          ),
-      ),
-    );
+    return toDate(this, timeZone);
   }
 
   /** Returns the ISO 8601 form, such as `2026-09-28`. */

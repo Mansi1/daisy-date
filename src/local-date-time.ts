@@ -42,6 +42,7 @@ import {
   plusBusinessDays,
 } from './functions/business-days';
 import type { WeekendOptions } from './functions/business-days';
+import { toDate, toLocalDate } from './functions/conversion';
 import { format } from './functions/format';
 import { formatRelative } from './functions/relative-format';
 import type { RelativeOptions } from './functions/relative-format';
@@ -72,7 +73,6 @@ import { resolveTimeZone } from './internal/time-zone';
 import { translateRangeError } from './internal/translate-range-error';
 import type { ParseOptions } from './parse/pattern-parser';
 import { nullOnParseError, parseDateTime } from './parse/resolve';
-import { fromPlainDate } from './local-date';
 import type { LocalDate } from './local-date';
 import type { Period } from './period';
 
@@ -273,7 +273,7 @@ export class LocalDateTime extends ComparableValue<LocalDateTime> {
 
   /** Returns the date part, dropping the time. */
   toLocalDate(): LocalDate {
-    return fromPlainDate(this.#plainDateTime.toPlainDate());
+    return toLocalDate(this);
   }
 
   plusDays(days: number): LocalDateTime {
@@ -478,16 +478,7 @@ export class LocalDateTime extends ComparableValue<LocalDateTime> {
    * A time skipped by a daylight-saving change moves forward; a repeated time uses the earlier instant.
    */
   toDate(timeZone?: string): Date {
-    return new Date(
-      translateRangeError(
-        () => this.#plainDateTime.toZonedDateTime(resolveTimeZone(timeZone)).epochMilliseconds,
-        (cause) =>
-          new DaisyRangeError(
-            `Cannot convert ${this.toString()} to a Date in time zone ${String(timeZone)}`,
-            { cause },
-          ),
-      ),
-    );
+    return toDate(this, timeZone);
   }
 
   /** Returns the ISO 8601 form with seconds, plus milliseconds when not zero: `2026-09-28T14:30:00.250`. */

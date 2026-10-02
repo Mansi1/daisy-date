@@ -17,24 +17,33 @@ export const toComparisonResult = (difference: number): ComparisonResult => {
   return difference > 0 ? 1 : 0;
 };
 
+/** Returns true if `left` comes before `right`. */
+export const isBefore = <T>(left: Comparable<T>, right: T): boolean => left.compareTo(right) < 0;
+
+/** Returns true if `left` comes after `right`. */
+export const isAfter = <T>(left: Comparable<T>, right: T): boolean => left.compareTo(right) > 0;
+
+/** Returns true if `left` and `right` are at the same position in the order (`PT1H` and `PT60M` are). */
+export const isEqual = <T>(left: Comparable<T>, right: T): boolean => left.compareTo(right) === 0;
+
 /** Base class for ordered value types: subclasses implement `compareTo`, the other checks derive from it. */
 export abstract class ComparableValue<T extends ComparableValue<T>> implements Comparable<T> {
   abstract compareTo(other: T): ComparisonResult;
 
   equals(other: T): boolean {
-    return this.compareTo(other) === 0;
+    return isEqual(this, other);
   }
 
   isEqual(other: T): boolean {
-    return this.compareTo(other) === 0;
+    return isEqual(this, other);
   }
 
   isBefore(other: T): boolean {
-    return this.compareTo(other) < 0;
+    return isBefore(this, other);
   }
 
   isAfter(other: T): boolean {
-    return this.compareTo(other) > 0;
+    return isAfter(this, other);
   }
 }
 
