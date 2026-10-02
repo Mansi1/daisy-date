@@ -60,6 +60,9 @@
 - 2026-10-02 (T20): `size-limit` 14 needs Node ≥22.19, so `scripts/size.mjs` bundles with esbuild (explicit dev
   dependency) and gzips itself; budgets live in that script. Any single root import is ~12.4 KB gzip because of the
   class ↔ function cycle (PROJECT.md §7, open question 7).
+- 2026-10-02: `test/compat/luxon/` translates every test in Luxon's `test/` folder (moment/luxon@f427515);
+  `LEDGER.md` there gives each one a status. A behaviour change that breaks a compat test needs either a fix or a
+  documented decision plus a `differs` row and a ledger update; never edit Luxon's expected value to match daisy.
 - Open follow-up: native-speaker review of `de`/`fr`/`es` before 1.0; known gap: German range `1–3. Okt.` (should be
   `1.–3. Okt.`).
 - Open follow-up (owner): enable `Mansi1/daisy-date` on codecov.io. Until then the Codecov upload fails quietly
