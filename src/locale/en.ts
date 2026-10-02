@@ -34,7 +34,7 @@ const relativePhrases = (singular: string, plural: string): RelativePhrases => (
 /** English, the default locale. */
 export const en: Locale = {
   code: 'en',
-  firstDayOfWeek: 'monday',
+  firstDayOfWeek: 'sunday',
   weekend: ['saturday', 'sunday'],
   months: { format: MONTHS, standalone: MONTHS },
   weekdays: {
@@ -79,7 +79,7 @@ export const en: Locale = {
     },
     months: {
       long: { one: '{0} month', other: '{0} months' },
-      short: { one: '{0} mo', other: '{0} mos' },
+      short: { one: '{0} mth', other: '{0} mths' },
       narrow: { other: '{0}mo' },
     },
     weeks: {
@@ -94,7 +94,7 @@ export const en: Locale = {
     },
     hours: {
       long: { one: '{0} hour', other: '{0} hours' },
-      short: { one: '{0} hr', other: '{0} hrs' },
+      short: { other: '{0} hr' },
       narrow: { other: '{0}h' },
     },
     minutes: {
@@ -122,10 +122,10 @@ export const en: Locale = {
   relative: {
     units: {
       year: { long: relativePhrases('year', 'years'), short: relativePhrases('yr', 'yrs') },
-      month: { long: relativePhrases('month', 'months'), short: relativePhrases('mo', 'mos') },
+      month: { long: relativePhrases('month', 'months'), short: relativePhrases('mo', 'mo') },
       week: { long: relativePhrases('week', 'weeks'), short: relativePhrases('wk', 'wks') },
       day: { long: relativePhrases('day', 'days'), short: relativePhrases('d', 'd') },
-      hour: { long: relativePhrases('hour', 'hours'), short: relativePhrases('hr', 'hrs') },
+      hour: { long: relativePhrases('hour', 'hours'), short: relativePhrases('hr', 'hr') },
       minute: { long: relativePhrases('minute', 'minutes'), short: relativePhrases('min', 'min') },
       second: { long: relativePhrases('second', 'seconds'), short: relativePhrases('sec', 'sec') },
     },

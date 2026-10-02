@@ -42,6 +42,8 @@ describe('LocalDate.parse with a pattern', () => {
     ['Mo 28.09.2026', 'EEEEEE dd.MM.yyyy', '2026-09-28'],
     ['September 2026 28', 'LLLL yyyy d', '2026-09-28'],
     ['2026-271', 'yyyy-DDD', '2026-09-28'],
+    ['2026 09 271', 'yyyy MM DDD', '2026-09-28'],
+    ['2026 28 271', 'yyyy dd DDD', '2026-09-28'],
     ['271 2026-09-28', 'DDD yyyy-MM-dd', '2026-09-28'],
     ['Q3 2026-09-28', 'QQQ yyyy-MM-dd', '2026-09-28'],
     ['3rd quarter, 28.09.2026', 'QQQQ, dd.MM.yyyy', '2026-09-28'],
@@ -51,6 +53,8 @@ describe('LocalDate.parse with a pattern', () => {
     ['01.01.99', 'dd.MM.yy', '2099-01-01'],
     ['01.01.00', 'dd.MM.yy', '2000-01-01'],
     ['5.3.7', 'd.M.y', '0007-03-05'],
+    ['22222-01-01', 'y-MM-dd', '+022222-01-01'],
+    ['222222-01-01', 'y-MM-dd', '+222222-01-01'],
     ['9/28/26', 'short', '2026-09-28'],
     ['Sep 28, 2026', 'medium', '2026-09-28'],
     ['September 28, 2026', 'long', '2026-09-28'],
@@ -131,6 +135,8 @@ describe('strict parse errors point at the failing position', () => {
     ],
     ['Q2 2026-09-28', 'QQQ yyyy-MM-dd', 'Quarter 2 does not match 2026-09-28', 0],
     ['270 2026-09-28', 'DDD yyyy-MM-dd', 'Day of year 270 does not match 2026-09-28', 0],
+    ['2017 05 340', 'yyyy MM DDD', 'Month 5 does not match 2017-12-06', 5],
+    ['2017 05 340', 'yyyy dd DDD', 'Day 5 does not match 2017-12-06', 5],
   ])('%j with %j: %s at %s', (text, pattern, reason, index) => {
     expect(() => LocalDate.parse(text, pattern)).toThrow(
       parseErrorAt(text, pattern, reason, index),
@@ -206,6 +212,14 @@ describe('patterns that cannot be parsed', () => {
     ],
   ])('LocalDate rejects %j', (pattern, message) => {
     expect(() => LocalDate.parse('28.09.2026', pattern)).toThrow(new DaisyFormatError(message));
+  });
+
+  it('rejects AM/PM next to a 24-hour clock', () => {
+    expect(() => LocalDateTime.parse('2000-01-01 0930PM', 'yyyy-MM-dd HHmma')).toThrow(
+      new DaisyFormatError(
+        'Pattern "yyyy-MM-dd HHmma" mixes a 24-hour field (H or k) with AM/PM (a)',
+      ),
+    );
   });
 
   it('rejects a 12-hour clock without AM/PM', () => {

@@ -88,6 +88,7 @@ created through static factories only (`of`, `parse`, `from…`, `now`). Constru
 | Comparison        | Ordered types (`LocalDate`, `LocalDateTime`, `Duration`) extend `ComparableValue`: `compareTo(other): -1 \| 0 \| 1`, `equals`, `isBefore`, `isAfter`, `isEqual`, plus the root `compare` for `Array.sort`. `Period` and `LocalDateRange` only have `equals`. |
 | String form       | `toString()` returns ISO 8601. `toJSON()` returns the same, so `JSON.stringify` works.                                                                                                                                                                       |
 | Invalid input     | Throws `DaisyRangeError` (out-of-range values) or `DaisyParseError` (unparseable text). No silent clamping, except month-end overflow in arithmetic and `withYear`/`withMonth` (§5.2).                                                                       |
+| Supported range   | Temporal's range: dates `-271821-04-19` to `+275760-09-13`, date-times `-271821-04-19T00:00:00.001` to `+275760-09-13T23:59:59.999`. Results outside it throw `DaisyRangeError` (`DaisyParseError` when parsing).                                            |
 | `now` / `today`   | Take an optional IANA `timeZone` string, defaulting to the system zone. This is the only place zones appear in v1.                                                                                                                                           |
 | JS `Date` interop | `fromDate(date, timeZone?)` / `toDate(timeZone?)`. The zone defaults to the system zone.                                                                                                                                                                     |
 
@@ -115,7 +116,7 @@ Wraps `Temporal.PlainDate`.
 Wraps `Temporal.PlainDateTime`. Precision is **milliseconds** (Temporal supports ns, but JS `Date` interop
 and typical use cases need ms). Finer input is **rejected**, not truncated: `parse` throws `DaisyParseError`
 for `…15.2501`, as `Duration.parse` does. Only `now()` drops Temporal's micro- and nanoseconds, since the clock
-isn't input.
+isn't input. The ISO end-of-day form `24:00` is rejected (`DaisyParseError`); write `00:00` of the next day.
 
 - **Create:** `of(year, month, day, hour?, minute?, second?, millisecond?)`, `parse(iso)`,
   `now(timeZone?)`, `fromDate(date, timeZone?)`, `LocalDate#atTime`
@@ -250,6 +251,10 @@ setDefaultLocale(de); // global default, optional
 - `relative`: per unit (`year` … `second`), style (`long | short`) and direction (`future | past`), plural
   templates such as `in {0} days`, which also cover languages that decline the unit (`in 3 Tagen`, `vor 3 Tagen`);
   the special words (`today`, `the day after tomorrow`…); and weekday templates (`next {0}`)
+
+`en` follows CLDR's US English, like its presets: weeks start on **Sunday** for `e`/`c` numbering and for the
+this/next/last week in relative text (owner decision, 2026-10-02). `startOfWeek()`, `endOfWeek()` and
+`LocalDateRange.ofWeek()` keep their explicit Monday default; pass `'sunday'` for US weeks.
 
 `Locale` values are plain objects; only `plural` and `ordinal` are functions. A pack may spread another
 (`{ ...en, code: 'en-GB' }`).

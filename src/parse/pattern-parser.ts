@@ -54,8 +54,8 @@ const TWO_DIGIT_YEAR_BASE = 2000;
 const PM = 1;
 
 const MAXIMUM_DIGITS: Readonly<Record<FieldSymbol, number>> = {
-  y: 4,
-  Y: 4,
+  y: 6,
+  Y: 6,
   M: 2,
   L: 2,
   d: 2,
@@ -121,6 +121,11 @@ export const assertParseablePattern = (
   if (hasSymbol(tokens, ['h', 'K']) && !hasSymbol(tokens, ['a'])) {
     throw new DaisyFormatError(
       `Pattern "${pattern}" has a 12-hour field (h or K) but no AM/PM (a)`,
+    );
+  }
+  if (hasSymbol(tokens, ['H', 'k']) && hasSymbol(tokens, ['a'])) {
+    throw new DaisyFormatError(
+      `Pattern "${pattern}" mixes a 24-hour field (H or k) with AM/PM (a)`,
     );
   }
   if (!hasSymbol(tokens, ['y'])) {
