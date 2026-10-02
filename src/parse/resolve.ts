@@ -45,7 +45,17 @@ export const dateFromFields = ({ fields, context }: PatternParse): LocalDate => 
 };
 
 const assertConsistent = ({ fields, context }: PatternParse, date: LocalDate): void => {
-  const { dayOfYear, weekday, quarter } = fields;
+  const { month, day, dayOfYear, weekday, quarter } = fields;
+  if (month !== undefined && month.value !== date.month) {
+    failAt(
+      context,
+      `Month ${String(month.value)} does not match ${date.toString()}`,
+      month.position,
+    );
+  }
+  if (day !== undefined && day.value !== date.day) {
+    failAt(context, `Day ${String(day.value)} does not match ${date.toString()}`, day.position);
+  }
   if (dayOfYear !== undefined && dayOfYear.value !== date.dayOfYear) {
     failAt(
       context,

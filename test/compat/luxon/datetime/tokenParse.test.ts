@@ -270,6 +270,12 @@ describe('Luxon datetime/tokenParse: years with more than four digits', () => {
   });
 });
 
+describe('Luxon datetime/tokenParse: mixed units', () => {
+  it('tokenParse.test.js:431: throws when a month contradicts the day of year', () => {
+    expect(() => LocalDate.parse('2017 05 340', 'yyyy MM DDD')).toThrow(DaisyParseError);
+  });
+});
+
 describe('Luxon datetime/tokenParse: presets read back what they write', () => {
   it.each<[string, string]>([
     ['tokenParse.test.js:739: D is short', 'short'],

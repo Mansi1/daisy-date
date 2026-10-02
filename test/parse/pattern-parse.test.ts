@@ -42,6 +42,8 @@ describe('LocalDate.parse with a pattern', () => {
     ['Mo 28.09.2026', 'EEEEEE dd.MM.yyyy', '2026-09-28'],
     ['September 2026 28', 'LLLL yyyy d', '2026-09-28'],
     ['2026-271', 'yyyy-DDD', '2026-09-28'],
+    ['2026 09 271', 'yyyy MM DDD', '2026-09-28'],
+    ['2026 28 271', 'yyyy dd DDD', '2026-09-28'],
     ['271 2026-09-28', 'DDD yyyy-MM-dd', '2026-09-28'],
     ['Q3 2026-09-28', 'QQQ yyyy-MM-dd', '2026-09-28'],
     ['3rd quarter, 28.09.2026', 'QQQQ, dd.MM.yyyy', '2026-09-28'],
@@ -133,6 +135,8 @@ describe('strict parse errors point at the failing position', () => {
     ],
     ['Q2 2026-09-28', 'QQQ yyyy-MM-dd', 'Quarter 2 does not match 2026-09-28', 0],
     ['270 2026-09-28', 'DDD yyyy-MM-dd', 'Day of year 270 does not match 2026-09-28', 0],
+    ['2017 05 340', 'yyyy MM DDD', 'Month 5 does not match 2017-12-06', 5],
+    ['2017 05 340', 'yyyy dd DDD', 'Day 5 does not match 2017-12-06', 5],
   ])('%j with %j: %s at %s', (text, pattern, reason, index) => {
     expect(() => LocalDate.parse(text, pattern)).toThrow(
       parseErrorAt(text, pattern, reason, index),
