@@ -1,5 +1,6 @@
 import { DaisyParseError } from './errors';
 import { minus, plus } from './functions/arithmetic';
+import { equals } from './functions/equality';
 import { abs, isNegative, isZero, negated, normalized } from './functions/amounts';
 import { formatAmount } from './functions/amount-format';
 import type { AmountFormatOptions } from './functions/amount-format';
@@ -120,12 +121,7 @@ export class Period {
 
   /** Compares component by component, so `P12M` does not equal `P1Y`. */
   equals(other: Period): boolean {
-    return (
-      this.years === other.years &&
-      this.months === other.months &&
-      this.weeks === other.weeks &&
-      this.days === other.days
-    );
+    return equals(this, other);
   }
 
   /** Returns the ISO 8601 form, such as `P1Y2M3D`; the zero period is `P0D`. */

@@ -1,4 +1,4 @@
-export { ComparableValue, compare } from './comparable';
+export { ComparableValue, compare, isAfter, isBefore, isEqual } from './comparable';
 export type { Comparable, ComparisonResult } from './comparable';
 export {
   DAY_OF_WEEK,
@@ -60,6 +60,9 @@ export {
 } from './functions/business-days';
 export type { WeekendOptions } from './functions/business-days';
 export { atStartOfDay, atTime } from './functions/combine';
+export { toDate, toLocalDate } from './functions/conversion';
+export { equals } from './functions/equality';
+export type { DaisyValue } from './functions/equality';
 export { format } from './functions/format';
 export type { FormatOptions } from './functions/format';
 export { LIST_STYLE, ZERO_DISPLAY } from './functions/amount-format';

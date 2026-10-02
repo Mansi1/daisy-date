@@ -14,7 +14,7 @@ Status: draft v1 · 2026-09-28 · Tasks: [TASK-list](./TASK-list/README.md)
 2. **Familiar model.** Names and semantics follow `java.time` (`LocalDate`, `LocalDateTime`, `Period`,
    `Duration`, `plusDays`, `until`, `isBefore`).
 3. **Two API styles, one implementation.** Immutable classes with methods, plus standalone
-   tree-shakable functions. Each method delegates to its function.
+   standalone functions. Each method delegates to its function.
 4. **Human text in four languages.** Pattern formatting and parsing, relative text (`"in 3 days"`,
    `"next Friday"`) and duration text, for `en`, `de`, `fr` and `es`.
 5. **Temporal underneath, hidden.** Correct calendar arithmetic comes from Temporal. Temporal types
@@ -389,8 +389,20 @@ date.plusDays(3).equals(plusDays(date, 3)); // true
   the root. Getters and factories stay on the classes.
 - Where one name applies to several types, the function is overloaded (`plusDays(LocalDate)` and
   `plusDays(LocalDateTime)` return the matching type).
-- Tree-shaking budget (checked in CI with size-limit): importing `{ plusDays }` alone stays under a
-  budget fixed in T20. Importing all four locales adds each pack's size independently.
+- Bundle budgets (checked in CI by `npm run size`, T20), in gzipped bytes: any single import from the root
+  (`{ plusDays }`, `{ LocalDate }`, `{ format }`) ≤ 13 000, the whole root ≤ 14 000, each locale pack ≤ 1 500.
+  The check also fails if text from an opt-in pack (`de`, `fr`, `es`) ends up in the root bundle.
+
+Audit (T20): every method with logic delegates to a standalone function, including `toDate`, `toLocalDate`,
+`equals`, `isBefore`, `isAfter` and `isEqual`. Methods that stay on the classes: getters and `isLeapYear`,
+factories (`of`, `parse`, `tryParse`, `today`, `now`, `fromDate`, `ofYearDay`, `ofDays`, …), the ordering primitive
+`compareTo` (exposed as `compare`), text forms (`toString`, `toJSON`, inspect) and iteration
+(`[Symbol.iterator]`, `toArray`, `businessDaysIterator`), because generators must be class methods.
+
+Measured in T20: importing one function bundles about as much as importing everything (12.4 KB vs 13.2 KB
+gzipped). Each method imports its function and each function that returns a value needs the class, so any
+import reaches the whole graph. Only the locale packs tree-shake. Real per-function tree-shaking would need
+functions that don't depend on the classes, i.e. a different architecture (open question 7).
 
 ## 8. Errors
 
@@ -424,6 +436,8 @@ matching task starts.
 4. Two-digit years (`yy`): map to `2000–2099` (default), or use a sliding window around the current year?
 5. ~~Bare weekday in `parseRelative`~~: obsolete, relative parsing was dropped (2026-10-02).
 6. Should `LocalDateRange` also support open-ended ranges (no end)? Default: no, not in v1.
+7. Per-function tree-shaking (§7): accept the ~12 KB core (default), or restructure so that standalone functions
+   don't pull in the classes?
 
 ## 11. Tasks
 

@@ -2,6 +2,7 @@ import type { DayOfWeek } from './day-of-week';
 import { DaisyParseError, DaisyRangeError } from './errors';
 import { endOfMonth, endOfWeek, endOfYear, startOfWeek } from './functions/adjusters';
 import { plusDays } from './functions/arithmetic';
+import { equals } from './functions/equality';
 import { format } from './functions/format';
 import type { FormatOptions } from './functions/format';
 import { businessDays, fallsOnWeekend, resolveWeekend } from './functions/business-days';
@@ -181,7 +182,7 @@ export class LocalDateRange {
   }
 
   equals(other: LocalDateRange): boolean {
-    return this.start.equals(other.start) && this.end.equals(other.end);
+    return equals(this, other);
   }
 
   /**

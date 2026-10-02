@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 4 — Polish and release  
 **Depends on:** [T19](./T19-de-fr-es-locale-packs.md)  
-**Status:** todo
+**Status:** done (see PROJECT.md §7 for the tree-shaking finding)
 
 ## Scope
 

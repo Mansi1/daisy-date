@@ -50,6 +50,7 @@ jobs:
           use_oidc: true
           fail_ci_if_error: false
       - run: npm run check:package
+      - run: npm run size
 
   node18-smoke:
     name: Smoke test dist (Node 18)
