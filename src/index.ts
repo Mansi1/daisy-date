@@ -62,6 +62,8 @@ export type { WeekendOptions } from './functions/business-days';
 export { atStartOfDay, atTime } from './functions/combine';
 export { format } from './functions/format';
 export type { FormatOptions } from './functions/format';
+export { LIST_STYLE, ZERO_DISPLAY } from './functions/amount-format';
+export type { AmountFormatOptions, ListStyle, ZeroDisplay } from './functions/amount-format';
 export { RELATIVE_NUMERIC, formatRelative } from './functions/relative-format';
 export type { RelativeNumeric, RelativeOptions } from './functions/relative-format';
 export type { ParseOptions } from './parse/pattern-parser';

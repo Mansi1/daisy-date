@@ -347,19 +347,26 @@ midnight. A plural category without a template falls back to `other`.
 
 ### 6.5 Duration and period text
 
-`period.format(options?)` and `duration.format(options?)`:
+`period.format(options?)`, `duration.format(options?)` and `format(amount, options?)`:
 
 ```ts
-type DurationFormatOptions = {
+type AmountFormatOptions = {
   locale?: Locale;
-  style?: 'long' | 'short' | 'narrow'; // '2 weeks 3 days' | '2 wks 3 d' | '2w 3d'
-  list?: 'conjunction' | 'unit'; // '2 weeks and 3 days' vs '2 weeks, 3 days'
+  style?: 'long' | 'short' | 'narrow'; // '2 weeks' | '2 wks' | '2w'
+  list?: 'conjunction' | 'unit' | 'narrow'; // '2 weeks and 3 days' | '2 weeks, 3 days' | '2w 3d'
   zeros?: 'omit' | 'show'; // default 'omit'
-  largestUnits?: number; // e.g. 2 → '1 year 2 months' (drops the smaller ones)
+  largestUnits?: number; // e.g. 2 → '1 year and 2 months' (drops the smaller ones)
 };
 ```
 
-A zero period formats as `0 days` / `0 Tage` / `0 jour` / `0 días`.
+A zero period formats as `0 days` / `0 Tage` / `0 jour` / `0 días`; a zero duration as `0 seconds`.
+
+Decisions made in T18: `list` gained `'narrow'` (space-separated, `locale.lists.narrow`) because the spec's
+`'2w 3d'` fits neither of the other two; the default is `'conjunction'`, or `'narrow'` for the narrow style.
+Lists of three or more use the locale's `end` separator (English: `1 year, 2 months, and 3 days`). Components are
+written as stored and keep their sign (`PT90M` → `90 minutes`, `-PT1H30M` → `-1 hour and -30 minutes`); call
+`normalized()` first for balanced units. `largestUnits` counts from the largest written component. The root
+`format` takes a pattern for dates and ranges and options for amounts; mixing them up throws a `TypeError`.
 
 ## 7. Functional API
 

@@ -128,6 +128,7 @@ describe('en patterns and text templates', () => {
   it('joins lists and ranges', () => {
     expect(en.lists.conjunction).toEqual({ pair: ' and ', middle: ', ', end: ', and ' });
     expect(en.lists.unit).toEqual({ pair: ', ', middle: ', ', end: ', ' });
+    expect(en.lists.narrow).toEqual({ pair: ' ', middle: ' ', end: ' ' });
     expect(en.rangeSeparator).toBe('–');
   });
 });
