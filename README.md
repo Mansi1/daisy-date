@@ -317,19 +317,26 @@ LocalDate.parse('28.9.2026', 'dd.MM.yyyy', { strict: false }); // 2026-09-28
 
 ### Locales
 
-English is built in and is the default. A locale holds the names, presets and phrases that formatting uses; pass
-one per call or make it the default. German, French and Spanish packs are on the roadmap.
+English is built in and is the default. German, French and Spanish come as separate entry points, so a bundle
+only contains the languages you import (about 1.4 KB gzipped each):
 
 ```ts
-import { en, getDefaultLocale, setDefaultLocale } from 'daisy-date';
-// or: import { en } from 'daisy-date/locale/en';
+import { LocalDate, Period, setDefaultLocale } from 'daisy-date';
+import { de } from 'daisy-date/locale/de';
+import { fr } from 'daisy-date/locale/fr';
 
-getDefaultLocale().code; // 'en'
-en.months.format.wide[8]; // 'September'
-en.ordinal(22); // '22nd'
-setDefaultLocale(en); // make a locale the default
-date.format('long', { locale: en }); // or pick one per call
+const date = LocalDate.parse('2026-09-28');
+
+date.format('full', { locale: de }); // 'Montag, 28. September 2026'
+date.format('long', { locale: fr }); // '28 septembre 2026'
+LocalDate.parse('28. September 2026', 'long', { locale: de }); // 2026-09-28
+Period.parse('P2W3D').format({ locale: fr }); // '2 semaines et 3 jours'
+
+setDefaultLocale(de); // the default for every call without `locale`
+LocalDate.parse('2026-09-30').formatRelative({ relativeTo: date }); // 'übermorgen'
 ```
+
+A locale is a plain object; you can adjust one by spreading it: `{ ...de, rangeSeparator: ' bis ' }`.
 
 ### Comparing and sorting
 
@@ -385,9 +392,7 @@ try {
 ## Roadmap
 
 daisy is being built in the open, task by task ([task list](./TASK-list/README.md), [specification](./PROJECT.md)).
-Coming next:
-
-- German, French and Spanish locale packs
+Before the 1.0 release: an audit of the standalone functions with bundle-size budgets, and the full API reference.
 
 ## Contributing
 

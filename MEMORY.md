@@ -54,6 +54,11 @@
   "Update branch" (or a rebase and force-push) plus a fresh CI run before it can merge.
 - 2026-09-29: 0.1.0 and 0.2.0 were unpublished from npm (scaffold only, nothing usable). npm never allows those numbers
   again, so the `v0.1.0`/`v0.2.0` tags must stay: semantic-release continues from them and the next release is 0.3.0.
+- 2026-10-02 (T19): locale strings can be checked against Node's `Intl` (DateTimeFormat parts, RelativeTimeFormat,
+  NumberFormat unit, ListFormat), which ships CLDR. Weekday-only `Intl` output is the standalone form (`Mo`);
+  pattern `E` is the format form (`Mo.`), so compare inside a full date.
+- Open follow-up: native-speaker review of `de`/`fr`/`es` before 1.0; known gap: German range `1–3. Okt.` (should be
+  `1.–3. Okt.`).
 - Open follow-up (owner): enable `Mansi1/daisy-date` on codecov.io. Until then the Codecov upload fails quietly
   (`fail_ci_if_error: false`) and the README badge shows "unknown". Delete this entry once uploads work.
 - Open follow-up (owner): npm trusted publishing for `Mansi1/daisy-date` + `release.yml`, then revoke the token and
