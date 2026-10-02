@@ -2,7 +2,7 @@
 
 **Milestone:** Milestone 3 — Localization and text  
 **Depends on:** [T13](./T13-pattern-compiler-and-format.md)–[T18](./T18-period-and-duration-text.md)  
-**Status:** todo
+**Status:** done (native-speaker review still open)
 
 ## Scope
 

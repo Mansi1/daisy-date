@@ -34,7 +34,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 - [x] [T16 · Relative formatting](./T16-relative-formatting.md)
 - ~~[T17 · Relative parsing](./T17-relative-parsing.md)~~ — dropped (2026-10-02)
 - [x] [T18 · Period and duration text](./T18-period-and-duration-text.md)
-- [ ] [T19 · `de`, `fr`, `es` locale packs](./T19-de-fr-es-locale-packs.md)
+- [x] [T19 · `de`, `fr`, `es` locale packs](./T19-de-fr-es-locale-packs.md)
 
 ## Milestone 4 — Polish and release
 

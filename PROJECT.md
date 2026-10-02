@@ -254,6 +254,11 @@ setDefaultLocale(de); // global default, optional
 `Locale` values are plain objects; only `plural` and `ordinal` are functions. A pack may spread another
 (`{ ...en, code: 'en-GB' }`).
 
+The `de`, `fr` and `es` packs (T19) follow CLDR; every month and weekday name, special word, relative phrase,
+unit name and list separator was checked against Node's `Intl` data. They use plain spaces where CLDR has
+non-breaking ones (`p. m.`), so typed text parses back. Known gap for the native-speaker review: German ranges
+collapse to `1–3. Okt. 2026` instead of `1.–3. Okt. 2026`, because the day's dot is treated as shared text.
+
 ### 6.2 Pattern formatting
 
 Patterns use Unicode LDML (CLDR) date field symbols, as in `java.time.DateTimeFormatter`. Supported
