@@ -123,6 +123,11 @@ export const assertParseablePattern = (
       `Pattern "${pattern}" has a 12-hour field (h or K) but no AM/PM (a)`,
     );
   }
+  if (hasSymbol(tokens, ['H', 'k']) && hasSymbol(tokens, ['a'])) {
+    throw new DaisyFormatError(
+      `Pattern "${pattern}" mixes a 24-hour field (H or k) with AM/PM (a)`,
+    );
+  }
   if (!hasSymbol(tokens, ['y'])) {
     throw new DaisyFormatError(missingYearMessage(pattern));
   }

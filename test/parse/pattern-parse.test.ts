@@ -208,6 +208,14 @@ describe('patterns that cannot be parsed', () => {
     expect(() => LocalDate.parse('28.09.2026', pattern)).toThrow(new DaisyFormatError(message));
   });
 
+  it('rejects AM/PM next to a 24-hour clock', () => {
+    expect(() => LocalDateTime.parse('2000-01-01 0930PM', 'yyyy-MM-dd HHmma')).toThrow(
+      new DaisyFormatError(
+        'Pattern "yyyy-MM-dd HHmma" mixes a 24-hour field (H or k) with AM/PM (a)',
+      ),
+    );
+  });
+
   it('rejects a 12-hour clock without AM/PM', () => {
     expect(() => LocalDateTime.parse('28.09.2026 02:05', 'dd.MM.yyyy hh:mm')).toThrow(
       new DaisyFormatError(

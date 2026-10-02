@@ -169,6 +169,14 @@ describe('Luxon datetime/tokenParse: date-times with a pattern', () => {
   });
 });
 
+describe('Luxon datetime/tokenParse: conflicting specifications', () => {
+  it('tokenParse.test.js:73: throws if you specify meridiem with 24-hour time', () => {
+    expect(() => LocalDateTime.parse('2000-01-01 0930PM', 'yyyy-MM-dd HHmma')).toThrow(
+      DaisyFormatError,
+    );
+  });
+});
+
 describe('Luxon datetime/tokenParse: dates with a pattern', () => {
   it.each<[string, string, string, string]>([
     ['tokenParse.test.js:128: y', '2-01-01', 'y-MM-dd', '0002-01-01'],
