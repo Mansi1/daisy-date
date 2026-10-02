@@ -54,8 +54,8 @@ const TWO_DIGIT_YEAR_BASE = 2000;
 const PM = 1;
 
 const MAXIMUM_DIGITS: Readonly<Record<FieldSymbol, number>> = {
-  y: 4,
-  Y: 4,
+  y: 6,
+  Y: 6,
   M: 2,
   L: 2,
   d: 2,

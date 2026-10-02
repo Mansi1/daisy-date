@@ -261,6 +261,15 @@ describe('Luxon datetime/tokenParse: dates with a pattern', () => {
 
 const presetSample = dateTime('2019-04-17T22:45:55.555');
 
+describe('Luxon datetime/tokenParse: years with more than four digits', () => {
+  it.each<[string, string, string]>([
+    ['tokenParse.test.js:132', '22222-01-01', '+022222-01-01'],
+    ['tokenParse.test.js:133', '222222-01-01', '+222222-01-01'],
+  ])('%s: parses %j with y-MM-dd', (_source, text, expected) => {
+    expect(LocalDate.parse(text, 'y-MM-dd')).toEqual(date(expected));
+  });
+});
+
 describe('Luxon datetime/tokenParse: presets read back what they write', () => {
   it.each<[string, string]>([
     ['tokenParse.test.js:739: D is short', 'short'],
