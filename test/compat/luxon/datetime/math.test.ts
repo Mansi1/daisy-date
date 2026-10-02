@@ -203,6 +203,20 @@ describe('Luxon datetime/math: plus and minus (differs from Luxon on purpose)', 
   });
 });
 
+describe("Luxon datetime/math: the supported range (differs from Luxon on purpose: PROJECT.md §5.1, daisy uses Temporal's range)", () => {
+  it("math.test.js:122: adding 1e8 days and a second ends just inside Temporal's last day", () => {
+    expect(LocalDateTime.parse('1970-01-01T00:00').plusSeconds(1e8 * 86400 + 1)).toEqual(
+      LocalDateTime.parse('+275760-09-13T00:00:01'),
+    );
+  });
+
+  it("math.test.js:218: subtracting 1e8 days and a second ends just inside Temporal's first day", () => {
+    expect(LocalDateTime.parse('1970-01-01T00:00').minusSeconds(1e8 * 86400 + 1)).toEqual(
+      LocalDateTime.parse('-271821-04-19T23:59:59'),
+    );
+  });
+});
+
 describe('Luxon datetime/math: startOf and endOf', () => {
   it.each<[string, (value: LocalDateTime) => LocalDateTime, string]>([
     ['math.test.js:266: start of the year', (value) => value.startOfYear(), '2010-01-01T00:00'],

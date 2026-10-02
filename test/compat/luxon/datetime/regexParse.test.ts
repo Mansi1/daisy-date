@@ -114,6 +114,12 @@ describe('Luxon datetime/regexParse: HTTP and SQL text via patterns', () => {
   });
 });
 
+describe('Luxon datetime/regexParse: 24:00 (differs from Luxon on purpose: PROJECT.md §5.3 rejects the end-of-day form)', () => {
+  it('regexParse.test.js:544: 2018-01-04T24:00 is rejected instead of rolling over', () => {
+    expect(() => LocalDateTime.parse('2018-01-04T24:00')).toThrow(DaisyParseError);
+  });
+});
+
 describe('Luxon datetime/regexParse (differs from Luxon on purpose)', () => {
   it.each<[string, string]>([
     ['regexParse.test.js:144: year only', '2016'],
