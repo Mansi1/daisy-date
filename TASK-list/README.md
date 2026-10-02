@@ -38,7 +38,7 @@ Set **Status** in each file to `todo`, `in progress` or `done`, and tick the box
 
 ## Milestone 4 — Polish and release
 
-- [ ] [T20 · Functional API audit and bundle budget](./T20-functional-api-audit-and-bundle-budget.md)
+- [x] [T20 · Functional API audit and bundle budget](./T20-functional-api-audit-and-bundle-budget.md)
 - [ ] [T21 · Documentation](./T21-documentation.md)
 - [ ] [T22 · 1.0 release](./T22-1-0-release.md)
 

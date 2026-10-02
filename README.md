@@ -26,8 +26,8 @@ invoice.until(LocalDate.parse('2026-03-01')).toString(); // 'P1M1D'
 - **Familiar, predictable API.** Names and rules follow `java.time`: `plusMonths`, `until`, `isBefore`,
   `Period`. Month arithmetic clamps to the month end, the way people expect (`Jan 31 + 1 month = Feb 28`).
 - **Immutable values.** Every operation returns a new value; nothing is ever modified in place.
-- **Two API styles, one implementation.** Chain methods (`date.plusDays(3)`) or import standalone functions
-  (`plusDays(date, 3)`) that bundlers can tree-shake.
+- **Two API styles, one implementation.** Chain methods (`date.plusDays(3)`) or call standalone functions
+  (`plusDays(date, 3)`). The core is about 12 KB gzipped either way; each extra language adds about 1.2 KB.
 - **Correct calendar maths underneath.** Temporal does the arithmetic, so leap years, month lengths and ISO week
   numbers are right. Temporal types never leak into daisy's API.
 - **Clear errors.** Invalid input throws instead of silently rolling over: `LocalDate.of(2026, 2, 29)` throws a
@@ -350,14 +350,20 @@ date.equals(LocalDate.of(2026, 9, 28)); // true
 
 ### Standalone functions
 
-Arithmetic, adjusters, period and duration operations are also plain functions that take the value first, so
-bundlers can drop what you don't use. Date functions work on both types and return the type they get:
+Every method with logic is also a plain function that takes the value first. Date functions work on both
+`LocalDate` and `LocalDateTime` and return the type they get:
 
 ```ts
-import { LocalDate, endOfMonth, plusDays } from 'daisy-date';
+import { LocalDate, endOfMonth, equals, isBefore, plusDays, toDate } from 'daisy-date';
 
-endOfMonth(plusDays(LocalDate.parse('2026-09-28'), 3)); // 2026-10-31
+const date = LocalDate.parse('2026-09-28');
+endOfMonth(plusDays(date, 3)); // 2026-10-31
+isBefore(date, LocalDate.parse('2026-10-01')); // true
+equals(date, LocalDate.of(2026, 9, 28)); // true
+toDate(date, 'UTC'); // Date for 2026-09-28T00:00:00.000Z
 ```
+
+Both styles share one implementation, so the bundle size is the same either way (about 12 KB gzipped).
 
 ### Converting
 
