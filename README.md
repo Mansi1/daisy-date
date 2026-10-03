@@ -398,7 +398,7 @@ try {
 ## Roadmap
 
 daisy is being built in the open, task by task ([task list](./TASK-list/README.md), [specification](./PROJECT.md)).
-Before the 1.0 release: an audit of the standalone functions with bundle-size budgets, and the full API reference.
+Before the 1.0 release: the full API reference.
 
 ## Contributing
 
